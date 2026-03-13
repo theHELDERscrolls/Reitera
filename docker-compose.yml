@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  reitera-db:
+    image: postgres:16
+    container_name: reitera_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: reitera_admin
+      POSTGRES_PASSWORD: reitera_password
+      POSTGRES_DB: reitera_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - reitera_pgdata:/var/lib/postgresql/data
+
+volumes:
+  reitera_pgdata:
+    name: reitera_pgdata
