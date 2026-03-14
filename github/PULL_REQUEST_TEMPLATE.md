@@ -1,20 +1,24 @@
-# 📝 Descripción
+# Description
 
-[Describe brevemente los cambios que incluye esta PR. ¿Qué problema resuelve o qué nueva funcionalidad añade?]
+[Describe briefly the changes included in this PR. What problem does it solve or what new feature does it add?]
 
-## 🔗 Issue Relacionada
+## Related Issue
 
-Closes #[Número de la Issue]
+Closes #[Issue Number]
 
-## 🛠️ Cambios Realizados
+## Changes Performed
 
-- [ ] Cambio A
-- [ ] Cambio B
-- [ ] Cambio C
+- [ ] Change A
+- [ ] Change B
+- [ ] Change C
 
-## ✅ Checklist de Calidad
+## Screenshots / Evidence (if applicable)
 
-- [ ] El código compila correctamente.
-- [ ] He revisado mi propio código antes de abrir la PR.
-- [ ] He actualizado/creado la documentación necesaria (Swagger, Markdown).
-- [ ] La base de datos local funciona con estos cambios.
+[Drop your screenshots, Postman responses, or logs here to prove it works]
+
+## Quality Checklist
+
+- [ ] The code compiles successfully.
+- [ ] I have self-reviewed my code before opening this PR.
+- [ ] I have updated/created the necessary documentation.
+- [ ] Local database and endpoints work properly with these changes.

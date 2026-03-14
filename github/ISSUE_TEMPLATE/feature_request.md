@@ -1,27 +1,25 @@
 ---
-name: Bug Report
-about: Crea un reporte para ayudarnos a mejorar el sistema
-title: "bug: [Título corto descriptivo]"
-labels: bug
+name: Feature Request
+about: Propose a new feature or task for the project
+title: "feat: [Short feature description]"
+labels: enhancement
 assignees: ""
 ---
 
-## 🐛 Descripción del Problema
+## Task Description
 
-[Una descripción clara y concisa de lo que está fallando]
+[Clear description of what needs to be done and why]
 
-## 👣 Pasos para Reproducir
+## Associated Requirement (RFTP)
 
-1. Ir a '...'
-2. Hacer clic en '....'
-3. Ver el error
+- Requirement ID: [e.g., R01F01T01]
 
-## 🎯 Comportamiento Esperado
+## Acceptance Criteria (DoD)
 
-[Dime qué debería haber pasado si funcionara bien]
+- [ ] Criteria 1
+- [ ] Criteria 2
 
-## 💻 Entorno
+## Time Tracking
 
-- OS: [ej. Linux Omarchy]
-- Navegador / Cliente API: [ej. Chrome, Postman]
-- Versión de Java/Spring: [ej. 21]
+- **Estimated Time:** X hours
+- **Real Time:** Y hours
