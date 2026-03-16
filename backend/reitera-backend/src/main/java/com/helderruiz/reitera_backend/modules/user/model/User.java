@@ -51,7 +51,6 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Relación N:1 -> Muchos usuarios tienen 1 rol
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
@@ -63,7 +62,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // Tomamos el email como identificador principal.
+        return email;
     }
 
     @Override
