@@ -1,5 +1,8 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
+import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
+import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
+import com.helderruiz.reitera_backend.modules.user.dto.UserLoginDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserRegisterDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserResponseDTO;
 import com.helderruiz.reitera_backend.modules.user.model.Role;
@@ -17,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public UserResponseDTO registerUser(UserRegisterDTO dto) {
         // 1. Validaciones básicas: Que no se repitan email ni username
@@ -54,5 +58,23 @@ public class UserService {
                 savedUser.getLastName(),
                 savedUser.getRole().getName()
         );
+    }
+
+    public AuthResponseDTO loginUser(UserLoginDTO dto) {
+        // 1. Buscar al usuario por email en la BD
+        User user = userRepository.findByEmail(dto.email())
+                // Por seguridad, si falla el email o la contraseña, devolvemos el mismo error genérico para no dar pistas a los hackers.
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+        // 2. Comprobar que la contraseña es correcta
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        // 3. Generar el JWT
+        String token = jwtService.generateToken(user.getUsername(), user.getRole().getName());
+
+        // 4. Devolver el DTO con el token
+        return new AuthResponseDTO(token, "Login successful");
     }
 }
