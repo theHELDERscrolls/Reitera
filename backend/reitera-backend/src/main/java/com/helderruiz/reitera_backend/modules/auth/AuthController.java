@@ -1,5 +1,7 @@
 package com.helderruiz.reitera_backend.modules.auth;
 
+import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
+import com.helderruiz.reitera_backend.modules.user.dto.UserLoginDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserRegisterDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserResponseDTO;
 import com.helderruiz.reitera_backend.modules.user.service.UserService;
@@ -9,21 +11,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller responsible for handling public authentication endpoints.
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    // Inyectamos el servicio que creamos en el paso anterior
     private final UserService userService;
 
-    // POST http://localhost:8080/api/v1/auth/register
+    /**
+     * Handles user registration.
+     * Validates input, creates a new user, and returns the created user data.
+     */
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterDTO dto) {
-        // Le pasamos el DTO al servicio, él hace su magia y nos devuelve el DTO de respuesta
         UserResponseDTO response = userService.registerUser(dto);
 
-        // Devolvemos un HTTP 201 (Created) con el usuario recién creado en el cuerpo (body)
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Handles user authentication (login).
+     * Verifies credentials and issues a JWT token upon success.
+     */
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody UserLoginDTO dto) {
+        AuthResponseDTO response = userService.loginUser(dto);
+
+        return ResponseEntity.ok(response);
     }
 }

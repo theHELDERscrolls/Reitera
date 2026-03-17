@@ -5,21 +5,29 @@ spring:
   application:
     name: reitera-backend
 
-  # Configuración de la Base de Datos PostgreSQL (Docker local)
+  # PostgreSQL Database Configuration (Local Docker environment)
   datasource:
     url: jdbc:postgresql://localhost:5432/reitera_db
     username: reitera_admin
     password: reitera_password
     driver-class-name: org.postgresql.Driver
 
-  # Configuración de JPA / Hibernate
+  # JPA & Hibernate Configuration
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      # 'none' significa que Spring NO tocará las tablas.f
-      # Usaremos el script SQL que ya creamos en DBeaver.
+      # 'none' ensures Hibernate does not auto-modify the schema. Relies on manual SQL scripts/Flyway.
       ddl-auto: none
-    show-sql: true # Para ver las consultas SQL en la consola (útil para debug)
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+# Custom API Security Properties
+api:
+  security:
+    jwt:
+      # Secret key for HMAC-SHA token signing. Must be injected via env variables in production.
+      secret-key: "ReiteraAppSuperSecretKeyForJWTGenerationDoNotShare2026!"
+      # Token validity duration in milliseconds (86400000 ms = 24 hours)
+      expiration-time: 86400000
