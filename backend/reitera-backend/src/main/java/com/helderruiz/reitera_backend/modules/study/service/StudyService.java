@@ -1,0 +1,255 @@
+package com.helderruiz.reitera_backend.modules.study.service;
+
+import com.helderruiz.reitera_backend.core.exception.ResourceNotFoundException;
+import com.helderruiz.reitera_backend.modules.card.model.Card;
+import com.helderruiz.reitera_backend.modules.card.repository.CardRepository;
+import com.helderruiz.reitera_backend.modules.deck.model.Deck;
+import com.helderruiz.reitera_backend.modules.deck.repository.CategoryRepository;
+import com.helderruiz.reitera_backend.modules.deck.repository.DeckRepository;
+import com.helderruiz.reitera_backend.modules.study.dto.CardRatingDTO;
+import com.helderruiz.reitera_backend.modules.study.dto.DueCardDTO;
+import com.helderruiz.reitera_backend.modules.study.dto.StudySessionRequestDTO;
+import com.helderruiz.reitera_backend.modules.study.dto.StudySessionResponseDTO;
+import com.helderruiz.reitera_backend.modules.study.model.ReviewLog;
+import com.helderruiz.reitera_backend.modules.study.model.StudyProgress;
+import com.helderruiz.reitera_backend.modules.study.model.StudyProgressId;
+import com.helderruiz.reitera_backend.modules.study.repository.ReviewLogRepository;
+import com.helderruiz.reitera_backend.modules.study.repository.StudyProgressRepository;
+import com.helderruiz.reitera_backend.modules.user.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * Orchestrates the study session flow: fetching due cards and processing ratings.
+ * Supports two study modes:
+ * - Single deck: study cards from one specific deck (deckId)
+ * - Category:    study cards from all decks in a category (categoryId)
+ * Delegates all FSRS scheduling math to FsrsService.
+ */
+@Service
+@RequiredArgsConstructor
+public class StudyService {
+
+    private final DeckRepository deckRepository;
+    private final CategoryRepository categoryRepository;
+    private final CardRepository cardRepository;
+    private final StudyProgressRepository studyProgressRepository;
+    private final ReviewLogRepository reviewLogRepository;
+    private final FsrsService fsrsService;
+
+    // -------------------------------------------------------------------------
+    // GET /api/v1/study/due?deckId={id}  OR  ?categoryId={id}
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns all cards the user should study now.
+     * Accepts either deckId (single deck) or categoryId (all decks in a category).
+     * Exactly one must be provided — the other must be null.
+     * <p>
+     * Two groups are merged into one list:
+     * 1. Cards with existing progress whose nextReview is in the past (overdue).
+     * 2. Cards with no StudyProgress at all (brand-new cards).
+     */
+    @Transactional(readOnly = true)
+    public List<DueCardDTO> getDueCards(Integer deckId, Integer categoryId, User user) {
+        validateScope(deckId, categoryId);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (deckId != null) {
+            return getDueCardsByDeck(deckId, user, now);
+        } else {
+            return getDueCardsByCategory(categoryId, user, now);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /api/v1/study/sessions
+    // -------------------------------------------------------------------------
+
+    /**
+     * Processes all card ratings submitted at the end of a study session.
+     * Accepts either deckId or categoryId to determine scope and validate ownership.
+     * <p>
+     * For each rated card:
+     * - Verifies the card belongs to the declared scope (deck or category).
+     * - Loads existing StudyProgress (null if the card is new to this user).
+     * - Calls FsrsService to compute the updated FSRS values.
+     * - Persists the updated StudyProgress.
+     * - Writes an immutable ReviewLog entry for audit and analytics.
+     * <p>
+     * The entire batch runs inside one transaction: if any card fails,
+     * the whole session is rolled back and nothing is persisted.
+     */
+    @Transactional
+    public StudySessionResponseDTO processSession(StudySessionRequestDTO dto, User user) {
+        validateScope(dto.deckId(), dto.categoryId());
+
+        LocalDateTime now = LocalDateTime.now();
+
+        for (CardRatingDTO ratingDTO : dto.ratings()) {
+            Card card = cardRepository.findById(ratingDTO.cardId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Card not found with id: " + ratingDTO.cardId()));
+
+            // Verify the card belongs to the declared scope and is owned by the user
+            verifyCardScope(card, dto.deckId(), dto.categoryId(), user);
+
+            // Load existing progress — null if the card has never been studied
+            StudyProgressId progressId = new StudyProgressId(user.getId(), ratingDTO.cardId());
+            StudyProgress existing = studyProgressRepository.findById(progressId).orElse(null);
+
+            // Delegate FSRS computation to FsrsService
+            StudyProgress updated = fsrsService.schedule(existing, ratingDTO.rating(), user, card, now);
+            studyProgressRepository.save(updated);
+
+            // Write the immutable review log entry (one per card per session)
+            ReviewLog log = ReviewLog.builder()
+                    .user(user)
+                    .card(card)
+                    .rating(ratingDTO.rating())
+                    .elapsedDays(updated.getElapsedDays())
+                    .scheduledDays(updated.getScheduledDays())
+                    .build();
+            reviewLogRepository.save(log);
+        }
+
+        return new StudySessionResponseDTO(dto.deckId(), dto.categoryId(), dto.ratings().size());
+    }
+
+    // -------------------------------------------------------------------------
+    // Private — scope-specific fetch logic
+    // -------------------------------------------------------------------------
+
+    /**
+     * Fetches due and new cards for a single deck.
+     * Verifies the user is the deck owner before querying.
+     */
+    private List<DueCardDTO> getDueCardsByDeck(Integer deckId, User user, LocalDateTime now) {
+        findOwnedDeck(deckId, user);
+
+        List<DueCardDTO> overdue = studyProgressRepository
+                .findDueByUserAndDeck(user.getId(), deckId, now)
+                .stream()
+                .map(sp -> toDueCardDTO(sp.getCard(), sp.getState()))
+                .toList();
+
+        List<DueCardDTO> newCards = cardRepository
+                .findNewCardsByDeckAndUser(deckId, user.getId())
+                .stream()
+                .map(card -> toDueCardDTO(card, 0))
+                .toList();
+
+        // Overdue first — the user should revisit pending material before new cards
+        List<DueCardDTO> all = new ArrayList<>(overdue);
+        all.addAll(newCards);
+        return all;
+    }
+
+    /**
+     * Fetches due and new cards across all decks the user owns in a category.
+     * Verifies the category exists before querying.
+     */
+    private List<DueCardDTO> getDueCardsByCategory(Integer categoryId, User user, LocalDateTime now) {
+        categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category not found with id: " + categoryId));
+
+        List<DueCardDTO> overdue = studyProgressRepository
+                .findDueByUserAndCategory(user.getId(), categoryId, now)
+                .stream()
+                .map(sp -> toDueCardDTO(sp.getCard(), sp.getState()))
+                .toList();
+
+        List<DueCardDTO> newCards = cardRepository
+                .findNewCardsByCategoryAndUser(categoryId, user.getId())
+                .stream()
+                .map(card -> toDueCardDTO(card, 0))
+                .toList();
+
+        List<DueCardDTO> all = new ArrayList<>(overdue);
+        all.addAll(newCards);
+        return all;
+    }
+
+    // -------------------------------------------------------------------------
+    // Private — validation helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Ensures exactly one of deckId or categoryId is provided.
+     * Having both or neither would be ambiguous for the algorithm.
+     */
+    private void validateScope(Integer deckId, Integer categoryId) {
+        if (deckId == null && categoryId == null) {
+            throw new IllegalArgumentException("Either deckId or categoryId must be provided");
+        }
+        if (deckId != null && categoryId != null) {
+            throw new IllegalArgumentException("Provide either deckId or categoryId, not both");
+        }
+    }
+
+    /**
+     * Verifies that a card belongs to the declared study scope and is owned by the user.
+     * For deck scope: card's deck must match deckId and be owned by the user.
+     * For category scope: card's deck must belong to the category and be owned by the user.
+     */
+    private void verifyCardScope(Card card, Integer deckId, Integer categoryId, User user) {
+        Deck deck = card.getDeck();
+
+        if (!deck.getOwner().getId().equals(user.getId())) {
+            throw new RuntimeException("Card " + card.getId() + " does not belong to the authenticated user");
+        }
+
+        if (deckId != null && !deck.getId().equals(deckId)) {
+            throw new RuntimeException("Card " + card.getId() + " does not belong to deck " + deckId);
+        }
+
+        if (categoryId != null && (deck.getCategory() == null || !deck.getCategory().getId().equals(categoryId))) {
+            throw new RuntimeException("Card " + card.getId() + " does not belong to category " + categoryId);
+        }
+    }
+
+    /**
+     * Finds a deck by ID and verifies the requesting user is its owner.
+     */
+    private Deck findOwnedDeck(Integer deckId, User user) {
+        Deck deck = deckRepository.findById(deckId)
+                .orElseThrow(() -> new ResourceNotFoundException("Deck not found with id: " + deckId));
+
+        if (!deck.getOwner().getId().equals(user.getId())) {
+            throw new RuntimeException("You do not have permission to access this deck");
+        }
+
+        return deck;
+    }
+
+    /**
+     * Maps a Card entity and its FSRS state to a DueCardDTO.
+     * The state is passed in rather than read from the card to handle
+     * both new cards (state=0, no progress record) and existing cards.
+     */
+    private DueCardDTO toDueCardDTO(Card card, Integer state) {
+        Set<DueCardDTO.TagSummary> tags = card.getTags().stream()
+                .map(tag -> new DueCardDTO.TagSummary(tag.getId(), tag.getName(), tag.getHexColor()))
+                .collect(Collectors.toSet());
+
+        return new DueCardDTO(
+                card.getId(),
+                card.getDeck().getId(),
+                card.getType(),
+                card.getQuestion(),
+                card.getAnswerJson(),
+                card.getExplanation(),
+                tags,
+                state
+        );
+    }
+}
