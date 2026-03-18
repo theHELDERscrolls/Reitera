@@ -28,7 +28,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    // 2. Atrapa los errores de negocio que lanzamos a mano en el UserService ("El email ya existe")
+    // 2. Catches "not found" errors (Deck, Card, Category...) and returns HTTP 404
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // 3. Atrapa los errores de negocio que lanzamos a mano en el UserService ("El email ya existe")
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeExceptions(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
