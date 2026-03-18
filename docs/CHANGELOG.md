@@ -1,0 +1,72 @@
+# Changelog
+
+All notable changes to this project are documented here.
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+---
+
+## [Unreleased] — feature/06
+### Planned
+- FSRS algorithm implementation for spaced repetition scheduling
+- `POST /api/v1/study/sessions` — batch endpoint to submit study session ratings
+- `GET /api/v1/study/due` — returns cards due for review today
+- Database seed with sample users, decks, cards and study progress data
+
+---
+
+## [0.5.0] — 2026-03-18 — feature/05-deck-card-crud
+### Added
+- `DeckService` and `DeckController` — full CRUD for decks (`GET`, `POST`, `PUT`, `DELETE`)
+- `CardService` and `CardController` — full CRUD for cards, nested under `/decks/{id}/cards`
+- `CardRequestDTO` and `CardResponseDTO` with nested `TagSummary` projection
+- `ResourceNotFoundException` — returns HTTP 404 when a Deck, Card or Category is not found
+- `GlobalExceptionHandler` updated to handle 404 separately from generic 400 errors
+- `DeckRepository.findAllByOwner(User)` and `CardRepository.findAllByDeck(Deck)` queries
+- Category and Tag resolution during Deck/Card creation
+- Ownership enforcement: users can only modify their own decks and cards
+- Postman collection at `docs/api/reitera-postman-collection.json`
+
+---
+
+## [0.4.0] — feature/04-content-domain
+### Added
+- `Card` entity with dynamic `JSONB` answer storage (`answer_json` column)
+  - Supported types: `BASIC`, `CLOZE`, `MULTIPLE_CHOICE`
+- `Deck` entity with ownership (`owner_id`) and optional category
+- `Category` and `Tag` entities for deck/card organization
+- `UserDeckSubscription` entity with composite key for public deck subscriptions
+- `StudyProgress` entity with composite key `(user_id, card_id)` — stores FSRS state variables
+- `ReviewLog` entity — immutable audit log of every study review action
+- All corresponding Spring Data JPA repositories (11 total)
+
+---
+
+## [0.3.0] — feature/03-login-jwt
+### Added
+- `JwtService` — JWT generation and validation (HMAC-SHA, 24h expiry)
+- `JwtAuthenticationFilter` — per-request token validation, populates `SecurityContext`
+- `SecurityConfig` — stateless session policy, public auth routes, protected everything else
+- `ApplicationConfig` — `UserDetailsService`, `AuthenticationManager`, `BCryptPasswordEncoder` beans
+- `POST /api/v1/auth/login` endpoint — returns signed JWT on valid credentials
+
+---
+
+## [0.2.0] — feature/02-user-entities
+### Added
+- `User` entity with UUID primary key, implementing Spring Security `UserDetails`
+- `Role` entity — `STUDENT` and `ADMIN` roles
+- `UserRegisterDTO` with full validation (username length, email format, password strength)
+- `UserResponseDTO` — safe projection without password
+- `UserService.registerUser()` — uniqueness checks, BCrypt hashing, role assignment
+- `POST /api/v1/auth/register` endpoint
+- `GlobalExceptionHandler` — centralized error handling for validation and runtime errors
+
+---
+
+## [0.1.0] — feature/01-project-setup
+### Added
+- Spring Boot 4.0.3 project scaffold (Java 21, Maven)
+- `docker-compose.yml` with PostgreSQL 16 service
+- Monorepo structure: `backend/`, `frontend/`, `docs/`
+- GitHub issue and PR templates (`bug_report.md`, `feature_request.md`, `PULL_REQUEST_TEMPLATE.md`)
+- `docs/setup/database-setup.md` — local database setup guide
