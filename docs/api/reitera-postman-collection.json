@@ -1,0 +1,318 @@
+{
+  "info": {
+    "_postman_id": "reitera-api-collection-v1",
+    "name": "Reitera API",
+    "description": "Complete REST API collection for the Reitera spaced repetition application.\n\n**Setup:**\n1. Import this collection into Postman.\n2. Set the `base_url` variable to `http://localhost:8080` (already set by default).\n3. Run **Register** or **Login** — the token is saved automatically to the `token` variable.\n4. All protected endpoints will use that token automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Public endpoints for user registration and login. No token required.",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test01\",\n  \"email\": \"test01@test.com\",\n  \"password\": \"!Test123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"Testez\"\n}"
+            },
+            "description": "Creates a new user account. Returns the created user data (no password). Password must be at least 8 characters with 1 digit, 1 lowercase, 1 uppercase and 1 special character."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Automatically saves the JWT token to the collection variable",
+                  "var jsonResponse = pm.response.json();",
+                  "if (jsonResponse.token) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.token);",
+                  "    console.log('Token saved successfully.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test01@test.com\",\n  \"password\": \"!Test123\"\n}"
+            },
+            "description": "Authenticates a user and returns a JWT token (valid for 24 hours). The token is automatically saved to the `token` collection variable via the Tests script."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Decks",
+      "description": "CRUD operations for study decks. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Create Deck",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Historia de España\",\n  \"description\": \"Repaso de eventos clave del siglo XX\",\n  \"isPublic\": false,\n  \"categoryId\": null\n}"
+            },
+            "description": "Creates a new deck owned by the authenticated user. `categoryId` is optional — send `null` or omit it if no category applies."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Decks",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks"]
+            },
+            "description": "Returns all decks owned by the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Deck by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1"]
+            },
+            "description": "Returns a single deck by its ID. Returns 404 if not found, 400 if the authenticated user is not the owner."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Deck",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Historia de España (Actualizado)\",\n  \"description\": \"Versión revisada con más contenido\",\n  \"isPublic\": true,\n  \"categoryId\": null\n}"
+            },
+            "description": "Updates an existing deck. Only the owner can perform this operation. Replaces all fields (full update)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Deck",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1"]
+            },
+            "description": "Deletes a deck by ID. Only the owner can perform this operation. Returns HTTP 204 (No Content) on success."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cards",
+      "description": "CRUD operations for flashcards. Cards are always nested under a parent deck. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Create Card (BASIC)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"BASIC\",\n  \"question\": \"¿En qué año comenzó la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"answer\": \"1936\"\n  },\n  \"explanation\": \"El conflicto se inició el 17 de julio de 1936 con el alzamiento militar.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Creates a BASIC card (question / answer). `answerJson` for this type must contain a single `answer` key."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card (MULTIPLE_CHOICE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"MULTIPLE_CHOICE\",\n  \"question\": \"¿Cuál fue el bando vencedor de la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"options\": [\"Bando Republicano\", \"Bando Nacional\", \"Ninguno\"],\n    \"correctIndex\": 1\n  },\n  \"explanation\": \"El bando Nacional, liderado por Francisco Franco, venció en 1939.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Creates a MULTIPLE_CHOICE card. `answerJson` must contain `options` (array of strings) and `correctIndex` (0-based index of the correct option)."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card (CLOZE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"CLOZE\",\n  \"question\": \"La Guerra Civil Española terminó en el año {{c1::1939}}.\",\n  \"answerJson\": {\n    \"clozes\": {\"c1\": \"1939\"}\n  },\n  \"explanation\": null,\n  \"tagIds\": []\n}"
+            },
+            "description": "Creates a CLOZE (fill-in-the-blank) card. The blanks are marked in the question with {{c1::answer}} notation. `answerJson` maps each cloze key to its answer."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cards by Deck",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards"]
+            },
+            "description": "Returns all cards belonging to the specified deck. Only accessible by the deck owner."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Card by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards", "1"]
+            },
+            "description": "Returns a single card by its ID within the specified deck. Returns 404 if the card does not exist or does not belong to the deck."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"BASIC\",\n  \"question\": \"¿En qué año terminó la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"answer\": \"1939\"\n  },\n  \"explanation\": \"El conflicto finalizó el 1 de abril de 1939.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Updates an existing card. Only the deck owner can perform this operation. Replaces all fields (full update)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Card",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards", "1"]
+            },
+            "description": "Deletes a card by ID. Only the deck owner can perform this operation. Returns HTTP 204 (No Content) on success."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
