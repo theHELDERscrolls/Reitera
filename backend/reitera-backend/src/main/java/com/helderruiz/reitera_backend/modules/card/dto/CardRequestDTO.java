@@ -14,7 +14,7 @@ import java.util.Set;
 public record CardRequestDTO(
 
         @NotBlank(message = "Type is mandatory")
-        @Pattern(regexp = "BASIC|CLOZE|MULTIPLE_CHOICE", message = "Type must be BASIC, CLOZE, or MULTIPLE_CHOICE")
+        @Pattern(regexp = "BASIC|CLOZE|MULTIPLE_CHOICE|TRUE_FALSE", message = "Type must be BASIC, CLOZE, MULTIPLE_CHOICE, or TRUE_FALSE")
         String type,
 
         @NotBlank(message = "Question is mandatory")

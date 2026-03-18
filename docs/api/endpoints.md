@@ -178,6 +178,17 @@ The `answerJson` structure varies by card type:
 }
 ```
 
+**TRUE_FALSE** — true or false statement:
+```json
+{
+  "type": "TRUE_FALSE",
+  "question": "La Guerra Civil Española comenzó en 1936.",
+  "answerJson": { "answer": true },
+  "explanation": "El conflicto se inició el 17 de julio de 1936.",
+  "tagIds": []
+}
+```
+
 `tagIds` is optional — send an empty array or omit it if no tags apply.
 
 **Response `201 Created`:** `CardResponseDTO`
