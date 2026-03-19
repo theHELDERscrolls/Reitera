@@ -5,10 +5,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased] — feature/07
+## [Unreleased] — feature/08
 ### Planned
-- Database seed with sample users, decks, cards and study progress data
 - Swagger / OpenAPI documentation
+
+---
+
+## [0.7.0] — 2026-03-19 — feature/07-seed-data
+### Added
+- `backend/src/main/resources/init.sql` — full database schema (DDL) for all 10 tables
+  - Enables `pgcrypto` extension for BCrypt password hashing via `seed.sql`
+  - Uses `CREATE TABLE IF NOT EXISTS` to be safe on repeated runs
+- `backend/src/main/resources/seed.sql` — idempotent demo data script
+  - 2 demo users with BCrypt-hashed passwords generated at runtime via `crypt()` + `gen_salt('bf', 10)`
+  - 3 categories, 4 tags, 4 decks (two under "Historia de España" to enable category-scoped study demo)
+  - 21 cards covering all 4 types: `BASIC`, `CLOZE`, `MULTIPLE_CHOICE`, `TRUE_FALSE`
+  - 6 `study_progress` records for Deck 1 with all FSRS states: Learning, Review, Relearning
+  - 14 `review_log` entries simulating realistic review history
+  - Idempotency guard: raises error if seed data already exists
+- `docs/setup/database-setup.md` updated with sections for `init.sql` and `seed.sql`
 
 ---
 
