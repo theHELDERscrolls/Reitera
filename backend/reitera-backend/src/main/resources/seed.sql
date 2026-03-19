@@ -14,15 +14,7 @@
 --
 -- IDEMPOTENCY:
 --   This script raises an error if seed data is already present.
---   To re-seed from scratch, run the following first:
---     DELETE FROM review_logs;
---     DELETE FROM study_progress;
---     DELETE FROM card_tags;
---     DELETE FROM cards;
---     DELETE FROM decks;
---     DELETE FROM categories;
---     DELETE FROM tags;
---     DELETE FROM users WHERE email IN ('alumno@reitera.com', 'admin@reitera.com');
+--   To re-seed from scratch, run truncate.sql first, then re-run this script.
 -- ============================================================
 
 BEGIN;
