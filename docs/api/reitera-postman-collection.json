@@ -313,6 +313,92 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Study",
+      "description": "FSRS-6 spaced repetition study endpoints. Fetch due cards and submit session ratings. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get Due Cards (by Deck)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/due?deckId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "study", "due"],
+              "query": [
+                { "key": "deckId", "value": "1" }
+              ]
+            },
+            "description": "Returns all cards due for review in a single deck. Includes overdue cards (nextReview <= now) and new cards (no StudyProgress yet). The 'state' field indicates: 0=New, 1=Learning, 2=Review, 3=Relearning."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Due Cards (by Category)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/due?categoryId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "study", "due"],
+              "query": [
+                { "key": "categoryId", "value": "1" }
+              ]
+            },
+            "description": "Returns all due cards across every deck the user owns within a category. Useful for studying a full subject (e.g. 'Historia de España' → Tema 1 + Tema 2 at once)."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Session (by Deck)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/sessions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "study", "sessions"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deckId\": 1,\n  \"categoryId\": null,\n  \"ratings\": [\n    { \"cardId\": 1, \"rating\": 3 },\n    { \"cardId\": 2, \"rating\": 1 },\n    { \"cardId\": 3, \"rating\": 4 }\n  ]\n}"
+            },
+            "description": "Submits all card ratings from a completed session. The FSRS-6 algorithm computes the next review date for each card. Rating scale: 1=Again, 2=Hard, 3=Good, 4=Easy. The entire batch is processed in a single transaction."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Session (by Category)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/sessions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "study", "sessions"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deckId\": null,\n  \"categoryId\": 1,\n  \"ratings\": [\n    { \"cardId\": 4, \"rating\": 3 },\n    { \"cardId\": 5, \"rating\": 2 }\n  ]\n}"
+            },
+            "description": "Same as 'Submit Session (by Deck)' but for category-scope sessions. Use when the due cards were fetched with categoryId. Validates that all rated cards belong to a deck in the declared category owned by the user."
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

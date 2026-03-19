@@ -5,12 +5,30 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased] — feature/06
+## [Unreleased] — feature/07
 ### Planned
-- FSRS algorithm implementation for spaced repetition scheduling
-- `POST /api/v1/study/sessions` — batch endpoint to submit study session ratings
-- `GET /api/v1/study/due` — returns cards due for review today
 - Database seed with sample users, decks, cards and study progress data
+- Swagger / OpenAPI documentation
+
+---
+
+## [0.6.0] — 2026-03-18 — feature/06-fsrs-study-session
+### Added
+- `FsrsService` — pure Java implementation of the FSRS-6 spaced repetition algorithm
+  - Initial stability `S₀` and difficulty `D₀` for new cards
+  - Stability update after recall (`S'_recall`) and after forgetting (`S'_forget`)
+  - Forgetting curve `R(t, S)` with minute-precision intervals (sub-day reviews supported)
+  - State machine: New → Learning → Review ↔ Relearning
+- `StudyService` — orchestrates DB access, calls `FsrsService`, persists results in a single `@Transactional` batch
+- `StudyController` — two REST endpoints:
+  - `GET /api/v1/study/due?deckId={id}` — cards due for review in a single deck
+  - `GET /api/v1/study/due?categoryId={id}` — cards due across all decks in a category
+  - `POST /api/v1/study/sessions` — submits all ratings from a completed session
+- `StudyProgressRepository.findDueByUserAndDeck` and `findDueByUserAndCategory` JPQL queries
+- `CardRepository.findNewCardsByDeckAndUser` and `findNewCardsByCategoryAndUser` JPQL queries
+- DTOs: `CardRatingDTO`, `StudySessionRequestDTO`, `StudySessionResponseDTO`, `DueCardDTO`
+- `docs/core-logic/fsrs-algorithm.md` — full algorithm reference document
+- Postman collection updated with Study folder (4 requests)
 
 ---
 

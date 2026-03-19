@@ -55,7 +55,7 @@ modules/
 ├── user/           → User & Role entities, registration, authentication logic
 ├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD API
 ├── card/           → Card entity + CRUD API (nested under decks)
-└── study/          → StudyProgress, ReviewLog entities (FSRS algorithm — upcoming)
+└── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
 
 core/
 └── exception/      → GlobalExceptionHandler, ResourceNotFoundException
@@ -82,11 +82,15 @@ All other endpoints are protected.
 
 ## Study Session Flow (design decision)
 
-Study sessions are designed to run **entirely in-memory on the frontend**:
+Study sessions follow a **batch architecture** — the backend is only hit twice per session:
 
-1. Frontend fetches all cards for a deck once: `GET /api/v1/decks/{id}/cards`
-2. User studies the session locally — ratings stored in `localStorage` (resilient to accidental closure)
+1. Frontend fetches due cards: `GET /api/v1/study/due?deckId={id}` (or `?categoryId={id}`)
+   - Returns overdue cards (previously studied, `nextReview ≤ now`) + new cards (no prior progress)
+   - Cards carry their FSRS `state` field so the UI can show New / Learning / Review badges
+2. User studies the session locally — ratings held in memory (or `localStorage` for resilience)
 3. On session completion, a **single batch request** submits all ratings: `POST /api/v1/study/sessions`
-4. Backend runs FSRS for each card and persists `StudyProgress` + `ReviewLog` records
+4. Backend runs FSRS-6 for each card in one `@Transactional` block and persists `StudyProgress` + `ReviewLog`
 
-This design minimizes API calls during study (only 2 per session) and makes the experience feel instant regardless of backend latency.
+**Scope modes:** both endpoints accept either `deckId` (single deck) or `categoryId` (all decks in a category), enabling users to study individual topics or full subjects at once.
+
+**Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Again on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
