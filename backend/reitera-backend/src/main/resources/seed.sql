@@ -158,12 +158,12 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
 
 
 -- ============================================================
--- 6. CARDS (16 total — all 4 types covered)
+-- 6. CARDS (21 total — all 4 types covered)
 -- deck_id is resolved via subquery to avoid hardcoded IDs.
 --
 -- JSONB formats by type:
 --   BASIC:           {"answer": "texto"}
---   CLOZE:           {"answer": "palabra oculta"}
+--   CLOZE:           {"answer": "palabra oculta"}  (use ___ as gap in question)
 --   MULTIPLE_CHOICE: {"options": [...], "correctIndex": N}
 --   TRUE_FALSE:      {"answer": true|false}
 -- ============================================================
