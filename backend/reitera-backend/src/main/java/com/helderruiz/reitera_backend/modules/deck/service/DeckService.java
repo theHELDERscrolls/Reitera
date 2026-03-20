@@ -86,15 +86,15 @@ public class DeckService {
 
     /**
      * Finds a deck by ID and verifies the requesting user is its owner.
-     * Throws ResourceNotFoundException (404) if not found.
-     * Throws RuntimeException (400) if the user is not the owner.
+     * Throws ResourceNotFoundException (404) in both cases — whether the deck does not exist
+     * or belongs to a different user — to prevent leaking resource existence to potential attackers.
      */
     private Deck findOwnedDeck(Integer id, User owner) {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Deck not found with id: " + id));
 
         if (!deck.getOwner().getId().equals(owner.getId())) {
-            throw new RuntimeException("You do not have permission to access this deck");
+            throw new ResourceNotFoundException("Deck not found with id: " + id);
         }
 
         return deck;

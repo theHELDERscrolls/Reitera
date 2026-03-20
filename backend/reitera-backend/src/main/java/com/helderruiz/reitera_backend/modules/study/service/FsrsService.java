@@ -21,13 +21,10 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class FsrsService {
 
-    // --- FSRS-6 default parameters (21 values trained on large-scale review data) ---
     // w[0-3]:  initial stability per rating (S₀)
     // w[4-7]:  initial difficulty and its update formula (D₀, D')
-    // w[8-11]: stability after a successful recall (S'_recall)
-    // w[12-15]: stability after forgetting (S'_forget) + hard penalty
-    // w[16-18]: easy bonus + same-day stability scaling
-    // w[19-20]: same-day power + decay factor for the forgetting curve
+    // w[8-15]: stability after recall (S'_recall) and after forgetting (S'_forget)
+    // w[16-20]: easy bonus, same-day scaling, decay factor for the forgetting curve
     private static final double[] W = {
             0.212, 1.2931, 2.3065, 8.2956,
             6.4133, 0.8334, 3.0194, 0.001,
@@ -41,15 +38,10 @@ public class FsrsService {
     // the user has a 90% probability of remembering them.
     private static final double REQUEST_RETENTION = 0.9;
 
-    // Card state constants (matches the 'state' column in study_progress table)
     private static final int NEW = 0;
     private static final int LEARNING = 1;
     private static final int REVIEW = 2;
     private static final int RELEARNING = 3;
-
-    // -------------------------------------------------------------------------
-    // PUBLIC API
-    // -------------------------------------------------------------------------
 
     /**
      * Main entry point. Given a card's current progress and the user's rating,
@@ -77,10 +69,6 @@ public class FsrsService {
         return scheduleExistingCard(progress, rating, now);
     }
 
-    // -------------------------------------------------------------------------
-    // PRIVATE — SCHEDULING LOGIC
-    // -------------------------------------------------------------------------
-
     /**
      * Handles the very first review of a card (state = New).
      * Computes initial stability S₀ and initial difficulty D₀ from the rating.
@@ -93,20 +81,13 @@ public class FsrsService {
                                           LocalDateTime now) {
 
         // S₀(rating) = w[rating - 1]
-        // The initial stability depends entirely on how well the user knew the card
-        // on first exposure. Rating 4 (Easy) gives ~8 days; Rating 1 (Again) gives ~0.2 days.
         double stability = initialStability(rating);
 
         // D₀(rating) = w[4] - exp(w[5] * (rating - 1)) + 1
-        // Difficulty is high when the card was hard on first try, low when easy.
         double difficulty = initialDifficulty(rating);
 
-        // Convert stability (in days) to a minute-precision interval.
-        // Minimum 1 minute — avoids scheduling a card for the exact current moment.
-        // For Again (S₀ = 0.212 days) this yields ~305 min; for Good (~2.3 days) ~3312 min.
+        // Minimum 1 minute — for Again (S₀ = 0.212 days) this yields ~305 min.
         long scheduledMinutes = Math.max(1, nextIntervalMinutes(stability));
-
-        // scheduledDays stores whole days for analytics; sub-day cards store 0.
         int scheduledDays = (int) (scheduledMinutes / 1440);
 
         StudyProgressId id = (existing != null)
@@ -123,7 +104,7 @@ public class FsrsService {
                 .scheduledDays(scheduledDays)
                 .reps(1)
                 .lapses(0)
-                .state(LEARNING)                          // New → Learning
+                .state(LEARNING)
                 .lastReview(now)
                 .nextReview(now.plusMinutes(scheduledMinutes))
                 .build();
@@ -137,21 +118,15 @@ public class FsrsService {
                                                int rating,
                                                LocalDateTime now) {
 
-        // Elapsed time in whole days (stored in StudyProgress for analytics).
         int elapsedDays = (int) ChronoUnit.DAYS.between(progress.getLastReview(), now);
 
-        // Elapsed time as a decimal fraction of days for accurate retrievability.
-        // Using minutes avoids losing precision for sub-day intervals:
-        // e.g. 305 minutes → 0.212 days, matching the S₀ that scheduled the card.
+        // Decimal days preserve sub-day precision: e.g. 305 min → 0.212 days.
         double elapsedDaysDecimal = ChronoUnit.MINUTES.between(progress.getLastReview(), now) / 1440.0;
 
         // R(t, S) = (1 + factor * t/S) ^ (-w[20])
-        // Retrievability: probability the user still remembers the card right now.
-        // When t = scheduledDays, R ≈ 0.9 (our retention target).
         double retrievability = retrievability(elapsedDaysDecimal, progress.getStability());
 
         // D'(D, rating) = w[7] * D₀(4) + (1 - w[7]) * (D - w[6] * (rating - 3))
-        // Difficulty drifts towards the mean based on the user's current rating.
         double newDifficulty = updateDifficulty(progress.getDifficulty(), rating);
 
         double newStability;
@@ -159,28 +134,18 @@ public class FsrsService {
         int newLapses = progress.getLapses();
 
         if (rating == 1) {
-            // Again — the user forgot the card
-            // S'_forget uses a separate formula that gives a low but non-zero stability.
             newStability = stabilityAfterForgetting(newDifficulty, progress.getStability(), retrievability);
             newLapses = progress.getLapses() + 1;
-
-            // Review → Relearning; Learning/Relearning → stays in Relearning
-            newState = (progress.getState() == REVIEW) ? RELEARNING : RELEARNING;
+            newState = RELEARNING;
         } else {
-            // Hard / Good / Easy — the user recalled the card
-            // S'_recall grows the stability; the amount depends on rating, D, S, and R.
             newStability = stabilityAfterRecall(newDifficulty, progress.getStability(), retrievability, rating);
-
-            // State transitions on successful recall
             newState = switch (progress.getState()) {
                 case LEARNING -> (rating >= 3) ? REVIEW : LEARNING;
                 case RELEARNING -> (rating >= 3) ? REVIEW : RELEARNING;
-                default -> REVIEW; // Already in Review, stays in Review
+                default -> REVIEW;
             };
         }
 
-        // Minimum 1 minute — the formula naturally produces sub-day intervals
-        // for low-stability cards (Again/Hard in Learning), so we allow them.
         long scheduledMinutes = Math.max(1, nextIntervalMinutes(newStability));
         int scheduledDays = (int) (scheduledMinutes / 1440);
 
@@ -199,10 +164,6 @@ public class FsrsService {
                 .nextReview(now.plusMinutes(scheduledMinutes))
                 .build();
     }
-
-    // -------------------------------------------------------------------------
-    // PRIVATE — FSRS-6 FORMULAS
-    // -------------------------------------------------------------------------
 
     /**
      * S₀(rating) = w[rating - 1]
@@ -230,27 +191,26 @@ public class FsrsService {
      * where factor = 0.9^(-1/w[20]) - 1
      * <p>
      * Retrievability: probability of recall after 't' days given stability 'S'.
-     * 't' is expressed as decimal days (e.g. 0.212 for 305 minutes) to preserve
-     * precision for sub-day intervals. R(S, S) = 0.9 by design.
+     * 't' is expressed as decimal days to preserve precision for sub-day intervals.
+     * R(S, S) = 0.9 by design.
      */
     private double retrievability(double elapsedDays, double stability) {
-        double decay = -W[20];                             // w[20] = 0.1542
-        double factor = Math.pow(0.9, 1.0 / decay) - 1;    // derived constant
+        double decay = -W[20];
+        double factor = Math.pow(0.9, 1.0 / decay) - 1;
         return Math.pow(1 + factor * elapsedDays / stability, decay);
     }
 
     /**
      * interval (minutes) = S_days * 1440 / factor * (requestRetention ^ (1/decay) - 1)
      * <p>
-     * Converts the stability (expressed in days) to a minute-precision interval.
-     * This allows FSRS to schedule sub-day reviews for low-stability cards
-     * (e.g. Again on a new card → S₀ = 0.212 days → ~305 minutes).
+     * Converts stability (in days) to a minute-precision interval, enabling
+     * sub-day reviews for low-stability cards (e.g. Again → ~305 minutes).
      */
     private long nextIntervalMinutes(double stability) {
         double decay = -W[20];
         double factor = Math.pow(0.9, 1.0 / decay) - 1;
         double intervalDays = stability / factor * (Math.pow(REQUEST_RETENTION, 1.0 / decay) - 1);
-        return Math.round(intervalDays * 1440); // convert days → minutes
+        return Math.round(intervalDays * 1440);
     }
 
     /**
@@ -260,29 +220,25 @@ public class FsrsService {
      * the global mean (D₀ at rating=4). Clamped to [1, 10].
      */
     private double updateDifficulty(double difficulty, int rating) {
-        double mean = initialDifficulty(4);                       // D₀(4) ≈ 4.93
+        double mean = initialDifficulty(4);
         double d = W[7] * mean + (1 - W[7]) * (difficulty - W[6] * (rating - 3));
         return clampDifficulty(d);
     }
 
     /**
      * S'_recall = S * exp(w[8]) * (11 - D) * S^(-w[9])
-     * * (exp(w[10] * (1 - R)) - 1)
-     * * hardPenalty   (if rating = 2)
-     * * easyBonus     (if rating = 4)
+     * * (exp(w[10] * (1 - R)) - 1) * hardPenalty * easyBonus
      * <p>
-     * Stability growth after successfully recalling a card. Grows faster when:
-     * - Card is easy (low D)
-     * - Current stability is low (we learn more when we barely remember)
-     * - Time elapsed was long (high forgetting = stronger encoding on recall)
+     * Stability growth after successfully recalling a card. Grows faster when
+     * the card is easy, current stability is low, or time elapsed was long.
      */
     private double stabilityAfterRecall(double difficulty,
                                         double stability,
                                         double retrievability,
                                         int rating) {
 
-        double hardPenalty = (rating == 2) ? W[15] : 1.0;   // w[15] = 0.6014
-        double easyBonus = (rating == 4) ? W[16] : 1.0;   // w[16] = 1.8729
+        double hardPenalty = (rating == 2) ? W[15] : 1.0;
+        double easyBonus = (rating == 4) ? W[16] : 1.0;
 
         double newS = stability
                 * Math.exp(W[8])
@@ -292,15 +248,14 @@ public class FsrsService {
                 * hardPenalty
                 * easyBonus;
 
-        // Stability must always increase on a successful recall
         return Math.max(newS, stability + 0.01);
     }
 
     /**
      * S'_forget = w[11] * D^(-w[12]) * ((S + 1)^w[13] - 1) * exp(w[14] * (1 - R))
      * <p>
-     * Stability after forgetting (rating = 1, Again). The card re-enters learning
-     * but retains some residual stability — it's not as hard as the very first time.
+     * Stability after forgetting (rating = 1). The card re-enters learning
+     * but retains some residual stability — it is not as hard as the very first time.
      */
     private double stabilityAfterForgetting(double difficulty,
                                             double stability,
