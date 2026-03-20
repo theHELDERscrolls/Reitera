@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 /**
  * Orchestrates the study session flow: fetching due cards and processing ratings.
  * Supports two study modes:
- * - Single deck: study cards from one specific deck (deckId)
- * - Category:    study cards from all decks in a category (categoryId)
+ * - Single deck:  study cards from one specific deck (deckId)
+ * - Category:     study cards from all decks in a category (categoryId)
  * Delegates all FSRS scheduling math to FsrsService.
  */
 @Service
@@ -43,10 +43,6 @@ public class StudyService {
     private final StudyProgressRepository studyProgressRepository;
     private final ReviewLogRepository reviewLogRepository;
     private final FsrsService fsrsService;
-
-    // -------------------------------------------------------------------------
-    // GET /api/v1/study/due?deckId={id}  OR  ?categoryId={id}
-    // -------------------------------------------------------------------------
 
     /**
      * Returns all cards the user should study now.
@@ -69,10 +65,6 @@ public class StudyService {
             return getDueCardsByCategory(categoryId, user, now);
         }
     }
-
-    // -------------------------------------------------------------------------
-    // POST /api/v1/study/sessions
-    // -------------------------------------------------------------------------
 
     /**
      * Processes all card ratings submitted at the end of a study session.
@@ -99,18 +91,14 @@ public class StudyService {
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Card not found with id: " + ratingDTO.cardId()));
 
-            // Verify the card belongs to the declared scope and is owned by the user
             verifyCardScope(card, dto.deckId(), dto.categoryId(), user);
 
-            // Load existing progress — null if the card has never been studied
             StudyProgressId progressId = new StudyProgressId(user.getId(), ratingDTO.cardId());
             StudyProgress existing = studyProgressRepository.findById(progressId).orElse(null);
 
-            // Delegate FSRS computation to FsrsService
             StudyProgress updated = fsrsService.schedule(existing, ratingDTO.rating(), user, card, now);
             studyProgressRepository.save(updated);
 
-            // Write the immutable review log entry (one per card per session)
             ReviewLog log = ReviewLog.builder()
                     .user(user)
                     .card(card)
@@ -123,10 +111,6 @@ public class StudyService {
 
         return new StudySessionResponseDTO(dto.deckId(), dto.categoryId(), dto.ratings().size());
     }
-
-    // -------------------------------------------------------------------------
-    // Private — scope-specific fetch logic
-    // -------------------------------------------------------------------------
 
     /**
      * Fetches due and new cards for a single deck.
@@ -147,7 +131,6 @@ public class StudyService {
                 .map(card -> toDueCardDTO(card, 0))
                 .toList();
 
-        // Overdue first — the user should revisit pending material before new cards
         List<DueCardDTO> all = new ArrayList<>(overdue);
         all.addAll(newCards);
         return all;
@@ -178,10 +161,6 @@ public class StudyService {
         all.addAll(newCards);
         return all;
     }
-
-    // -------------------------------------------------------------------------
-    // Private — validation helpers
-    // -------------------------------------------------------------------------
 
     /**
      * Ensures exactly one of deckId or categoryId is provided.

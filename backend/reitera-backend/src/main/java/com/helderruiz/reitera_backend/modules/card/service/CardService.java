@@ -106,8 +106,6 @@ public class CardService {
         Deck deck = deckRepository.findById(deckId)
                 .orElseThrow(() -> new ResourceNotFoundException("Deck not found with id: " + deckId));
 
-        // Return 404 instead of 403 to avoid leaking that the deck exists but belongs to another user.
-        // An attacker cannot distinguish "not found" from "not yours" — this prevents enumeration.
         if (!deck.getOwner().getId().equals(owner.getId())) {
             throw new ResourceNotFoundException("Deck not found with id: " + deckId);
         }
