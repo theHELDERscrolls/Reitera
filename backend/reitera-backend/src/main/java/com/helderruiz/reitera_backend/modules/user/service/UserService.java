@@ -68,6 +68,20 @@ public class UserService {
     }
 
     /**
+     * Returns the profile of the currently authenticated user.
+     */
+    public UserResponseDTO getMe(User user) {
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getRole().getName()
+        );
+    }
+
+    /**
      * Authenticates a user and generates a JWT.
      * Prevents user enumeration by throwing generic exceptions on failure.
      */

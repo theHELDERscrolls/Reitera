@@ -75,7 +75,7 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
         'Repaso de los principales eventos, fechas y personajes de la SGMU',
         false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-        'Alumno Demo',
+        'alumno',
         (SELECT id FROM categories WHERE name = 'Historia de España')
     ),
     (
@@ -83,7 +83,7 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
         'Los 23 patrones clásicos del libro Gang of Four aplicados a Java',
         false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-        'Alumno Demo',
+        'alumno',
         (SELECT id FROM categories WHERE name = 'Programación Java')
     ),
     (
@@ -91,7 +91,7 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
         'Los 60 phrasal verbs más usados en inglés cotidiano y profesional',
         false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-        'Alumno Demo',
+        'alumno',
         (SELECT id FROM categories WHERE name = 'Inglés B2')
     ),
     (
@@ -99,7 +99,7 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
         'Causas, desarrollo y consecuencias del conflicto civil español (1936-1939)',
         false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-        'Alumno Demo',
+        'alumno',
         (SELECT id FROM categories WHERE name = 'Historia de España')
     );
 

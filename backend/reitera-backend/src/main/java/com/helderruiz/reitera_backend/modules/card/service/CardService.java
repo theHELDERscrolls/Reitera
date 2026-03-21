@@ -95,6 +95,17 @@ public class CardService {
         cardRepository.delete(findCardInDeck(cardId, deckId));
     }
 
+    /**
+     * Returns all cards owned by the user that have the specified tag assigned.
+     * Returns an empty list for both non-existent tags and tags with no matching cards
+     * to prevent tag ID enumeration.
+     */
+    public List<CardResponseDTO> getCardsByTag(Integer tagId, User owner) {
+        return cardRepository.findByTagIdAndOwner(tagId, owner.getId()).stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     // --- Private helpers ---
 
     /**

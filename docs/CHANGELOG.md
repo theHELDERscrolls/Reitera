@@ -5,9 +5,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased] — feature/08
+## [Unreleased] — feature/09
 ### Planned
-- Swagger / OpenAPI documentation
+- Deck import / export (JSON format)
+
+---
+
+## [0.8.0] — 2026-03-21 — feature/08-tags-user-swagger
+### Added
+- `GET /api/v1/users/me` — returns the authenticated user's own profile (id, username, email, firstName, lastName, roleName)
+- `GET /api/v1/categories` — returns the distinct categories used across the authenticated user's decks (for frontend autocomplete)
+- `GET /api/v1/tags` — returns the distinct tags assigned to cards in the authenticated user's decks
+- `GET /api/v1/tags/{tagId}/cards` — returns the user's cards filtered by tag; always returns 200 to prevent tag ID enumeration
+- `UserController` at `/api/v1/users`
+- `CategoryController` and `CategoryService` at `/api/v1/categories`
+- `TagController` and `TagService` at `/api/v1/tags`
+- `CategoryResponseDTO` and `TagResponseDTO`
+- Postman collection updated with Users, Categories and Tags folders; Login split into alumno / admin variants; CLOZE example corrected to current format
+
+### Changed
+- `DeckService.createDeck()` — `authorName` now uses `username` instead of `firstName + lastName` to ensure uniqueness
+- `seed.sql` — `author_name` updated to `'alumno'` across all 4 demo decks
+- `init.sql` — `DOUBLE PRECISION` replaced with `FLOAT8` alias (functionally identical; fixes DBeaver parser warning)
 
 ---
 
