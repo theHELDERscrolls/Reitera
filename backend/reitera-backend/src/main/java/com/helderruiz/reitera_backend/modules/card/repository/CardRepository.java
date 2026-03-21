@@ -46,4 +46,11 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
             ")")
     List<Card> findNewCardsByCategoryAndUser(@Param("categoryId") Integer categoryId,
                                              @Param("userId") UUID userId);
+
+    /**
+     * Returns all cards owned by the user that have the specified tag assigned.
+     * Navigates Card → tags (ManyToMany) and Card → deck → owner.
+     */
+    @Query("SELECT c FROM Card c JOIN c.tags t WHERE t.id = :tagId AND c.deck.owner.id = :userId")
+    List<Card> findByTagIdAndOwner(@Param("tagId") Integer tagId, @Param("userId") UUID userId);
 }

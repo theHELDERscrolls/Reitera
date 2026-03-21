@@ -98,8 +98,8 @@ backend/reitera-backend/src/main/resources/seed.sql
 |---|---|---|
 | Categories | 3 | Historia de España · Programación Java · Inglés B2 |
 | Tags | 4 | importante · difícil · repaso · vocabulario |
-| Decks | 3 | One per category, owned by `alumno` |
-| Cards | 16 | BASIC(7) · CLOZE(2) · MULTIPLE_CHOICE(4) · TRUE_FALSE(5) |
+| Decks | 4 | Two under "Historia de España" (enables category-scoped study demo), one under "Programación Java", one under "Inglés B2" |
+| Cards | 21 | BASIC(8) · CLOZE(3) · MULTIPLE_CHOICE(5) · TRUE_FALSE(5) |
 | StudyProgress | 6 | Cards from Deck 1, all states covered: Learning(2), Review(2), Relearning(2) |
 | ReviewLogs | 14 | Historical review entries for the 6 progress records |
 
@@ -107,19 +107,16 @@ backend/reitera-backend/src/main/resources/seed.sql
 
 The 6 `study_progress` records in Deck 1 (*La Segunda Guerra Mundial*) are configured so that **5 cards are immediately due** (past `next_review`) and **1 is scheduled for the future**. This means a call to `GET /study/due?deckId=1` will return those 5 cards plus the 10 new cards from Decks 2 and 3.
 
+### FSRS states in the seed
+
+The 6 `study_progress` records in Deck 1 (*La Segunda Guerra Mundial*) are configured so that **5 cards are immediately due** (past `next_review`) and **1 is scheduled for the future**.
+
 ### Idempotency
 
-The script raises an error if seed data is already present (`alumno@reitera.com` already exists). To reset and re-seed:
+The script raises an error if seed data is already present (`alumno@reitera.com` already exists). To reset and re-seed, run `truncate.sql` first:
 
-```sql
-DELETE FROM review_logs;
-DELETE FROM study_progress;
-DELETE FROM card_tags;
-DELETE FROM cards;
-DELETE FROM decks;
-DELETE FROM categories;
-DELETE FROM tags;
-DELETE FROM users WHERE email IN ('alumno@reitera.com', 'admin@reitera.com');
+```
+backend/reitera-backend/src/main/resources/truncate.sql
 ```
 
 Then run `seed.sql` again.

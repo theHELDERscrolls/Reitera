@@ -51,10 +51,10 @@ The backend is organized by **feature module**, not by technical layer:
 
 ```
 modules/
-├── auth/           → JWT filter, JwtService, public login/register endpoints
-├── user/           → User & Role entities, registration, authentication logic
-├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD API
-├── card/           → Card entity + CRUD API (nested under decks)
+├── auth/           → JWT filter, JwtService, public login/register endpoints (AuthController)
+├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
+├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories and tags APIs
+├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search
 └── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
 
 core/
@@ -94,3 +94,23 @@ Study sessions follow a **batch architecture** — the backend is only hit twice
 **Scope modes:** both endpoints accept either `deckId` (single deck) or `categoryId` (all decks in a category), enabling users to study individual topics or full subjects at once.
 
 **Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Again on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
+
+## Security Decisions
+
+### 404 instead of 403 on unauthorized resource access (IDOR prevention)
+
+When a user requests a resource that exists but belongs to another user, the API returns `404 Not Found` instead of `403 Forbidden`.
+
+Returning `403` would confirm to an attacker that the resource exists, enabling enumeration: by iterating IDs and observing 403 vs 404 responses, an attacker could map out which IDs are valid. This is an IDOR (Insecure Direct Object Reference) vulnerability listed in the OWASP Top 10.
+
+Returning `404` in both cases (resource not found, resource belongs to another user) makes the response indistinguishable. The attacker learns nothing about the existence of resources they do not own.
+
+Applied in: `DeckService.findOwnedDeck()`, `CardService.findOwnedDeck()`.
+
+### No 404 on unknown tag IDs in `GET /api/v1/tags/{tagId}/cards`
+
+The same enumeration principle applies here. Returning `404` for a non-existent tag ID would allow an attacker to probe which tag IDs exist in the system. The endpoint always returns `200` with an empty array regardless of whether the tag exists or not.
+
+### `authorName` uses `username`, not `firstName + lastName`
+
+Deck author attribution uses the unique `username` field rather than the display name (`firstName + lastName`). Full names are not unique — multiple users can share the same name. The `username` field is unique by constraint and unambiguously identifies the author.

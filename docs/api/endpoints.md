@@ -123,7 +123,7 @@ Deletes a deck by ID.
   "title": "Historia de España",
   "description": "...",
   "isPublic": false,
-  "authorName": "Test Testez",
+  "authorName": "alumno",
   "categoryId": null,
   "categoryName": null,
   "createdAt": "2026-03-18T10:00:00",
@@ -240,6 +240,71 @@ Deletes a card by ID.
   ]
 }
 ```
+
+---
+
+## Users
+
+### GET `/api/v1/users/me`
+Returns the profile of the currently authenticated user.
+
+**Response `200 OK`:**
+```json
+{
+  "id": "uuid",
+  "username": "alumno",
+  "email": "alumno@reitera.com",
+  "firstName": "Alumno",
+  "lastName": "Demo",
+  "roleName": "STUDENT"
+}
+```
+
+---
+
+## Categories
+
+Returns only the categories used across the authenticated user's own decks. Intended for frontend autocomplete when creating a new deck.
+
+### GET `/api/v1/categories`
+
+**Response `200 OK`:**
+```json
+[
+  { "id": 1, "name": "Historia de España", "description": "..." },
+  { "id": 2, "name": "Programación Java",  "description": "..." }
+]
+```
+
+Returns an empty array if the user has no decks with a category assigned.
+
+---
+
+## Tags
+
+Returns only the tags used on cards in the authenticated user's own decks.
+
+### GET `/api/v1/tags`
+Returns all distinct tags used on the user's cards.
+
+**Response `200 OK`:**
+```json
+[
+  { "id": 1, "name": "importante", "hexColor": "#E74C3C" },
+  { "id": 2, "name": "difícil",    "hexColor": "#E67E22" }
+]
+```
+
+Tags that exist in the system but are not assigned to any of the user's cards will **not** appear.
+
+---
+
+### GET `/api/v1/tags/{tagId}/cards`
+Returns all cards owned by the authenticated user that have the specified tag.
+
+**Response `200 OK`:** Array of `CardResponseDTO`
+
+Always returns `200` with an empty array for unknown tag IDs — no `404` is thrown to prevent tag ID enumeration.
 
 ---
 

@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "reitera-api-collection-v1",
     "name": "Reitera API",
-    "description": "Complete REST API collection for the Reitera spaced repetition application.\n\n**Setup:**\n1. Import this collection into Postman.\n2. Set the `base_url` variable to `http://localhost:8080` (already set by default).\n3. Run **Register** or **Login** — the token is saved automatically to the `token` variable.\n4. All protected endpoints will use that token automatically.",
+    "description": "Complete REST API collection for the Reitera spaced repetition application.\n\n**Setup:**\n1. Import this collection into Postman.\n2. Set the `base_url` variable to `http://localhost:8080` (already set by default).\n3. Run **Login (alumno)** — the token is saved automatically to the `token` variable.\n4. All protected endpoints will use that token automatically.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -43,14 +43,13 @@
           "response": []
         },
         {
-          "name": "Login",
+          "name": "Login (alumno)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// Automatically saves the JWT token to the collection variable",
                   "var jsonResponse = pm.response.json();",
                   "if (jsonResponse.token) {",
                   "    pm.collectionVariables.set('token', jsonResponse.token);",
@@ -72,9 +71,126 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test01@test.com\",\n  \"password\": \"!Test123\"\n}"
+              "raw": "{\n  \"email\": \"alumno@reitera.com\",\n  \"password\": \"reitera2026\"\n}"
             },
-            "description": "Authenticates a user and returns a JWT token (valid for 24 hours). The token is automatically saved to the `token` collection variable via the Tests script."
+            "description": "Authenticates the seed demo user and saves the JWT to the `token` collection variable. Password: reitera2026."
+          },
+          "response": []
+        },
+        {
+          "name": "Login (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonResponse = pm.response.json();",
+                  "if (jsonResponse.token) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.token);",
+                  "    console.log('Token saved successfully.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@reitera.com\",\n  \"password\": \"reitera2026\"\n}"
+            },
+            "description": "Authenticates the seed admin user. Useful to verify that admin has no decks and returns empty lists."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User profile endpoints. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "me"]
+            },
+            "description": "Returns the profile of the authenticated user: id, username, email, firstName, lastName, roleName. No password included."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "description": "Category endpoints. Returns only categories used in the authenticated user's own decks.",
+      "item": [
+        {
+          "name": "Get My Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "categories"]
+            },
+            "description": "Returns the distinct categories used across all decks owned by the authenticated user. With seed data (alumno): Historia de España, Programación Java, Inglés B2."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "description": "Tag endpoints. Returns only tags used on cards in the authenticated user's decks.",
+      "item": [
+        {
+          "name": "Get My Tags",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/tags",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "tags"]
+            },
+            "description": "Returns the distinct tags assigned to cards in the authenticated user's decks. With seed data (alumno): importante, difícil, vocabulario. Note: 'repaso' exists in the DB but is not assigned to any card, so it will NOT appear here."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cards by Tag",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/tags/1/cards",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "tags", "1", "cards"]
+            },
+            "description": "Returns all cards owned by the authenticated user that have the specified tag. Replace '1' with the actual tag ID from 'Get My Tags'. Returns 404 if the tag does not exist. Returns an empty list if the tag exists but none of the user's cards have it."
           },
           "response": []
         }
@@ -133,7 +249,7 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "decks", "1"]
             },
-            "description": "Returns a single deck by its ID. Returns 404 if not found, 400 if the authenticated user is not the owner."
+            "description": "Returns a single deck by its ID. Returns 404 if not found or if the authenticated user is not the owner."
           },
           "response": []
         },
@@ -237,9 +353,30 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"type\": \"CLOZE\",\n  \"question\": \"La Guerra Civil Española terminó en el año {{c1::1939}}.\",\n  \"answerJson\": {\n    \"clozes\": {\"c1\": \"1939\"}\n  },\n  \"explanation\": null,\n  \"tagIds\": []\n}"
+              "raw": "{\n  \"type\": \"CLOZE\",\n  \"question\": \"La Guerra Civil Española terminó en el año ___.\",\n  \"answerJson\": {\n    \"answer\": \"1939\"\n  },\n  \"explanation\": null,\n  \"tagIds\": []\n}"
             },
-            "description": "Creates a CLOZE (fill-in-the-blank) card. The blanks are marked in the question with {{c1::answer}} notation. `answerJson` maps each cloze key to its answer."
+            "description": "Creates a CLOZE (fill-in-the-blank) card. Use ___ in the question to mark the gap. `answerJson` must contain a single `answer` key with the word or phrase that fills the blank."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card (TRUE_FALSE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "decks", "1", "cards"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"TRUE_FALSE\",\n  \"question\": \"La Guerra Civil Española comenzó en 1936.\",\n  \"answerJson\": {\n    \"answer\": true\n  },\n  \"explanation\": \"El alzamiento militar comenzó el 17 de julio de 1936.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Creates a TRUE_FALSE card. `answerJson` must contain a single boolean `answer` key."
           },
           "response": []
         },
@@ -352,7 +489,7 @@
                 { "key": "categoryId", "value": "1" }
               ]
             },
-            "description": "Returns all due cards across every deck the user owns within a category. Useful for studying a full subject (e.g. 'Historia de España' → Tema 1 + Tema 2 at once)."
+            "description": "Returns all due cards across every deck the user owns within a category. With seed data (alumno + categoryId=1 Historia de España): returns cards from both SGMU and GCE decks."
           },
           "response": []
         },
