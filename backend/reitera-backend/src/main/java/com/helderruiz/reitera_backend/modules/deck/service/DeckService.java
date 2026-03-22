@@ -37,7 +37,7 @@ public class DeckService {
                 .description(dto.description())
                 .isPublic(dto.isPublic())
                 .owner(owner)
-                .authorName(owner.getUsername())
+                .authorName(owner.getNickname())
                 .category(category)
                 .build();
 

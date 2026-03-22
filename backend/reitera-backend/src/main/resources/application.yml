@@ -29,5 +29,8 @@ api:
     jwt:
       # Secret key for HMAC-SHA token signing. Must be injected via env variables in production.
       secret-key: "ReiteraAppSuperSecretKeyForJWTGenerationDoNotShare2026!"
-      # Token validity duration in milliseconds (86400000 ms = 24 hours)
-      expiration-time: 86400000
+      # Access token validity in milliseconds (900000 ms = 15 minutes)
+      expiration-time: 900000
+    refresh-token:
+      # Refresh token validity in days (7 days)
+      expiration-days: 7

@@ -60,6 +60,19 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
     }
 
+    /**
+     * Returns the user's chosen nickname (the 'username' DB column).
+     * Needed because Lombok cannot generate getUsername() — Spring Security
+     * already overrides it to return the email (the authentication principal).
+     */
+    public String getNickname() {
+        return username;
+    }
+
+    /**
+     * Spring Security principal. Returns the email used as the login credential.
+     * This is NOT the display username — use getNickname() for that.
+     */
     @Override
     public String getUsername() {
         return email;

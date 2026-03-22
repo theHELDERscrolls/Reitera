@@ -51,7 +51,12 @@ The backend is organized by **feature module**, not by technical layer:
 
 ```
 modules/
-├── auth/           → JWT filter, JwtService, public login/register endpoints (AuthController)
+├── auth/
+│   ├── controller/ → AuthController: /register, /login, /refresh, /logout
+│   ├── filter/     → JwtAuthenticationFilter (intercepts every request)
+│   ├── model/      → RefreshToken entity
+│   ├── repository/ → RefreshTokenRepository
+│   └── service/    → JwtService, RefreshTokenService
 ├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
 ├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories and tags APIs
 ├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search
@@ -63,15 +68,25 @@ core/
 
 ## Security Model
 
-Authentication is **stateless JWT-based**:
+Authentication uses a **two-token stateless strategy**:
 
-1. User logs in → server issues a signed JWT (24h expiry, HMAC-SHA)
-2. Client sends `Authorization: Bearer <token>` on every request
-3. `JwtAuthenticationFilter` validates the token and populates the `SecurityContext`
+| Token | Type | Expiry | Storage |
+|---|---|---|---|
+| Access token | Signed JWT (HMAC-SHA) | 15 minutes | Client memory |
+| Refresh token | Random UUID (SHA-256 hashed) | 7 days | `refresh_tokens` table |
+
+**Flow:**
+1. `POST /auth/login` → server issues both tokens; refresh token hash persisted in DB
+2. Client sends `Authorization: Bearer <accessToken>` on every request
+3. `JwtAuthenticationFilter` validates the JWT and populates the `SecurityContext`
 4. Controllers receive the authenticated `User` via `@AuthenticationPrincipal`
+5. When the access token expires → `POST /auth/refresh` → server validates refresh token hash, revokes the old one, and issues a new pair (rotation)
+6. `POST /auth/logout` → server revokes all active refresh tokens for the user
 
-Public endpoints (no token required): `POST /api/v1/auth/register`, `POST /api/v1/auth/login`
+Public endpoints (no token required): `/register`, `/login`, `/refresh`, `/logout`
 All other endpoints are protected.
+
+**Refresh token rotation:** each refresh token is single-use. After being exchanged for a new pair, it is immediately marked `revoked = true`. This limits the damage window if a token is stolen — once used, the old token is worthless.
 
 ## Database Design
 
@@ -79,6 +94,7 @@ All other endpoints are protected.
 - **Primary keys:** UUID for `users`, auto-increment Integer for all other entities.
 - **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different card types (BASIC, CLOZE, MULTIPLE_CHOICE) to use different answer structures without schema changes.
 - **Composite keys:** `StudyProgress` uses a composite PK of `(user_id, card_id)` — one progress record per user per card.
+- **Refresh tokens:** the raw UUID token is never stored. Only its SHA-256 hex digest (`token_hash VARCHAR(64)`) is persisted. `ON DELETE CASCADE` on `user_id` ensures cleanup on user deletion. The `revoked` flag preserves the audit trail without physically deleting rows.
 
 ## Study Session Flow (design decision)
 
@@ -111,6 +127,8 @@ Applied in: `DeckService.findOwnedDeck()`, `CardService.findOwnedDeck()`.
 
 The same enumeration principle applies here. Returning `404` for a non-existent tag ID would allow an attacker to probe which tag IDs exist in the system. The endpoint always returns `200` with an empty array regardless of whether the tag exists or not.
 
-### `authorName` uses `username`, not `firstName + lastName`
+### `authorName` uses the nickname (`username` field), not `firstName + lastName`
 
-Deck author attribution uses the unique `username` field rather than the display name (`firstName + lastName`). Full names are not unique — multiple users can share the same name. The `username` field is unique by constraint and unambiguously identifies the author.
+Deck author attribution uses the unique `username` field (the user's chosen nickname) rather than `firstName + lastName`. Full names are not unique — multiple users can share the same name. The `username` column has a unique constraint and unambiguously identifies the author.
+
+**Implementation note:** `User` implements Spring Security's `UserDetails`, which forces an override of `getUsername()` to return the email (the authentication principal). Lombok cannot generate a getter for the `username` field because that method name is taken. A dedicated `getNickname()` method exposes the actual nickname value. Any code that needs the display username must call `getNickname()`, not `getUsername()`.

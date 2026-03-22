@@ -5,9 +5,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased] — feature/09
+## [Unreleased]
 ### Planned
-- Deck import / export (JSON format)
+- Deck import / export (JSON format) — deferred, tracked in issue #16
+
+---
+
+## [0.9.0] — 2026-03-22 — feature/09-refresh-token
+### Added
+- Refresh token system: two-token authentication strategy (access token + refresh token)
+- `POST /api/v1/auth/refresh` — issues a new access token and a rotated refresh token given a valid refresh token
+- `POST /api/v1/auth/logout` — revokes all active refresh tokens for the authenticated user
+- `RefreshToken` entity mapped to the new `refresh_tokens` table (SHA-256 hash storage, revoked flag, expiry)
+- `RefreshTokenRepository` with JOIN FETCH query to avoid N+1 on user+role loading
+- `RefreshTokenService` — full lifecycle: create, validate, rotate, revoke
+- `RefreshRequestDTO` — request body for `/refresh` and `/logout`
+- `refresh_tokens` table added to `init.sql` with `ON DELETE CASCADE` FK and `idx_refresh_tokens_user_id` index
+- `refresh_tokens` added to `truncate.sql`
+- `AuthController` moved to `modules/auth/controller/` package (consistent with project structure)
+
+### Added
+- `InvalidRefreshTokenException` — dedicated exception for invalid/expired/revoked refresh tokens, mapped to HTTP 401 by `GlobalExceptionHandler`. Previously these cases fell through to the generic `RuntimeException` handler and returned HTTP 400.
+
+### Fixed
+- `POST /api/v1/auth/register` and `GET /api/v1/users/me` — `username` field in the response was returning the email instead of the user's chosen nickname. Root cause: Spring Security's `UserDetails.getUsername()` override returns the email (authentication principal); Lombok cannot generate a getter for the `username` field because the method name is taken. Fixed by adding `getNickname()` to `User` and using it in `UserService` and `DeckService`.
+- `DeckService.createDeck()` — `authorName` was being set to the user's email instead of their nickname for the same reason. Fixed alongside the above.
+
+### Changed
+- `POST /api/v1/auth/login` — response now returns `accessToken` + `refreshToken` + `message` (was `token` + `message`)
+- Access token expiry reduced from 24 hours to 15 minutes (`expiration-time: 900000` ms)
+- `application.yml` — new `api.security.refresh-token.expiration-days: 7` property
+- `RefreshTokenRepository.findByTokenHash` uses `JOIN FETCH rt.user u JOIN FETCH u.role` to resolve token + user + role in a single SQL query (N+1 prevention)
 
 ---
 

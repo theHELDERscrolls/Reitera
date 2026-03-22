@@ -15,6 +15,7 @@
 -- ============================================================
 
 TRUNCATE TABLE
+    refresh_tokens,
     review_logs,
     study_progress,
     card_tags,

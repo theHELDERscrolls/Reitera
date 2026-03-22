@@ -54,7 +54,7 @@ backend/reitera-backend/src/main/resources/init.sql
 
 | Table | Description |
 |---|---|
-| `roles` | RBAC roles (USER, ADMIN) |
+| `roles` | RBAC roles (STUDENT, ADMIN) |
 | `users` | User accounts |
 | `categories` | High-level groupings for decks |
 | `tags` | Cross-deck labels for cards |
@@ -64,6 +64,7 @@ backend/reitera-backend/src/main/resources/init.sql
 | `study_progress` | FSRS state per (user, card) pair |
 | `review_logs` | Immutable history of every review action |
 | `user_deck_subscriptions` | Community deck subscriptions |
+| `refresh_tokens` | Active user sessions (SHA-256 hashed tokens, expiry, revoked flag) |
 
 > **Note:** `init.sql` enables the `pgcrypto` extension, which is required by `seed.sql` to generate BCrypt password hashes at runtime.
 
@@ -87,7 +88,7 @@ backend/reitera-backend/src/main/resources/seed.sql
 
 | Email | Password | Role |
 |---|---|---|
-| `alumno@reitera.com` | `reitera2026` | USER |
+| `alumno@reitera.com` | `reitera2026` | STUDENT |
 | `admin@reitera.com` | `reitera2026` | ADMIN |
 
 > Passwords are hashed at runtime using **pgcrypto's BCrypt** (`gen_salt('bf', 10)`), producing a hash compatible with Spring Security's `BCryptPasswordEncoder`.
@@ -106,10 +107,6 @@ backend/reitera-backend/src/main/resources/seed.sql
 ### FSRS states in the seed
 
 The 6 `study_progress` records in Deck 1 (*La Segunda Guerra Mundial*) are configured so that **5 cards are immediately due** (past `next_review`) and **1 is scheduled for the future**. This means a call to `GET /study/due?deckId=1` will return those 5 cards plus the 10 new cards from Decks 2 and 3.
-
-### FSRS states in the seed
-
-The 6 `study_progress` records in Deck 1 (*La Segunda Guerra Mundial*) are configured so that **5 cards are immediately due** (past `next_review`) and **1 is scheduled for the future**.
 
 ### Idempotency
 
