@@ -21,7 +21,7 @@ END $$;
 -- 1. ROLES
 -- No explicit IDs: avoids PK conflicts if roles already exist in the DB.
 INSERT INTO roles (name) VALUES
-    ('USER'),
+    ('STUDENT'),
     ('ADMIN')
 ON CONFLICT (name) DO NOTHING;
 
@@ -37,7 +37,7 @@ INSERT INTO users (id, username, email, password, first_name, last_name, role_id
         crypt('reitera2026', gen_salt('bf', 10)),
         'Alumno',
         'Demo',
-        (SELECT id FROM roles WHERE name = 'USER')
+        (SELECT id FROM roles WHERE name = 'STUDENT')
     ),
     (
         'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',

@@ -27,12 +27,12 @@ public class JwtService {
      */
     public String generateToken(String username, String role) {
         return Jwts.builder()
-                .claims(Map.of("role", role)) // Custom payload data
-                .subject(username)                // The principal (typically email/username)
+                .claims(Map.of("role", role))
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSignInKey())         // Applies the cryptographic signature
-                .compact();                       // Serializes into the standard Base64Url-encoded JWT string
+                .signWith(getSignInKey())
+                .compact();
     }
 
     /**
@@ -73,7 +73,7 @@ public class JwtService {
      */
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getSignInKey()) // Cryptographic validation step
+                .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

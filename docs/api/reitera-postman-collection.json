@@ -15,6 +15,11 @@
       "key": "token",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -51,9 +56,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var jsonResponse = pm.response.json();",
-                  "if (jsonResponse.token) {",
-                  "    pm.collectionVariables.set('token', jsonResponse.token);",
-                  "    console.log('Token saved successfully.');",
+                  "if (jsonResponse.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', jsonResponse.refreshToken);",
+                  "    console.log('Access token and refresh token saved.');",
                   "}"
                 ]
               }
@@ -86,9 +92,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var jsonResponse = pm.response.json();",
-                  "if (jsonResponse.token) {",
-                  "    pm.collectionVariables.set('token', jsonResponse.token);",
-                  "    console.log('Token saved successfully.');",
+                  "if (jsonResponse.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', jsonResponse.refreshToken);",
+                  "    console.log('Access token and refresh token saved.');",
                   "}"
                 ]
               }
@@ -109,6 +116,62 @@
               "raw": "{\n  \"email\": \"admin@reitera.com\",\n  \"password\": \"reitera2026\"\n}"
             },
             "description": "Authenticates the seed admin user. Useful to verify that admin has no decks and returns empty lists."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonResponse = pm.response.json();",
+                  "if (jsonResponse.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', jsonResponse.refreshToken);",
+                  "    console.log('Tokens rotated and saved.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "refresh"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "description": "Exchanges the current refresh token for a new access token and a rotated refresh token. The old refresh token is revoked. Both new tokens are saved automatically to collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "description": "Revokes all active refresh tokens for the user. Returns 204 No Content. The access token will continue to work until its 15-minute TTL expires."
           },
           "response": []
         }

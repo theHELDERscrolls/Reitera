@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.helderruiz</groupId>
     <artifactId>reitera-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <name>Reitera</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Spaced repetition flashcard application (TFG)</description>
     <url/>
     <licenses>
         <license/>

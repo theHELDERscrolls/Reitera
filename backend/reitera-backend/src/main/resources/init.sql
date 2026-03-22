@@ -125,6 +125,19 @@ CREATE TABLE IF NOT EXISTS user_deck_subscriptions (
 );
 
 
+-- 11. REFRESH_TOKENS
+-- One row per active session. Stores a SHA-256 hash of the raw token (never the token itself).
+-- The revoked flag allows explicit logout without deleting the row, preserving the audit trail.
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id         SERIAL       PRIMARY KEY,
+    token_hash VARCHAR(64)  NOT NULL UNIQUE,
+    user_id    UUID         NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expires_at TIMESTAMP    NOT NULL,
+    revoked    BOOLEAN      NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP    DEFAULT NOW()
+);
+
+
 -- INDEXES
 -- PostgreSQL does not auto-index FK columns. These cover the most frequent query paths.
 -- See docs/ARCHITECTURE.md for the rationale behind each index.
@@ -140,3 +153,6 @@ CREATE INDEX IF NOT EXISTS idx_decks_owner_id
 
 CREATE INDEX IF NOT EXISTS idx_review_logs_user_id
     ON review_logs (user_id);
+
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id
+    ON refresh_tokens (user_id);
