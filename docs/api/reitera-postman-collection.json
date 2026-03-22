@@ -41,7 +41,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"test01\",\n  \"email\": \"test01@test.com\",\n  \"password\": \"!Test123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"Testez\"\n}"
+              "raw": "{\n  \"username\": \"test01\",\n  \"email\": \"test01@test.com\",\n  \"password\": \"!Test123\",\n  \"confirmPassword\": \"!Test123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"Testez\"\n}"
             },
             "description": "Creates a new user account. Returns the created user data (no password). Password must be at least 8 characters with 1 digit, 1 lowercase, 1 uppercase and 1 special character."
           },

@@ -24,11 +24,12 @@ Creates a new user account.
   "username": "test01",
   "email": "test01@test.com",
   "password": "!Test123",
+  "confirmPassword": "!Test123",
   "firstName": "Test",
   "lastName": "Testez"
 }
 ```
-Password rules: min 8 characters, at least 1 digit, 1 lowercase, 1 uppercase, 1 special character (`@#$%^&+=!`).
+Password rules: min 8 characters, at least 1 digit, 1 lowercase, 1 uppercase, 1 special character (`@#$%^&+=!`). `confirmPassword` must match `password` exactly.
 
 **Response `201 Created`:**
 ```json

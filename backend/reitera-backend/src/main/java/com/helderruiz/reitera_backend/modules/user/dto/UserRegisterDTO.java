@@ -21,6 +21,9 @@ public record UserRegisterDTO(
         )
         String password,
 
+        @NotBlank(message = "The confirm password is mandatory")
+        String confirmPassword,
+
         @NotBlank(message = "The first name is mandatory")
         String firstName,
 

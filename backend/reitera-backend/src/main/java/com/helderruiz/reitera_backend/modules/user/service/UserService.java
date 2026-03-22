@@ -32,6 +32,10 @@ public class UserService {
      * Validates uniqueness, assigns the default STUDENT role, and hashes the password.
      */
     public UserResponseDTO registerUser(UserRegisterDTO dto) {
+        if (!dto.password().equals(dto.confirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
         if (userRepository.findByEmail(dto.email()).isPresent()) {
             throw new RuntimeException("The email is already registered");
         }
