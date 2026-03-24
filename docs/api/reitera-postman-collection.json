@@ -249,11 +249,15 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/tags/1/cards",
+              "raw": "{{base_url}}/api/v1/tags/1/cards?page=0&size=20",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "tags", "1", "cards"]
+              "path": ["api", "v1", "tags", "1", "cards"],
+              "query": [
+                { "key": "page", "value": "0", "description": "Zero-based page number" },
+                { "key": "size", "value": "20", "description": "Items per page" }
+              ]
             },
-            "description": "Returns all cards owned by the authenticated user that have the specified tag. Replace '1' with the actual tag ID from 'Get My Tags'. Returns 404 if the tag does not exist. Returns an empty list if the tag exists but none of the user's cards have it."
+            "description": "Returns a paginated list of cards owned by the authenticated user that have the specified tag. Replace '1' with the actual tag ID from 'Get My Tags'. Always returns 200 — returns an empty page for unknown tag IDs to prevent enumeration."
           },
           "response": []
         }
@@ -292,11 +296,16 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/decks",
+              "raw": "{{base_url}}/api/v1/decks?page=0&size=20&sort=createdAt,desc",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "decks"]
+              "path": ["api", "v1", "decks"],
+              "query": [
+                { "key": "page", "value": "0", "description": "Zero-based page number" },
+                { "key": "size", "value": "20", "description": "Items per page" },
+                { "key": "sort", "value": "createdAt,desc", "description": "Sort field and direction" }
+              ]
             },
-            "description": "Returns all decks owned by the authenticated user."
+            "description": "Returns a paginated list of decks owned by the authenticated user. Response is a Page object with 'content', 'totalElements', 'totalPages', 'number', and 'size' fields."
           },
           "response": []
         },
@@ -451,11 +460,15 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "raw": "{{base_url}}/api/v1/decks/1/cards?page=0&size=20",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "decks", "1", "cards"]
+              "path": ["api", "v1", "decks", "1", "cards"],
+              "query": [
+                { "key": "page", "value": "0", "description": "Zero-based page number" },
+                { "key": "size", "value": "20", "description": "Items per page" }
+              ]
             },
-            "description": "Returns all cards belonging to the specified deck. Only accessible by the deck owner."
+            "description": "Returns a paginated list of cards belonging to the specified deck. Only accessible by the deck owner. Response is a Page object with 'content', 'totalElements', 'totalPages', 'number', and 'size' fields."
           },
           "response": []
         },

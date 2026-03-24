@@ -2,6 +2,8 @@ package com.helderruiz.reitera_backend.modules.card.repository;
 
 import com.helderruiz.reitera_backend.modules.card.model.Card;
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,8 +13,7 @@ import java.util.UUID;
 
 public interface CardRepository extends JpaRepository<Card, Integer> {
 
-    // Returns all cards belonging to a specific deck
-    List<Card> findAllByDeck(Deck deck);
+    Page<Card> findAllByDeck(Deck deck, Pageable pageable);
 
     /**
      * Returns cards in a deck that the user has never studied before.
@@ -48,9 +49,9 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
                                              @Param("userId") UUID userId);
 
     /**
-     * Returns all cards owned by the user that have the specified tag assigned.
+     * Returns a paginated list of cards owned by the user that have the specified tag assigned.
      * Navigates Card → tags (ManyToMany) and Card → deck → owner.
      */
     @Query("SELECT c FROM Card c JOIN c.tags t WHERE t.id = :tagId AND c.deck.owner.id = :userId")
-    List<Card> findByTagIdAndOwner(@Param("tagId") Integer tagId, @Param("userId") UUID userId);
+    Page<Card> findByTagIdAndOwner(@Param("tagId") Integer tagId, @Param("userId") UUID userId, Pageable pageable);
 }

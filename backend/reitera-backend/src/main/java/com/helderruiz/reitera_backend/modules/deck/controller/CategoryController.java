@@ -3,6 +3,7 @@ package com.helderruiz.reitera_backend.modules.deck.controller;
 import com.helderruiz.reitera_backend.modules.deck.dto.CategoryResponseDTO;
 import com.helderruiz.reitera_backend.modules.deck.service.CategoryService;
 import com.helderruiz.reitera_backend.modules.user.model.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/categories")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
     private final CategoryService categoryService;

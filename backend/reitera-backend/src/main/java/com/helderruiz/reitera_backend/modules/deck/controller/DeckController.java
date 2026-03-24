@@ -9,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * REST controller exposing CRUD endpoints for Deck management.
@@ -20,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/decks")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class DeckController {
 
     private final DeckService deckService;
@@ -37,12 +41,15 @@ public class DeckController {
     }
 
     /**
-     * Returns all decks owned by the authenticated user.
-     * GET /api/v1/decks
+     * Returns a paginated list of decks owned by the authenticated user.
+     * GET /api/v1/decks?page=0&size=20&sort=createdAt,desc
      */
     @GetMapping
-    public ResponseEntity<List<DeckResponseDTO>> getUserDecks(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(deckService.getUserDecks(user));
+    public ResponseEntity<Page<DeckResponseDTO>> getUserDecks(
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        return ResponseEntity.ok(deckService.getUserDecks(user, pageable));
     }
 
     /**

@@ -3,6 +3,7 @@ package com.helderruiz.reitera_backend.modules.user.controller;
 import com.helderruiz.reitera_backend.modules.user.dto.UserResponseDTO;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import com.helderruiz.reitera_backend.modules.user.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
     private final UserService userService;

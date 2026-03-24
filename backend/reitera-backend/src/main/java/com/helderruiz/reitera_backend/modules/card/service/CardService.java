@@ -11,6 +11,8 @@ import com.helderruiz.reitera_backend.modules.deck.repository.DeckRepository;
 import com.helderruiz.reitera_backend.modules.deck.repository.TagRepository;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -52,13 +54,11 @@ public class CardService {
     }
 
     /**
-     * Returns all cards belonging to a deck owned by the authenticated user.
+     * Returns a paginated list of cards belonging to a deck owned by the authenticated user.
      */
-    public List<CardResponseDTO> getCardsByDeck(Integer deckId, User owner) {
+    public Page<CardResponseDTO> getCardsByDeck(Integer deckId, User owner, Pageable pageable) {
         Deck deck = findOwnedDeck(deckId, owner);
-        return cardRepository.findAllByDeck(deck).stream()
-                .map(this::toResponseDTO)
-                .toList();
+        return cardRepository.findAllByDeck(deck, pageable).map(this::toResponseDTO);
     }
 
     /**
@@ -96,14 +96,12 @@ public class CardService {
     }
 
     /**
-     * Returns all cards owned by the user that have the specified tag assigned.
-     * Returns an empty list for both non-existent tags and tags with no matching cards
+     * Returns a paginated list of cards owned by the user that have the specified tag assigned.
+     * Returns an empty page for both non-existent tags and tags with no matching cards
      * to prevent tag ID enumeration.
      */
-    public List<CardResponseDTO> getCardsByTag(Integer tagId, User owner) {
-        return cardRepository.findByTagIdAndOwner(tagId, owner.getId()).stream()
-                .map(this::toResponseDTO)
-                .toList();
+    public Page<CardResponseDTO> getCardsByTag(Integer tagId, User owner, Pageable pageable) {
+        return cardRepository.findByTagIdAndOwner(tagId, owner.getId(), pageable).map(this::toResponseDTO);
     }
 
     // --- Private helpers ---

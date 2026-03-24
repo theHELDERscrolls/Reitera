@@ -2,6 +2,8 @@
 
 Base URL (local): `http://localhost:8080`
 
+Interactive documentation: `http://localhost:8080/swagger-ui.html`
+
 All endpoints except Auth require a valid **access token** in the `Authorization` header:
 ```
 Authorization: Bearer <accessToken>
@@ -129,9 +131,26 @@ Creates a new deck for the authenticated user.
 ---
 
 ### GET `/api/v1/decks`
-Returns all decks owned by the authenticated user.
+Returns a paginated list of decks owned by the authenticated user.
 
-**Response `200 OK`:** Array of `DeckResponseDTO`
+| Query param | Type | Default | Description |
+|---|---|---|---|
+| `page` | Integer | `0` | Zero-based page number |
+| `size` | Integer | `20` | Items per page |
+| `sort` | String | `createdAt,desc` | Field and direction (e.g. `title,asc`) |
+
+**Response `200 OK`:** `Page<DeckResponseDTO>`
+```json
+{
+  "content": [ ...decks... ],
+  "totalElements": 47,
+  "totalPages": 3,
+  "number": 0,
+  "size": 20,
+  "first": true,
+  "last": false
+}
+```
 
 ---
 
@@ -239,9 +258,26 @@ The `answerJson` structure varies by card type:
 ---
 
 ### GET `/api/v1/decks/{deckId}/cards`
-Returns all cards belonging to the specified deck.
+Returns a paginated list of cards belonging to the specified deck.
 
-**Response `200 OK`:** Array of `CardResponseDTO`
+| Query param | Type | Default | Description |
+|---|---|---|---|
+| `page` | Integer | `0` | Zero-based page number |
+| `size` | Integer | `20` | Items per page |
+| `sort` | String | — | Field and direction (e.g. `id,asc`) |
+
+**Response `200 OK`:** `Page<CardResponseDTO>`
+```json
+{
+  "content": [ ...cards... ],
+  "totalElements": 120,
+  "totalPages": 6,
+  "number": 0,
+  "size": 20,
+  "first": true,
+  "last": false
+}
+```
 
 ---
 
@@ -343,11 +379,17 @@ Tags that exist in the system but are not assigned to any of the user's cards wi
 ---
 
 ### GET `/api/v1/tags/{tagId}/cards`
-Returns all cards owned by the authenticated user that have the specified tag.
+Returns a paginated list of cards owned by the authenticated user that have the specified tag.
 
-**Response `200 OK`:** Array of `CardResponseDTO`
+| Query param | Type | Default | Description |
+|---|---|---|---|
+| `page` | Integer | `0` | Zero-based page number |
+| `size` | Integer | `20` | Items per page |
+| `sort` | String | — | Field and direction (e.g. `id,asc`) |
 
-Always returns `200` with an empty array for unknown tag IDs — no `404` is thrown to prevent tag ID enumeration.
+**Response `200 OK`:** `Page<CardResponseDTO>`
+
+Always returns `200` with an empty page for unknown tag IDs — no `404` is thrown to prevent tag ID enumeration.
 
 ---
 

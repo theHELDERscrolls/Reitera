@@ -11,6 +11,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.10.0] — 2026-03-24 — feature/10-cors-swagger-pagination
+### Added
+- CORS policy configured in `SecurityConfig` — allows `http://localhost:4200` (Angular dev server) with `Authorization` and `Content-Type` headers; credentials enabled; preflight cached for 1 hour
+- `springdoc-openapi-starter-webmvc-ui:3.0.2` dependency — auto-generates OpenAPI schema at `/v3/api-docs` and serves Swagger UI at `/swagger-ui.html`
+- `OpenApiConfig` — declares API metadata (`title`, `version`, `description`) and registers a global `bearerAuth` Bearer JWT security scheme, enabling the "Authorize" button in Swagger UI
+- `@SecurityRequirement(name = "bearerAuth")` added to all protected controllers so Swagger UI marks them with the lock icon and attaches the token automatically
+- Pagination support on `GET /api/v1/decks` and `GET /api/v1/decks/{deckId}/cards`:
+  - Both endpoints accept `?page`, `?size`, and `?sort` query params
+  - Response shape changed from `List<DTO>` to `Page<DTO>` (adds `totalElements`, `totalPages`, `number`, `size`, `first`, `last`)
+  - Default: `size=20`; decks additionally default to `sort=createdAt,DESC`
+- Pagination support on `GET /api/v1/tags/{tagId}/cards` — same `Page<CardResponseDTO>` shape, default `size=20`
+
+### Changed
+- `SecurityConfig` — Swagger UI routes (`/swagger-ui/**`, `/v3/api-docs/**`, `/swagger-ui.html`) added to `permitAll()` so documentation is publicly accessible
+- `DeckRepository.findAllByOwner` signature updated to accept `Pageable` and return `Page<Deck>`
+- `CardRepository.findAllByDeck` signature updated to accept `Pageable` and return `Page<Card>`
+
+---
+
 ## [0.9.0] — 2026-03-22 — feature/09-refresh-token
 ### Added
 - Refresh token system: two-token authentication strategy (access token + refresh token)
