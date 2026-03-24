@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,30 +22,53 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     /**
-     * Configures the main security filter chain for the application.
-     * Defines CORS/CSRF policies, route protection, and custom filters.
+     * Configures the security filter chain: disables CSRF, enables CORS,
+     * sets stateless session management, and registers the JWT filter.
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF as we are using stateless JWT authentication
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // Configure route-level authorization
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll() // Public endpoints
-                        .anyRequest().authenticated() // Protected endpoints
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        .anyRequest().authenticated()
                 )
-
-                // Set session management to stateless (no server-side sessions)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // Register the custom authentication provider (handles DB checks and hashing)
                 .authenticationProvider(authenticationProvider)
-
-                // Inject the JWT filter before the standard authentication filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * Defines the CORS policy applied to all endpoints.
+     * Allows the Angular dev server ({@code localhost:4200}) to make cross-origin
+     * requests with {@code Authorization} and {@code Content-Type} headers.
+     * The preflight response is cached for 1 hour to reduce OPTIONS overhead.
+     *
+     * @return a {@link CorsConfigurationSource} registered for all URL patterns.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedMethod("OPTIONS");
+        configuration.addAllowedHeader("Authorization");
+        configuration.addAllowedHeader("Content-Type");
+        configuration.addExposedHeader("Authorization");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }

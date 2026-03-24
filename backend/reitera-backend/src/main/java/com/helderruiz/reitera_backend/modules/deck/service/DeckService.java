@@ -9,9 +9,9 @@ import com.helderruiz.reitera_backend.modules.deck.repository.CategoryRepository
 import com.helderruiz.reitera_backend.modules.deck.repository.DeckRepository;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Core business logic for Deck management.
@@ -45,12 +45,10 @@ public class DeckService {
     }
 
     /**
-     * Returns all decks owned by the authenticated user.
+     * Returns a paginated list of decks owned by the authenticated user.
      */
-    public List<DeckResponseDTO> getUserDecks(User owner) {
-        return deckRepository.findAllByOwner(owner).stream()
-                .map(this::toResponseDTO)
-                .toList();
+    public Page<DeckResponseDTO> getUserDecks(User owner, Pageable pageable) {
+        return deckRepository.findAllByOwner(owner, pageable).map(this::toResponseDTO);
     }
 
     /**

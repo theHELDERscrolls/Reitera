@@ -5,7 +5,11 @@ import com.helderruiz.reitera_backend.modules.card.service.CardService;
 import com.helderruiz.reitera_backend.modules.deck.dto.TagResponseDTO;
 import com.helderruiz.reitera_backend.modules.deck.service.TagService;
 import com.helderruiz.reitera_backend.modules.user.model.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/tags")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TagController {
 
     private final TagService tagService;
@@ -37,14 +42,15 @@ public class TagController {
     }
 
     /**
-     * Returns all cards owned by the authenticated user that have the specified tag.
-     * GET /api/v1/tags/{tagId}/cards
+     * Returns a paginated list of cards owned by the authenticated user that have the specified tag.
+     * GET /api/v1/tags/{tagId}/cards?page=0&size=20
      */
     @GetMapping("/{tagId}/cards")
-    public ResponseEntity<List<CardResponseDTO>> getCardsByTag(
+    public ResponseEntity<Page<CardResponseDTO>> getCardsByTag(
             @PathVariable Integer tagId,
-            @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 20) Pageable pageable) {
 
-        return ResponseEntity.ok(cardService.getCardsByTag(tagId, user));
+        return ResponseEntity.ok(cardService.getCardsByTag(tagId, user, pageable));
     }
 }

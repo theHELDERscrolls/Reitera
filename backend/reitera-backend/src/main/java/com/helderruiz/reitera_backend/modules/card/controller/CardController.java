@@ -9,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * REST controller exposing CRUD endpoints for Card management.
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/decks/{deckId}/cards")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class CardController {
 
     private final CardService cardService;
@@ -39,15 +42,16 @@ public class CardController {
     }
 
     /**
-     * Returns all cards belonging to the specified deck.
-     * GET /api/v1/decks/{deckId}/cards
+     * Returns a paginated list of cards belonging to the specified deck.
+     * GET /api/v1/decks/{deckId}/cards?page=0&size=20
      */
     @GetMapping
-    public ResponseEntity<List<CardResponseDTO>> getCardsByDeck(
+    public ResponseEntity<Page<CardResponseDTO>> getCardsByDeck(
             @PathVariable Integer deckId,
-            @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 20) Pageable pageable) {
 
-        return ResponseEntity.ok(cardService.getCardsByDeck(deckId, user));
+        return ResponseEntity.ok(cardService.getCardsByDeck(deckId, user, pageable));
     }
 
     /**

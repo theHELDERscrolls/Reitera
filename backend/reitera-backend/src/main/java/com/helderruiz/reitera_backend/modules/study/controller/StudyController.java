@@ -5,6 +5,7 @@ import com.helderruiz.reitera_backend.modules.study.dto.StudySessionRequestDTO;
 import com.helderruiz.reitera_backend.modules.study.dto.StudySessionResponseDTO;
 import com.helderruiz.reitera_backend.modules.study.service.StudyService;
 import com.helderruiz.reitera_backend.modules.user.model.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/study")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class StudyController {
 
     private final StudyService studyService;
