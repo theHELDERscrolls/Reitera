@@ -1,0 +1,61 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "or": "or"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "password": "Password",
+      "password_placeholder": "Your password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "no_account": "Don't have an account?",
+      "go_register": "Sign up",
+      "error": {
+        "email_required": "Email is required.",
+        "email_invalid": "Enter a valid email address.",
+        "password_required": "Password is required.",
+        "server": "Invalid credentials. Please try again."
+      }
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start your learning journey",
+      "username": "Username",
+      "username_placeholder": "yourname",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "first_name": "First name",
+      "first_name_placeholder": "John",
+      "last_name": "Last name",
+      "last_name_placeholder": "Doe",
+      "password": "Password",
+      "password_placeholder": "Min. 8 characters",
+      "confirm_password": "Confirm password",
+      "confirm_password_placeholder": "Repeat your password",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "has_account": "Already have an account?",
+      "go_login": "Sign in",
+      "error": {
+        "username_required": "Username is required.",
+        "username_min": "Username must be at least 3 characters.",
+        "username_max": "Username must be at most 50 characters.",
+        "email_required": "Email is required.",
+        "email_invalid": "Enter a valid email address.",
+        "first_name_required": "First name is required.",
+        "last_name_required": "Last name is required.",
+        "password_required": "Password is required.",
+        "password_pattern": "Min. 8 characters with uppercase, lowercase, number and special character (@#$%^&+=!).",
+        "confirm_password_required": "Please confirm your password.",
+        "password_mismatch": "Passwords do not match.",
+        "server": "Registration failed. Please try again."
+      }
+    }
+  }
+}

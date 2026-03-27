@@ -1,0 +1,61 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo ha ido mal. Por favor, inténtalo de nuevo.",
+    "or": "o"
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicia sesión en tu cuenta",
+      "email": "Email",
+      "email_placeholder": "tu@ejemplo.com",
+      "password": "Contraseña",
+      "password_placeholder": "Tu contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión...",
+      "no_account": "¿No tienes cuenta?",
+      "go_register": "Regístrate",
+      "error": {
+        "email_required": "El email es obligatorio.",
+        "email_invalid": "Introduce una dirección de email válida.",
+        "password_required": "La contraseña es obligatoria.",
+        "server": "Credenciales incorrectas. Por favor, inténtalo de nuevo."
+      }
+    },
+    "register": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Empieza tu viaje de aprendizaje",
+      "username": "Nombre de usuario",
+      "username_placeholder": "tunombre",
+      "email": "Email",
+      "email_placeholder": "tu@ejemplo.com",
+      "first_name": "Nombre",
+      "first_name_placeholder": "Juan",
+      "last_name": "Apellidos",
+      "last_name_placeholder": "García",
+      "password": "Contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "confirm_password": "Confirmar contraseña",
+      "confirm_password_placeholder": "Repite tu contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta...",
+      "has_account": "¿Ya tienes cuenta?",
+      "go_login": "Inicia sesión",
+      "error": {
+        "username_required": "El nombre de usuario es obligatorio.",
+        "username_min": "El nombre de usuario debe tener al menos 3 caracteres.",
+        "username_max": "El nombre de usuario no puede superar los 50 caracteres.",
+        "email_required": "El email es obligatorio.",
+        "email_invalid": "Introduce una dirección de email válida.",
+        "first_name_required": "El nombre es obligatorio.",
+        "last_name_required": "Los apellidos son obligatorios.",
+        "password_required": "La contraseña es obligatoria.",
+        "password_pattern": "Mín. 8 caracteres con mayúscula, minúscula, número y carácter especial (@#$%^&+=!).",
+        "confirm_password_required": "Por favor, confirma tu contraseña.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "server": "El registro ha fallado. Por favor, inténtalo de nuevo."
+      }
+    }
+  }
+}
