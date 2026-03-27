@@ -11,6 +11,23 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.11.0] — 2026-03-27 — feature/11-frontend-setup
+### Added
+- Angular 21 project scaffolded in `frontend/` — standalone components, no NgModules, Tailwind CSS v4 via PostCSS, Vitest for testing
+- Environment files (`environment.ts`, `environment.development.ts`) — `apiUrl` configured for local backend at `http://localhost:8080/api/v1`
+- Feature-based folder structure: `core/` (auth, guards, interceptors, models), `shared/components/`, `features/` (auth, dashboard, decks, cards, study, profile)
+- TypeScript models in `core/models/` mapping all backend DTOs: `auth`, `user`, `deck`, `card`, `study`, `category`, `tag`, `page`
+- `Page<T>` generic model for paginated responses
+- `HttpClient` registered in `app.config.ts` via `provideHttpClient(withInterceptors([jwtInterceptor]))`
+- `jwt.interceptor.ts` — functional interceptor that reads `accessToken` from localStorage and attaches `Authorization: Bearer` header to every outgoing request
+- `auth.guard.ts` — functional guard that protects routes requiring authentication, redirecting unauthenticated users to `/auth/login`
+
+### Changed
+- `app.html` — replaced Angular boilerplate with `<router-outlet />`
+- `app.ts` — removed unused `signal` boilerplate from root component
+
+---
+
 ## [0.10.0] — 2026-03-24 — feature/10-cors-swagger-pagination
 ### Added
 - CORS policy configured in `SecurityConfig` — allows `http://localhost:4200` (Angular dev server) with `Authorization` and `Content-Type` headers; credentials enabled; preflight cached for 1 hour
