@@ -73,6 +73,7 @@
     },
     "profile": {
       "open": "Abrir menú de perfil",
+      "viewProfile": "Ver perfil",
       "lightMode": "Modo claro",
       "darkMode": "Modo oscuro",
       "language": "Idioma",

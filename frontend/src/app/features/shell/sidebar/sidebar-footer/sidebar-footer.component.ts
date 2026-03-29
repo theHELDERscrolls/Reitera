@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, input, signal } from '@angular/core';
+import { Component, HostListener, inject, input, output, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { AuthService } from '@core/auth/auth.service';
@@ -15,6 +15,7 @@ export class SidebarFooterComponent {
   readonly currentUser = this.authService.currentUser;
   readonly isCollapsed = input.required<boolean>();
   readonly isProfileOpen = signal(false);
+  readonly navigated = output<void>();
 
   toggleProfile(): void {
     this.isProfileOpen.update((v) => !v);

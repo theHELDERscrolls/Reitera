@@ -36,13 +36,13 @@
     </button>
   </div>
 
-  <!-- Mobile nav (always expanded, closes sidebar on navigation) -->
+  <!-- Mobile nav -->
   <app-sidebar-nav
     [isCollapsed]="false"
     (navItemClicked)="toggleMobile()"
     class="flex flex-col flex-1 overflow-hidden"
   />
 
-  <!-- Mobile footer (always expanded) -->
-  <app-sidebar-footer [isCollapsed]="false" />
+  <!-- Mobile footer -->
+  <app-sidebar-footer [isCollapsed]="false" (navigated)="toggleMobile()" />
 </div>
