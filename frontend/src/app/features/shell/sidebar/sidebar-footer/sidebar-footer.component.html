@@ -1,0 +1,26 @@
+<div class="relative border-t border-border shrink-0" data-profile-menu>
+  @if (isProfileOpen()) {
+    <app-profile-panel />
+  }
+
+  <button
+    (click)="toggleProfile()"
+    class="flex items-center w-full p-3 transition-colors hover:bg-overlay"
+    [class]="isCollapsed() ? 'justify-center' : 'gap-3'"
+    [attr.aria-label]="'shell.profile.open' | transloco"
+  >
+    <div
+      class="flex items-center justify-center text-xs font-semibold uppercase border rounded-full size-8 bg-overlay border-border shrink-0 text-foreground"
+    >
+      {{ (currentUser()?.username ?? '?').charAt(0) }}
+    </div>
+    @if (!isCollapsed()) {
+      <div class="flex flex-col items-start min-w-0 ">
+        <span class="w-full text-sm font-medium truncate border border-red-500 text-foreground">{{
+          currentUser()?.username ?? '—'
+        }}</span>
+        <span class="w-full text-xs truncate border border-blue-500 text-muted">{{ currentUser()?.id ?? '' }}</span>
+      </div>
+    }
+  </button>
+</div>

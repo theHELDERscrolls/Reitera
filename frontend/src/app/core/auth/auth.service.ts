@@ -7,7 +7,6 @@ import { environment } from '@environments/environment';
 import { LoginRequest, AuthResponse, RegisterRequest } from '@core/models/auth.model';
 import { User } from '@core/models/user.model';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);

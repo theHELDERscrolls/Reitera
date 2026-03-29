@@ -1,0 +1,46 @@
+<div class="absolute z-10 mb-2 overflow-hidden border rounded-lg shadow-lg bottom-full left-2 right-2 bg-surface border-border">
+  <!-- User info header -->
+  <div class="px-4 py-3 border-b border-border">
+    <p class="text-sm font-semibold truncate text-foreground">{{ currentUser()?.username ?? '—' }}</p>
+    <p class="text-xs truncate text-muted">{{ currentUser()?.email ?? '' }}</p>
+  </div>
+
+  <!-- Theme toggle -->
+  <button
+    (click)="themeService.toggle()"
+    class="flex items-center w-full gap-3 px-4 py-2.5 text-sm transition-colors text-muted hover:text-foreground hover:bg-overlay"
+  >
+    @if (isDark) {
+      <svg lucideSun class="size-4 shrink-0" />
+      <span>{{ 'shell.profile.lightMode' | transloco }}</span>
+    } @else {
+      <svg lucideMoon class="size-4 shrink-0" />
+      <span>{{ 'shell.profile.darkMode' | transloco }}</span>
+    }
+  </button>
+
+  <!-- Language -->
+  <div class="px-4 py-2 border-t border-border">
+    <p class="mb-1.5 text-xs text-muted">{{ 'shell.profile.language' | transloco }}</p>
+    <div class="flex gap-1">
+      @for (lang of languages; track lang.code) {
+        <button
+          (click)="selectLang(lang.code)"
+          class="px-2 py-1 text-xs transition-colors rounded"
+          [class]="activeLang === lang.code ? 'bg-primary text-primary-foreground' : 'text-muted hover:text-foreground hover:bg-overlay'"
+        >
+          {{ lang.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Logout -->
+  <button
+    (click)="logout()"
+    class="flex items-center w-full gap-3 px-4 py-2.5 text-sm transition-colors border-t text-error hover:bg-overlay border-border"
+  >
+    <svg lucideLogOut class="size-4 shrink-0" />
+    <span>{{ 'shell.profile.logout' | transloco }}</span>
+  </button>
+</div>

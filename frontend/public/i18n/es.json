@@ -59,5 +59,24 @@
         "server": "El registro ha fallado. Por favor, inténtalo de nuevo."
       }
     }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Inicio",
+      "decks": "Mazos",
+      "study": "Estudiar"
+    },
+    "sidebar": {
+      "collapse": "Plegar barra lateral",
+      "open": "Abrir menú",
+      "close": "Cerrar menú"
+    },
+    "profile": {
+      "open": "Abrir menú de perfil",
+      "lightMode": "Modo claro",
+      "darkMode": "Modo oscuro",
+      "language": "Idioma",
+      "logout": "Cerrar sesión"
+    }
   }
 }

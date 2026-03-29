@@ -59,5 +59,24 @@
         "server": "L'inscription a échoué. Veuillez réessayer."
       }
     }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Accueil",
+      "decks": "Paquets",
+      "study": "Étudier"
+    },
+    "sidebar": {
+      "collapse": "Réduire la barre latérale",
+      "open": "Ouvrir le menu",
+      "close": "Fermer le menu"
+    },
+    "profile": {
+      "open": "Ouvrir le menu du profil",
+      "lightMode": "Mode clair",
+      "darkMode": "Mode sombre",
+      "language": "Langue",
+      "logout": "Se déconnecter"
+    }
   }
 }
