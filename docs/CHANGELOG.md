@@ -11,6 +11,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.14.0] — 2026-03-29 — feature/28-app-shell-sidebar
+### Added
+- `AppShellComponent` in `features/shell/` — layout wrapper for all authenticated routes; `<router-outlet>` renders child views inside the main content area
+- `ThemeService` in `core/theme/` — reads `prefers-color-scheme` on first load; persists user preference in `localStorage`; applies `data-theme` attribute on `<html>` reactively via Angular `effect()`
+- `SidebarComponent` — collapsible aside with three zones (header, nav, footer); expanded/collapsed state persisted in `localStorage` (`sidebar_collapsed`); smooth CSS `transition-all` on width change
+- `SidebarHeaderComponent` — Reitera logo button that triggers collapse/expand; title hidden when collapsed
+- `SidebarNavComponent` — three nav links (Dashboard, Decks, Study) with Lucide icons, active-route highlight, and `navItemClicked` output to close the mobile overlay on navigation
+- `SidebarFooterComponent` — displays avatar initial, username and email; opens the profile panel on click; closes panel on outside click via `@HostListener` + `data-profile-menu` attribute guard
+- `ProfilePanelComponent` — fixed-position dropdown with user info, **View profile** link → `/profile`, theme toggle, language switcher and logout; navigation closes both the panel and the mobile sidebar overlay
+- `MobileHeaderComponent` — top bar shown only on small screens; Reitera logo and hamburger button that triggers the mobile sidebar
+- Mobile sidebar overlay — ¾-width slide-in panel with `translate-x` CSS transition; backdrop closes it on click; nav and profile navigation also close it automatically
+- `ProfilePanelService` stub registered in `core/profile-panel/` — scaffolded for future use
+- Stub routes `/decks`, `/study`, `/profile` registered and connected to the shell
+- `shell.*` i18n keys added to `en.json`, `es.json` and `fr.json` (nav labels, sidebar actions, profile menu options)
+
+### Changed
+- `AuthService` rewritten — replaces client-side JWT decode with `GET /users/me` after login/register and on page reload, so the full user profile (username, email) is available in the `currentUser` signal
+- `app.routes.ts` — all authenticated routes nested under the shell route with `authGuard`; `AppShellComponent` acts as the lazy-loaded layout parent
+- `frontend/package.json` version bumped to `0.14.0`
+
+---
+
 ## [0.13.0] — 2026-03-28 — feature/12-auth-login-register
 ### Added
 - `AuthService` in `core/auth/` — wraps `POST /auth/login`, `POST /auth/register` and client-side logout; stores `accessToken` and `refreshToken` in `localStorage`; exposes a readonly `currentUser` signal and `isLoggedIn` computed; restores user from stored token on page reload
