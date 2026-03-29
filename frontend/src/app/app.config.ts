@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([jwtInterceptor])),
     provideTransloco({
       config: {
-        availableLangs: ['en', 'es'],
+        availableLangs: ['en', 'es', 'fr'],
         defaultLang: 'en',
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),

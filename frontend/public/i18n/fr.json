@@ -1,0 +1,63 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "or": "ou"
+  },
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous à votre compte",
+      "email": "E-mail",
+      "email_placeholder": "vous@exemple.com",
+      "password": "Mot de passe",
+      "password_placeholder": "Votre mot de passe",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "no_account": "Pas encore de compte ?",
+      "go_register": "S'inscrire",
+      "success": "Bon retour ! Vous êtes maintenant connecté.",
+      "error": {
+        "email_required": "L'e-mail est obligatoire.",
+        "email_invalid": "Saisissez une adresse e-mail valide.",
+        "password_required": "Le mot de passe est obligatoire.",
+        "server": "Identifiants invalides. Veuillez réessayer."
+      }
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Commencez votre parcours d'apprentissage",
+      "username": "Nom d'utilisateur",
+      "username_placeholder": "votreenom",
+      "email": "E-mail",
+      "email_placeholder": "vous@exemple.com",
+      "first_name": "Prénom",
+      "first_name_placeholder": "Jean",
+      "last_name": "Nom",
+      "last_name_placeholder": "Dupont",
+      "password": "Mot de passe",
+      "password_placeholder": "Min. 8 caractères",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_password_placeholder": "Répétez votre mot de passe",
+      "submit": "Créer un compte",
+      "submitting": "Création en cours...",
+      "has_account": "Vous avez déjà un compte ?",
+      "go_login": "Se connecter",
+      "success": "Compte créé ! Bienvenue sur Reitera.",
+      "error": {
+        "username_required": "Le nom d'utilisateur est obligatoire.",
+        "username_min": "Le nom d'utilisateur doit contenir au moins 3 caractères.",
+        "username_max": "Le nom d'utilisateur ne peut pas dépasser 50 caractères.",
+        "email_required": "L'e-mail est obligatoire.",
+        "email_invalid": "Saisissez une adresse e-mail valide.",
+        "first_name_required": "Le prénom est obligatoire.",
+        "last_name_required": "Le nom est obligatoire.",
+        "password_required": "Le mot de passe est obligatoire.",
+        "password_pattern": "Min. 8 caractères avec majuscule, minuscule, chiffre et caractère spécial (@#$%^&+=!).",
+        "confirm_password_required": "Veuillez confirmer votre mot de passe.",
+        "password_mismatch": "Les mots de passe ne correspondent pas.",
+        "server": "L'inscription a échoué. Veuillez réessayer."
+      }
+    }
+  }
+}

@@ -1,0 +1,185 @@
+<div class="flex items-center justify-center min-h-screen p-4 bg-background">
+  <div class="w-full max-w-md">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl font-semibold text-foreground">
+        {{ 'auth.register.title' | transloco }}
+      </h1>
+      <p class="mt-1 text-sm text-muted-foreground">
+        {{ 'auth.register.subtitle' | transloco }}
+      </p>
+    </div>
+
+    <!-- Card -->
+    <div class="relative p-8 border bg-surface rounded-xl border-border">
+      <app-language-switcher />
+      <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+        <!-- Username -->
+        <div class="min-h-22.5 flex flex-col gap-1.5">
+          <label for="username" class="text-sm font-medium text-foreground">
+            {{ 'auth.register.username' | transloco }}
+          </label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            [placeholder]="'auth.register.username_placeholder' | transloco"
+            autocomplete="username"
+            class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            [class.border-error]="username?.invalid && username?.touched"
+          />
+          @if (username?.invalid && username?.touched) {
+            @if (username?.hasError('required')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.username_required' | transloco
+              }}</span>
+            } @else if (username?.hasError('minlength')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.username_min' | transloco
+              }}</span>
+            } @else if (username?.hasError('maxlength')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.username_max' | transloco
+              }}</span>
+            }
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="min-h-22.5 flex flex-col gap-1.5">
+          <label for="email" class="text-sm font-medium text-foreground">
+            {{ 'auth.register.email' | transloco }}
+          </label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            [placeholder]="'auth.register.email_placeholder' | transloco"
+            autocomplete="email"
+            class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            [class.border-error]="email?.invalid && email?.touched"
+          />
+          @if (email?.invalid && email?.touched) {
+            @if (email?.hasError('required')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.email_required' | transloco
+              }}</span>
+            } @else if (email?.hasError('email')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.email_invalid' | transloco
+              }}</span>
+            }
+          }
+        </div>
+
+        <!-- First name + Last name -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="min-h-22.5 flex flex-col gap-1.5">
+            <label for="firstName" class="text-sm font-medium text-foreground">
+              {{ 'auth.register.first_name' | transloco }}
+            </label>
+            <input
+              id="firstName"
+              type="text"
+              formControlName="firstName"
+              [placeholder]="'auth.register.first_name_placeholder' | transloco"
+              autocomplete="given-name"
+              class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              [class.border-error]="firstName?.invalid && firstName?.touched"
+            />
+            @if (firstName?.invalid && firstName?.touched) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.first_name_required' | transloco
+              }}</span>
+            }
+          </div>
+
+          <div class="min-h-22.5 flex flex-col gap-1.5">
+            <label for="lastName" class="text-sm font-medium text-foreground">
+              {{ 'auth.register.last_name' | transloco }}
+            </label>
+            <input
+              id="lastName"
+              type="text"
+              formControlName="lastName"
+              [placeholder]="'auth.register.last_name_placeholder' | transloco"
+              autocomplete="family-name"
+              class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              [class.border-error]="lastName?.invalid && lastName?.touched"
+            />
+            @if (lastName?.invalid && lastName?.touched) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.last_name_required' | transloco
+              }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="min-h-22.5 flex flex-col gap-1.5">
+          <label for="password" class="text-sm font-medium text-foreground">
+            {{ 'auth.register.password' | transloco }}
+          </label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            [placeholder]="'auth.register.password_placeholder' | transloco"
+            autocomplete="new-password"
+            class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            [class.border-error]="password?.invalid && password?.touched"
+          />
+          @if (password?.invalid && password?.touched) {
+            @if (password?.hasError('required')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.password_required' | transloco
+              }}</span>
+            } @else if (password?.hasError('pattern')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.password_pattern' | transloco
+              }}</span>
+            }
+          }
+        </div>
+
+        <!-- Confirm password -->
+        <div class="min-h-22.5 flex flex-col gap-1.5">
+          <label for="confirmPassword" class="text-sm font-medium text-foreground">
+            {{ 'auth.register.confirm_password' | transloco }}
+          </label>
+          <input
+            id="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            [placeholder]="'auth.register.confirm_password_placeholder' | transloco"
+            autocomplete="new-password"
+            class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            [class.border-error]="confirmPassword?.touched && form.hasError('passwordMismatch')"
+          />
+          @if (confirmPassword?.touched && form.hasError('passwordMismatch')) {
+            <span class="text-xs text-error">{{
+              'auth.register.error.password_mismatch' | transloco
+            }}</span>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          [disabled]="loading()"
+          class="mt-1 w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {{ (loading() ? 'auth.register.submitting' : 'auth.register.submit') | transloco }}
+        </button>
+
+        <!-- Login link -->
+        <p class="text-sm text-center text-muted-foreground">
+          {{ 'auth.register.has_account' | transloco }}
+          <a routerLink="/auth/login" class="font-medium text-primary hover:underline">
+            {{ 'auth.register.go_login' | transloco }}
+          </a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,7 @@
       "submitting": "Iniciando sesión...",
       "no_account": "¿No tienes cuenta?",
       "go_register": "Regístrate",
+      "success": "¡Bienvenido de nuevo! Has iniciado sesión correctamente.",
       "error": {
         "email_required": "El email es obligatorio.",
         "email_invalid": "Introduce una dirección de email válida.",
@@ -42,6 +43,7 @@
       "submitting": "Creando cuenta...",
       "has_account": "¿Ya tienes cuenta?",
       "go_login": "Inicia sesión",
+      "success": "¡Cuenta creada! Bienvenido a Reitera.",
       "error": {
         "username_required": "El nombre de usuario es obligatorio.",
         "username_min": "El nombre de usuario debe tener al menos 3 caracteres.",

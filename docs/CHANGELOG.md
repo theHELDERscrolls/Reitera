@@ -11,6 +11,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.13.0] — 2026-03-28 — feature/12-auth-login-register
+### Added
+- `AuthService` in `core/auth/` — wraps `POST /auth/login`, `POST /auth/register` and client-side logout; stores `accessToken` and `refreshToken` in `localStorage`; exposes a readonly `currentUser` signal and `isLoggedIn` computed; restores user from stored token on page reload
+- `LoginComponent` — reactive form with email + password fields, inline field validation, and link to register
+- `RegisterComponent` — reactive form with all fields (`username`, `email`, `firstName`, `lastName`, `password`, `confirmPassword`); cross-field password match validator; inline field validation; link to login
+- `authGuard` — functional `CanActivateFn` that redirects unauthenticated users to `/auth/login`
+- `noAuthGuard` — functional `CanActivateFn` that redirects already-authenticated users away from auth routes to `/dashboard`
+- `auth.routes.ts` in `features/auth/` — lazy routes for `/auth/login` and `/auth/register` using `loadComponent` with `export default`
+- `DashboardComponent` — stub component registered as the post-login landing route at `/dashboard`
+- `app.routes.ts` updated — root redirect to `/auth/login`, auth feature via `loadChildren`, dashboard via `loadComponent`; both protected by their respective guards
+- `ToastService` in `core/toast/` — singleton signal-based notification service with `success`, `error`, `warning` and `info` helpers; auto-dismiss via `setTimeout`; manual `dismiss(id)`
+- `ToastComponent` in `shared/components/toast/` — fixed bottom-right overlay; `@for` loop over `toastService.toasts()`; animated progress bar that shrinks over the toast duration; `LucideX` dismiss button
+- `LanguageSwitcherComponent` in `shared/components/language-switcher/` — click-outside-aware dropdown that calls `TranslocoService.setActiveLang()`; integrated into both auth screens
+- `Toast` model and `ToastType` union type added to `core/models/toast.model.ts`
+- i18n keys for auth (login, register) and toast copy added to `en.json`, `es.json` and `fr.json`
+- Server errors on login and register shown via the global toast system
+
+---
+
+## [0.12.0] — 2026-03-27 — feature/13-frontend-base-config
+### Added
+- TypeScript path aliases in `tsconfig.json`: `@core/*`, `@features/*`, `@shared/*`, `@environments/*` — all imports use aliases instead of relative paths
+- Catppuccin design token system in `styles.css`:
+  - Raw palette layer: all Catppuccin Mocha (dark) and Latte (light) named color variables
+  - Semantic token layer: theme-aware CSS custom properties (foreground, background, surface, primary, success, error, warning, info, border) defined in `:root` (dark) and `[data-theme='light']`
+  - `@theme inline` block exposing all semantic tokens as Tailwind utilities (`bg-background`, `text-primary`, etc.)
+- Theme switching via `data-theme` attribute on `<html>` — dark is default; light applied by setting `data-theme="light"`
+- `@jsverse/transloco` v8 configured — `TranslocoHttpLoader`, `availableLangs: ['en', 'es', 'fr']`, `defaultLang: 'en'`, `reRenderOnLangChange: true`
+- Translation files `public/i18n/en.json`, `es.json`, `fr.json` with `common.*` namespace
+- `angular.json` schematics config: `"type": "component"` and `"type": "service"` for `.component.ts` / `.service.ts` file suffixes
+
+---
+
 ## [0.11.0] — 2026-03-27 — feature/11-frontend-setup
 ### Added
 - Angular 21 project scaffolded in `frontend/` — standalone components, no NgModules, Tailwind CSS v4 via PostCSS, Vitest for testing

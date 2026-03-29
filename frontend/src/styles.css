@@ -205,6 +205,9 @@
 
   /* Focus */
   --color-ring: var(--color-ring);
+
+  /* Animations */
+  --animate-shrink: shrink 4s linear;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -214,4 +217,13 @@
 html {
   background-color: var(--color-background);
   color: var(--color-foreground);
+}
+
+@keyframes shrink {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
 }

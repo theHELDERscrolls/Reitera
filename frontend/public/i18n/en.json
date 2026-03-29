@@ -16,6 +16,7 @@
       "submitting": "Signing in...",
       "no_account": "Don't have an account?",
       "go_register": "Sign up",
+      "success": "Welcome back! You are now signed in.",
       "error": {
         "email_required": "Email is required.",
         "email_invalid": "Enter a valid email address.",
@@ -42,6 +43,7 @@
       "submitting": "Creating account...",
       "has_account": "Already have an account?",
       "go_login": "Sign in",
+      "success": "Account created! Welcome to Reitera.",
       "error": {
         "username_required": "Username is required.",
         "username_min": "Username must be at least 3 characters.",

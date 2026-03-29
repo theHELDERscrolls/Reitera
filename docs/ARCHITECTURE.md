@@ -111,6 +111,66 @@ Study sessions follow a **batch architecture** — the backend is only hit twice
 
 **Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Again on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
 
+## Frontend Architecture
+
+The Angular 21 frontend is a **Single-Page Application** using standalone components — no NgModules anywhere.
+
+### Folder Structure
+
+```
+src/app/
+├── core/           → Singleton services, guards, interceptors, and models (never imported by feature modules)
+│   ├── auth/       → AuthService
+│   ├── guards/     → authGuard, noAuthGuard (functional CanActivateFn)
+│   ├── interceptors/ → jwtInterceptor (functional HttpInterceptorFn)
+│   ├── models/     → TypeScript interfaces mapping all backend DTOs
+│   └── toast/      → ToastService
+├── features/       → One folder per feature; each has its own routes file and components
+│   ├── auth/       → auth.routes.ts, LoginComponent, RegisterComponent
+│   └── dashboard/  → DashboardComponent (stub)
+└── shared/         → Reusable components with no feature-specific logic
+    └── components/ → ToastComponent, LanguageSwitcherComponent
+```
+
+### Routing Pattern
+
+All feature routes are **lazy-loaded**. Components use `export default class` so `loadComponent` needs no `.then()` callback:
+
+```typescript
+// app.routes.ts
+{ path: 'auth', loadChildren: () => import('./features/auth/auth.routes') }
+
+// auth.routes.ts
+{ path: 'login', loadComponent: () => import('./login/login.component') }
+
+// login.component.ts
+export default class LoginComponent { ... }
+```
+
+### State Management
+
+Global state uses Angular **Signals** — no NgRx, no BehaviorSubjects:
+
+- Private writable signal: `private readonly _x = signal<T>(null)`
+- Public readonly surface: `readonly x = this._x.asReadonly()`
+- Derived state: `readonly isX = computed(() => this._x() !== null)`
+
+Services are injected via `inject()` (functional injection, no constructor parameters).
+
+### Design Tokens
+
+Three-layer token system in `styles.css`:
+
+1. **Raw palette** — all Catppuccin Mocha/Latte color variables
+2. **Semantic tokens** — theme-aware CSS custom properties (`--color-background`, `--color-primary`, etc.) swapped by `data-theme` attribute on `<html>`
+3. **`@theme inline`** — Tailwind v4 block exposing semantic tokens as utility classes (`bg-background`, `text-primary`, etc.)
+
+### i18n
+
+Transloco v8 — translation files live in `public/i18n/{lang}.json`. Components use `TranslocoPipe` (`| transloco`), never the deprecated `TranslocoDirective` with `inlineRead`.
+
+---
+
 ## Security Decisions
 
 ### 404 instead of 403 on unauthorized resource access (IDOR prevention)

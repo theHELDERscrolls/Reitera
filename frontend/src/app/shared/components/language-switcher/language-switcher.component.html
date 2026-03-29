@@ -1,0 +1,35 @@
+<div class="absolute top-2 right-2" data-language-switcher>
+  <!-- Trigger -->
+  <button
+    (click)="isOpen.set(!isOpen())"
+    class="flex items-center gap-1 px-2 py-1 text-xs font-medium transition rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-alt"
+    [attr.aria-expanded]="isOpen()"
+  >
+    <svg lucideEarth class="size-3.5" />
+    <span>{{ activeLabel }}</span>
+    <svg lucideChevronDown class="transition-transform size-3" [class.rotate-180]="isOpen()" />
+  </button>
+
+  <!-- Dropdown -->
+  @if (isOpen()) {
+    <ul
+      class="absolute right-0 w-32 mt-1 overflow-hidden border rounded-lg shadow-lg top-full border-border bg-surface"
+    >
+      @for (lang of languages; track lang.code) {
+        <li>
+          <button
+            (click)="select(lang.code)"
+            class="flex items-center justify-between w-full px-3 py-2 text-xs transition hover:bg-surface-alt"
+            [class.text-primary]="lang.code === activeLang"
+            [class.text-muted-foreground]="lang.code !== activeLang"
+          >
+            <span>{{ lang.label }}</span>
+            @if (lang.code === activeLang) {
+              <span class="size-1.5 rounded-full bg-primary"></span>
+            }
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>
