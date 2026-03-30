@@ -1,0 +1,12 @@
+<div class="flex items-center justify-center h-16 px-3 border-b border-border shrink-0">
+  <button
+    (click)="toggle.emit()"
+    class="flex items-center min-w-0 gap-2 rounded-md hover:opacity-80 transition-opacity"
+    [attr.aria-label]="'shell.sidebar.collapse' | transloco"
+  >
+    <svg lucideLibraryBig class="rounded-md p-0.5 size-7 bg-primary shrink-0 text-background" />
+    @if (!isCollapsed()) {
+      <span class="font-semibold truncate text-foreground">Reitera</span>
+    }
+  </button>
+</div>

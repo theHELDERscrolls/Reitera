@@ -119,29 +119,51 @@ The Angular 21 frontend is a **Single-Page Application** using standalone compon
 
 ```
 src/app/
-├── core/           → Singleton services, guards, interceptors, and models (never imported by feature modules)
-│   ├── auth/       → AuthService
-│   ├── guards/     → authGuard, noAuthGuard (functional CanActivateFn)
-│   ├── interceptors/ → jwtInterceptor (functional HttpInterceptorFn)
-│   ├── models/     → TypeScript interfaces mapping all backend DTOs
-│   └── toast/      → ToastService
-├── features/       → One folder per feature; each has its own routes file and components
-│   ├── auth/       → auth.routes.ts, LoginComponent, RegisterComponent
-│   └── dashboard/  → DashboardComponent (stub)
-└── shared/         → Reusable components with no feature-specific logic
-    └── components/ → ToastComponent, LanguageSwitcherComponent
+├── core/               → Singleton services, guards, interceptors, and models (never imported by feature modules)
+│   ├── auth/           → AuthService (login, register, logout, GET /users/me, token storage)
+│   ├── guards/         → authGuard, noAuthGuard (functional CanActivateFn)
+│   ├── interceptors/   → jwtInterceptor (functional HttpInterceptorFn)
+│   ├── models/         → TypeScript interfaces mapping all backend DTOs
+│   ├── profile-panel/  → ProfilePanelService (stub — scaffolded for future use)
+│   ├── theme/          → ThemeService (dark/light, localStorage persistence, data-theme on <html>)
+│   └── toast/          → ToastService
+├── features/           → One folder per feature; each has its own routes file and components
+│   ├── auth/           → auth.routes.ts, LoginComponent, RegisterComponent
+│   ├── dashboard/      → DashboardComponent (stub)
+│   ├── decks/          → DecksComponent (stub)
+│   ├── profile/        → ProfileComponent (stub)
+│   ├── shell/          → AppShellComponent + all layout sub-components
+│   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
+│   │   └── sidebar/               → SidebarComponent (collapsible, desktop + mobile overlay)
+│   │       ├── sidebar-header/    → SidebarHeaderComponent (logo + collapse toggle)
+│   │       ├── sidebar-nav/       → SidebarNavComponent (nav links with icons)
+│   │       └── sidebar-footer/    → SidebarFooterComponent (avatar, username, email, profile panel trigger)
+│   │           └── profile-panel/ → ProfilePanelComponent (view profile, theme, language, logout)
+│   └── study/          → StudyComponent (stub)
+└── shared/             → Reusable components with no feature-specific logic
+    └── components/     → ToastComponent, LanguageSwitcherComponent
 ```
 
 ### Routing Pattern
 
-All feature routes are **lazy-loaded**. Components use `export default class` so `loadComponent` needs no `.then()` callback:
+All feature routes are **lazy-loaded**. Components use `export default class` so `loadComponent` needs no `.then()` callback.
+
+Authenticated routes are **nested under `AppShellComponent`**, which acts as the layout parent. This ensures the sidebar is always visible when logged in:
 
 ```typescript
 // app.routes.ts
-{ path: 'auth', loadChildren: () => import('./features/auth/auth.routes') }
-
-// auth.routes.ts
-{ path: 'login', loadComponent: () => import('./login/login.component') }
+{ path: 'auth', loadChildren: () => import('./features/auth/auth.routes'), canActivate: [noAuthGuard] }
+{
+  path: '',
+  loadComponent: () => import('./features/shell/app-shell.component'),
+  canActivate: [authGuard],
+  children: [
+    { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component') },
+    { path: 'decks',     loadComponent: () => import('./features/decks/decks.component') },
+    { path: 'study',     loadComponent: () => import('./features/study/study.component') },
+    { path: 'profile',   loadComponent: () => import('./features/profile/profile.component') },
+  ],
+}
 
 // login.component.ts
 export default class LoginComponent { ... }

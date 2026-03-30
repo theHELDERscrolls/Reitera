@@ -1,0 +1,48 @@
+<!-- ─── DESKTOP SIDEBAR ───────────────────────────────────────────────────── -->
+<aside
+  class="flex-col hidden h-full overflow-hidden transition-all duration-300 ease-in-out border-r md:flex shrink-0 bg-surface border-border"
+  [class]="isCollapsed() ? 'w-14' : 'w-64'"
+>
+  <app-sidebar-header [isCollapsed]="isCollapsed()" (toggle)="toggleCollapse()" />
+  <app-sidebar-nav [isCollapsed]="isCollapsed()" class="flex flex-col flex-1 overflow-hidden" />
+  <app-sidebar-footer [isCollapsed]="isCollapsed()" />
+</aside>
+
+<!-- ─── MOBILE OVERLAY ────────────────────────────────────────────────────── -->
+@if (isMobileOpen()) {
+  <div
+    class="fixed inset-0 z-40 bg-black/50 md:hidden"
+    (click)="toggleMobile()"
+    aria-hidden="true"
+  ></div>
+}
+
+<div
+  class="fixed inset-y-0 left-0 z-50 flex flex-col w-3/4 max-w-xs transition-transform duration-300 ease-in-out bg-surface md:hidden"
+  [class]="isMobileOpen() ? 'translate-x-0' : '-translate-x-full'"
+>
+  <!-- Mobile header -->
+  <div class="flex items-center justify-between px-4 border-b h-14 border-border shrink-0">
+    <div class="flex items-center gap-2">
+      <svg lucideLibraryBig class="rounded-md p-0.5 size-7 bg-primary shrink-0 text-background" />
+      <span class="font-semibold text-foreground">Reitera</span>
+    </div>
+    <button
+      (click)="toggleMobile()"
+      class="p-1.5 rounded-md text-muted hover:text-foreground hover:bg-overlay transition-colors"
+      [attr.aria-label]="'shell.sidebar.close' | transloco"
+    >
+      <svg lucideX class="stroke-2 size-6" />
+    </button>
+  </div>
+
+  <!-- Mobile nav -->
+  <app-sidebar-nav
+    [isCollapsed]="false"
+    (navItemClicked)="toggleMobile()"
+    class="flex flex-col flex-1 overflow-hidden"
+  />
+
+  <!-- Mobile footer -->
+  <app-sidebar-footer [isCollapsed]="false" (navigated)="toggleMobile()" />
+</div>

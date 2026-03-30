@@ -59,5 +59,25 @@
         "server": "Registration failed. Please try again."
       }
     }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "decks": "Decks",
+      "study": "Study"
+    },
+    "sidebar": {
+      "collapse": "Collapse sidebar",
+      "open": "Open menu",
+      "close": "Close menu"
+    },
+    "profile": {
+      "open": "Open profile menu",
+      "viewProfile": "View profile",
+      "lightMode": "Light mode",
+      "darkMode": "Dark mode",
+      "language": "Language",
+      "logout": "Log out"
+    }
   }
 }

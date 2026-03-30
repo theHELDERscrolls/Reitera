@@ -15,8 +15,26 @@ export const routes: Routes = [
     canActivate: [noAuthGuard],
   },
   {
-    path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard/dashboard.component'),
+    path: '',
+    loadComponent: () => import('./features/shell/app-shell.component'),
     canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard.component'),
+      },
+      {
+        path: 'decks',
+        loadComponent: () => import('./features/decks/decks.component'),
+      },
+      {
+        path: 'study',
+        loadComponent: () => import('./features/study/study.component'),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component'),
+      },
+    ],
   },
 ];

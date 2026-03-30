@@ -1,0 +1,40 @@
+<nav aria-label="navigation bar" class="flex flex-col flex-1 gap-1 px-2 py-4 overflow-y-auto">
+  <a
+    routerLink="/dashboard"
+    (click)="navItemClicked.emit()"
+    routerLinkActive="bg-overlay text-foreground"
+    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    [attr.title]="isCollapsed() ? ('shell.nav.dashboard' | transloco) : null"
+  >
+    <svg lucideLayoutDashboard class="size-4 shrink-0" />
+    @if (!isCollapsed()) {
+      <span class="font-semibold">{{ 'shell.nav.dashboard' | transloco }}</span>
+    }
+  </a>
+
+  <a
+    routerLink="/decks"
+    (click)="navItemClicked.emit()"
+    routerLinkActive="bg-overlay text-foreground"
+    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    [attr.title]="isCollapsed() ? ('shell.nav.decks' | transloco) : null"
+  >
+    <svg lucideBookOpen class="size-4 shrink-0" />
+    @if (!isCollapsed()) {
+      <span class="font-semibold">{{ 'shell.nav.decks' | transloco }}</span>
+    }
+  </a>
+
+  <a
+    routerLink="/study"
+    (click)="navItemClicked.emit()"
+    routerLinkActive="bg-overlay text-foreground"
+    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    [attr.title]="isCollapsed() ? ('shell.nav.study' | transloco) : null"
+  >
+    <svg lucideBrain class="size-4 shrink-0" />
+    @if (!isCollapsed()) {
+      <span class="font-semibold">{{ 'shell.nav.study' | transloco }}</span>
+    }
+  </a>
+</nav>

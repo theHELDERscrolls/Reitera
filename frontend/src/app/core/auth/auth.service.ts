@@ -7,38 +7,29 @@ import { environment } from '@environments/environment';
 import { LoginRequest, AuthResponse, RegisterRequest } from '@core/models/auth.model';
 import { User } from '@core/models/user.model';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly apiUrl = `${environment.apiUrl}/auth`;
+  private readonly usersUrl = `${environment.apiUrl}/users`;
   private readonly _currentUser = signal<User | null>(null);
 
   readonly currentUser = this._currentUser.asReadonly();
   readonly isLoggedIn = computed(() => this._currentUser() !== null);
 
   constructor() {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      this._currentUser.set(this.decodeUserFromToken(token));
+    if (localStorage.getItem('accessToken')) {
+      this.fetchCurrentUser().subscribe();
     }
   }
 
-  /**
-   * Sends login credentials to the backend.
-   * On success, stores tokens and loads the user profile.
-   */
   login(data: LoginRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/login`, data)
       .pipe(tap((response) => this.handleAuthSuccess(response)));
   }
 
-  /**
-   * Registers a new user, then logs in automatically with the same credentials.
-   * The backend register endpoint returns only user data, not tokens.
-   */
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.http
       .post<void>(`${this.apiUrl}/register`, data)
@@ -69,12 +60,22 @@ export class AuthService {
   }
 
   /**
-   * Stores tokens and updates the current user signal from the JWT payload.
+   * Fetches the full user profile from the backend and updates the signal.
+   * Called after login/register and on page reload when a token is present.
+   */
+  private fetchCurrentUser(): Observable<User> {
+    return this.http
+      .get<User>(`${this.usersUrl}/me`)
+      .pipe(tap((user) => this._currentUser.set(user)));
+  }
+
+  /**
+   * Stores tokens after a successful auth response, then fetches the full user profile.
    */
   private handleAuthSuccess(response: AuthResponse): void {
     localStorage.setItem('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
-    this._currentUser.set(this.decodeUserFromToken(response.accessToken));
+    this.fetchCurrentUser().subscribe();
   }
 
   /**
@@ -85,27 +86,5 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     this._currentUser.set(null);
     this.router.navigate(['/auth/login']);
-  }
-
-  /**
-   * Decodes the JWT payload to extract basic user info without a library.
-   * JWTs are base64url-encoded — the payload is the second segment.
-   */
-  private decodeUserFromToken(token: string): User | null {
-    try {
-      const payload = token.split('.')[1];
-      const decoded = JSON.parse(atob(payload));
-
-      return {
-        id: decoded.sub,
-        username: decoded.sub,
-        email: '',
-        firstName: '',
-        lastName: '',
-        roleName: decoded.role ?? '',
-      };
-    } catch {
-      return null;
-    }
   }
 }

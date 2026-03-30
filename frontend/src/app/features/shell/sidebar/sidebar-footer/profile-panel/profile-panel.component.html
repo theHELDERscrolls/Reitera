@@ -1,0 +1,47 @@
+<div
+  class="fixed z-10 mb-2 overflow-hidden border rounded-lg shadow-lg bottom-17 w-2xs left-2 bg-surface border-border"
+>
+  <!-- Language -->
+  <app-language-switcher></app-language-switcher>
+
+  <!-- User info header -->
+  <div class="px-4 py-3 mt-6 border-b border-border">
+    <p class="text-sm font-semibold truncate text-foreground">
+      {{ currentUser()?.username ?? '—' }}
+    </p>
+    <p class="text-xs truncate text-muted">{{ currentUser()?.email ?? '' }}</p>
+  </div>
+
+  <!-- View profile -->
+  <a
+    routerLink="/profile"
+    (click)="navigated.emit()"
+    class="flex items-center cursor-default w-full gap-3 px-4 py-2.5 text-sm transition-colors text-muted hover:text-foreground hover:bg-overlay"
+  >
+    <svg lucideUser class="size-4 shrink-0" />
+    <span>{{ 'shell.profile.viewProfile' | transloco }}</span>
+  </a>
+
+  <!-- Theme toggle -->
+  <button
+    (click)="themeService.toggle()"
+    class="flex items-center w-full gap-3 px-4 py-2.5 text-sm transition-colors text-muted hover:text-foreground hover:bg-overlay"
+  >
+    @if (isDark) {
+      <svg lucideSun class="size-4 shrink-0" />
+      <span>{{ 'shell.profile.lightMode' | transloco }}</span>
+    } @else {
+      <svg lucideMoon class="size-4 shrink-0" />
+      <span>{{ 'shell.profile.darkMode' | transloco }}</span>
+    }
+  </button>
+
+  <!-- Logout -->
+  <button
+    (click)="logout()"
+    class="flex items-center w-full gap-3 px-4 py-2.5 text-sm transition-colors text-error hover:bg-overlay border-border"
+  >
+    <svg lucideLogOut class="size-4 shrink-0" />
+    <span>{{ 'shell.profile.logout' | transloco }}</span>
+  </button>
+</div>
