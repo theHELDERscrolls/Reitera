@@ -22,4 +22,10 @@ public interface DeckRepository extends JpaRepository<Deck, Integer> {
      */
     @Query("SELECT DISTINCT d.category FROM Deck d WHERE d.owner.id = :userId AND d.category IS NOT NULL")
     List<Category> findDistinctCategoriesByOwnerId(@Param("userId") UUID userId);
+
+    /**
+     * Counts how many decks are currently assigned to the given category.
+     * Used to detect orphaned categories after a deck is deleted or reassigned.
+     */
+    long countByCategory(Category category);
 }

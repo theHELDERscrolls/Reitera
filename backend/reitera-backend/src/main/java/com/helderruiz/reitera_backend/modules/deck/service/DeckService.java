@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Core business logic for Deck management.
@@ -27,11 +28,10 @@ public class DeckService {
     /**
      * Creates a new deck and assigns it to the authenticated user.
      */
+    @Transactional
     public DeckResponseDTO createDeck(DeckRequestDTO dto, User owner) {
-        // Resolve the optional category from the provided ID
-        Category category = resolveCategory(dto.categoryId());
+        Category category = findOrCreateCategory(dto.categoryId(), dto.categoryName());
 
-        // Build and persist the deck entity, setting the authenticated user as owner
         Deck deck = Deck.builder()
                 .title(dto.title())
                 .description(dto.description())
@@ -60,24 +60,44 @@ public class DeckService {
 
     /**
      * Updates an existing deck. Only the owner can perform this operation.
+     * If the category changes, the old category is checked for orphan status and deleted if unreferenced.
      */
+    @Transactional
     public DeckResponseDTO updateDeck(Integer id, DeckRequestDTO dto, User owner) {
         Deck deck = findOwnedDeck(id, owner);
 
-        // Apply updated values from the request DTO
+        // Keep a reference to the old category before overwriting it
+        Category oldCategory = deck.getCategory();
+        Category newCategory = findOrCreateCategory(dto.categoryId(), dto.categoryName());
+
         deck.setTitle(dto.title());
         deck.setDescription(dto.description());
         deck.setPublic(dto.isPublic());
-        deck.setCategory(resolveCategory(dto.categoryId()));
+        deck.setCategory(newCategory);
 
-        return toResponseDTO(deckRepository.save(deck));
+        DeckResponseDTO response = toResponseDTO(deckRepository.save(deck));
+
+        // If the category changed, check whether the old one is now orphaned
+        boolean categoryChanged = !isSameCategory(oldCategory, newCategory);
+        if (categoryChanged) {
+            deleteOrphanedCategory(oldCategory);
+        }
+
+        return response;
     }
 
     /**
      * Deletes a deck by ID. Only the owner can perform this operation.
+     * After deletion, the former category is checked for orphan status and deleted if unreferenced.
      */
+    @Transactional
     public void deleteDeck(Integer id, User owner) {
-        deckRepository.delete(findOwnedDeck(id, owner));
+        Deck deck = findOwnedDeck(id, owner);
+        Category formerCategory = deck.getCategory();
+
+        deckRepository.delete(deck);
+
+        deleteOrphanedCategory(formerCategory);
     }
 
     // --- Private helpers ---
@@ -99,13 +119,50 @@ public class DeckService {
     }
 
     /**
-     * Resolves a Category entity from an optional ID.
-     * Returns null if no categoryId is provided (deck without category is valid).
+     * Resolves the category to assign to a deck using a two-step strategy:
+     *
+     * 1. If categoryId is provided, fetch the existing category by ID (fails with 404 if not found).
+     * 2. Otherwise, if categoryName is provided, search by name (case-insensitive).
+     *    If a match is found it is reused; if not, a new Category row is created and saved.
+     * 3. If neither is provided, returns null (deck without category is valid).
+     *
+     * categoryId takes precedence over categoryName when both are supplied.
      */
-    private Category resolveCategory(Integer categoryId) {
-        if (categoryId == null) return null;
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
+    private Category findOrCreateCategory(Integer categoryId, String categoryName) {
+        if (categoryId != null) {
+            return categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
+        }
+
+        if (categoryName != null && !categoryName.isBlank()) {
+            return categoryRepository.findByNameIgnoreCase(categoryName.trim())
+                    .orElseGet(() -> categoryRepository.save(
+                            Category.builder().name(categoryName.trim()).build()
+                    ));
+        }
+
+        return null;
+    }
+
+    /**
+     * Deletes the given category if it is no longer referenced by any deck.
+     * Does nothing if the category is null (deck had no category).
+     */
+    private void deleteOrphanedCategory(Category category) {
+        if (category == null) return;
+        if (deckRepository.countByCategory(category) == 0) {
+            categoryRepository.delete(category);
+        }
+    }
+
+    /**
+     * Returns true if both category references point to the same category (or are both null).
+     * Used to avoid an unnecessary orphan check when the category did not change.
+     */
+    private boolean isSameCategory(Category a, Category b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return a.getId().equals(b.getId());
     }
 
     /**

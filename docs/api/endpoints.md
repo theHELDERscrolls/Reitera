@@ -121,10 +121,17 @@ Creates a new deck for the authenticated user.
   "title": "Historia de España",
   "description": "Repaso de eventos clave del siglo XX",
   "isPublic": false,
-  "categoryId": null
+  "categoryId": null,
+  "categoryName": null
 }
 ```
-`categoryId` is optional. `title` is required (max 100 characters).
+
+- `title` is required (max 100 characters).
+- `categoryId` and `categoryName` are both optional. Use one or the other:
+  - `categoryId` — assigns an existing category by ID.
+  - `categoryName` — find-or-create: if a category with that name already exists (case-insensitive) it is reused; otherwise a new category row is created automatically.
+  - If both are supplied, `categoryId` takes precedence.
+  - If neither is supplied, the deck is created without a category.
 
 **Response `201 Created`:** `DeckResponseDTO`
 
@@ -165,14 +172,14 @@ Returns a single deck by ID.
 ### PUT `/api/v1/decks/{id}`
 Updates an existing deck (full replacement of all fields).
 
-**Request body:** Same as POST.
+**Request body:** Same as POST. The same `categoryId` / `categoryName` find-or-create logic applies. If the category changes, the old category is automatically deleted if no other deck references it.
 
 **Response `200 OK`:** Updated `DeckResponseDTO`
 
 ---
 
 ### DELETE `/api/v1/decks/{id}`
-Deletes a deck by ID.
+Deletes a deck by ID. If the deck had a category and no other deck references it after deletion, the category row is automatically deleted.
 
 **Response `204 No Content`**
 
@@ -343,15 +350,16 @@ Returns the profile of the currently authenticated user.
 
 ## Categories
 
-Returns only the categories used across the authenticated user's own decks. Intended for frontend autocomplete when creating a new deck.
+Categories are a shared global table — there is no dedicated creation endpoint. They are created automatically via the find-or-create logic in `POST /api/v1/decks` and `PUT /api/v1/decks/{id}` when a `categoryName` is supplied. They are also deleted automatically when no deck references them anymore (orphan cleanup).
 
 ### GET `/api/v1/categories`
+Returns the distinct categories assigned to the authenticated user's own decks. Intended for frontend autocomplete when creating or editing a deck.
 
 **Response `200 OK`:**
 ```json
 [
-  { "id": 1, "name": "Historia de España", "description": "..." },
-  { "id": 2, "name": "Programación Java",  "description": "..." }
+  { "id": 1, "name": "Historia de España", "description": null },
+  { "id": 2, "name": "Programación Java",  "description": null }
 ]
 ```
 
