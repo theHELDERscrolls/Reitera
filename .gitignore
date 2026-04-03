@@ -30,3 +30,6 @@ Thumbs.db
 
 # ===== Obsidian (docs viewer) =====
 docs/.obsidian/
+
+# ===== Claude Code =====
+CLAUDE.md

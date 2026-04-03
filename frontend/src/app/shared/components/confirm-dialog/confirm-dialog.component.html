@@ -1,0 +1,45 @@
+<!-- Backdrop -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+  (click)="cancelled.emit()"
+>
+  <!-- Modal card -->
+  <div
+    class="flex flex-col w-full max-w-sm border shadow-xl bg-surface rounded-xl border-border"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Body -->
+    <div class="flex flex-col items-center gap-3 p-6 text-center">
+      <div class="flex items-center justify-center rounded-full size-12" [class]="config().iconBg">
+        @if (variant() === 'success') {
+          <svg lucideCircleCheck class="size-6" [class]="config().iconColor" />
+        } @else if (variant() === 'info') {
+          <svg lucideInfo class="size-6" [class]="config().iconColor" />
+        } @else {
+          <svg lucideTriangleAlert class="size-6" [class]="config().iconColor" />
+        }
+      </div>
+      <div class="flex flex-col gap-1">
+        <h2 class="text-base font-semibold text-foreground">{{ title() }}</h2>
+        <p class="text-sm text-muted">{{ message() }}</p>
+      </div>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="flex gap-2 px-6 pb-6">
+      <button
+        (click)="cancelled.emit()"
+        class="flex-1 px-4 py-2 text-sm font-medium transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
+      >
+        {{ 'common.cancel' | transloco }}
+      </button>
+      <button
+        (click)="confirmed.emit()"
+        class="flex-1 px-4 py-2 text-sm font-medium transition-colors rounded-lg"
+        [class]="config().buttonClass"
+      >
+        {{ confirmLabel() ?? ('common.confirm' | transloco) }}
+      </button>
+    </div>
+  </div>
+</div>

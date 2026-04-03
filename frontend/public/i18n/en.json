@@ -2,7 +2,10 @@
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong. Please try again.",
-    "or": "or"
+    "or": "or",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete"
   },
   "auth": {
     "login": {
@@ -58,6 +61,61 @@
         "password_mismatch": "Passwords do not match.",
         "server": "Registration failed. Please try again."
       }
+    }
+  },
+  "decks": {
+    "title": "My Decks",
+    "subtitle": "Manage and study your flashcard decks",
+    "newDeck": "New deck",
+    "filter": {
+      "all": "All"
+    },
+    "pagination": {
+      "prev": "Previous page",
+      "next": "Next page"
+    },
+    "card": {
+      "public": "Public",
+      "private": "Private",
+      "options": "Deck options",
+      "edit": "Edit deck",
+      "delete": "Delete deck"
+    },
+    "empty": {
+      "title": "No decks yet",
+      "subtitle": "Create your first deck to start studying"
+    },
+    "form": {
+      "createTitle": "New deck",
+      "editTitle": "Edit deck",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Spanish Vocabulary",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "What is this deck about?",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Search or create a category...",
+      "isPublicLabel": "Public deck",
+      "isPublicHint": "Anyone will be able to download this deck",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "error": {
+        "titleRequired": "Title is required.",
+        "titleMax": "Title must be at most 100 characters."
+      }
+    },
+    "edit": {
+      "title": "Save changes",
+      "message": "Are you sure you want to save your changes to \"{{ title }}\"?"
+    },
+    "delete": {
+      "title": "Delete deck",
+      "message": "Are you sure you want to delete \"{{ title }}\"? This action cannot be undone."
+    },
+    "toast": {
+      "created": "Deck created successfully",
+      "updated": "Deck updated successfully",
+      "deleted": "Deck deleted successfully"
     }
   },
   "shell": {

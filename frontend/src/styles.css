@@ -108,6 +108,14 @@
   --color-info-foreground: var(--ctp-mocha-base);
   --color-info-surface: var(--ctp-mocha-surface0);
 
+  /* Accent palette — used to visually differentiate cards/items */
+  --color-accent-1: var(--ctp-mocha-mauve);
+  --color-accent-2: var(--ctp-mocha-blue);
+  --color-accent-3: var(--ctp-mocha-peach);
+  --color-accent-4: var(--ctp-mocha-teal);
+  --color-accent-5: var(--ctp-mocha-green);
+  --color-accent-6: var(--ctp-mocha-yellow);
+
   /* Focus ring */
   --color-ring: var(--ctp-mocha-mauve);
 }
@@ -154,6 +162,14 @@
   --color-info: var(--ctp-latte-sky);
   --color-info-foreground: var(--ctp-latte-base);
   --color-info-surface: var(--ctp-latte-surface0);
+
+  /* Accent palette — used to visually differentiate cards/items */
+  --color-accent-1: var(--ctp-latte-mauve);
+  --color-accent-2: var(--ctp-latte-blue);
+  --color-accent-3: var(--ctp-latte-peach);
+  --color-accent-4: var(--ctp-latte-teal);
+  --color-accent-5: var(--ctp-latte-green);
+  --color-accent-6: var(--ctp-latte-yellow);
 
   /* Focus ring */
   --color-ring: var(--ctp-latte-mauve);
@@ -202,6 +218,14 @@
   --color-info: var(--color-info);
   --color-info-foreground: var(--color-info-foreground);
   --color-info-surface: var(--color-info-surface);
+
+  /* Accent palette */
+  --color-accent-1: var(--color-accent-1);
+  --color-accent-2: var(--color-accent-2);
+  --color-accent-3: var(--color-accent-3);
+  --color-accent-4: var(--color-accent-4);
+  --color-accent-5: var(--color-accent-5);
+  --color-accent-6: var(--color-accent-6);
 
   /* Focus */
   --color-ring: var(--color-ring);

@@ -2,7 +2,10 @@
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur s'est produite. Veuillez réessayer.",
-    "or": "ou"
+    "or": "ou",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer"
   },
   "auth": {
     "login": {
@@ -58,6 +61,61 @@
         "password_mismatch": "Les mots de passe ne correspondent pas.",
         "server": "L'inscription a échoué. Veuillez réessayer."
       }
+    }
+  },
+  "decks": {
+    "title": "Mes paquets",
+    "subtitle": "Gérez et étudiez vos paquets de cartes",
+    "newDeck": "Nouveau paquet",
+    "filter": {
+      "all": "Tous"
+    },
+    "pagination": {
+      "prev": "Page précédente",
+      "next": "Page suivante"
+    },
+    "card": {
+      "public": "Public",
+      "private": "Privé",
+      "options": "Options du paquet",
+      "edit": "Modifier le paquet",
+      "delete": "Supprimer le paquet"
+    },
+    "empty": {
+      "title": "Aucun paquet pour l'instant",
+      "subtitle": "Créez votre premier paquet pour commencer à étudier"
+    },
+    "form": {
+      "createTitle": "Nouveau paquet",
+      "editTitle": "Modifier le paquet",
+      "titleLabel": "Titre",
+      "titlePlaceholder": "ex. Vocabulaire espagnol",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "De quoi parle ce paquet ?",
+      "categoryLabel": "Catégorie",
+      "categoryPlaceholder": "Rechercher ou créer une catégorie...",
+      "isPublicLabel": "Paquet public",
+      "isPublicHint": "N'importe qui pourra télécharger ce paquet",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "error": {
+        "titleRequired": "Le titre est obligatoire.",
+        "titleMax": "Le titre ne peut pas dépasser 100 caractères."
+      }
+    },
+    "edit": {
+      "title": "Enregistrer les modifications",
+      "message": "Êtes-vous sûr de vouloir enregistrer les modifications apportées à « {{ title }} » ?"
+    },
+    "delete": {
+      "title": "Supprimer le paquet",
+      "message": "Êtes-vous sûr de vouloir supprimer « {{ title }} » ? Cette action est irréversible."
+    },
+    "toast": {
+      "created": "Paquet créé avec succès",
+      "updated": "Paquet mis à jour avec succès",
+      "deleted": "Paquet supprimé avec succès"
     }
   },
   "shell": {

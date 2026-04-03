@@ -1,9 +1,9 @@
 <div
-  class="fixed z-50 flex flex-col gap-2 translate-x-1/2 top-5 sm:bottom-5 sm:right-5 sm:translate-x-0 right-1/2 w-80"
+  class="fixed z-50 flex flex-col gap-2 translate-x-1/2 pointer-events-none top-5 sm:bottom-5 sm:right-5 sm:translate-x-0 right-1/2 w-2xs"
 >
   @for (toast of toastService.toasts(); track trackById($index, toast)) {
     <div
-      class="relative flex items-center justify-between gap-3 px-4 py-3 overflow-hidden text-sm rounded-lg shadow-lg text-primary-foreground"
+      class="relative flex items-center justify-between gap-3 px-4 py-3 overflow-hidden text-sm rounded-lg shadow-lg pointer-events-auto text-primary-foreground"
       [class]="typeClasses(toast.type)"
     >
       <span class="font-semibold">{{ toast.message }}</span>
@@ -15,7 +15,7 @@
         <svg lucideX class="size-4 stroke-4" />
       </button>
 
-      <div class="absolute bottom-0 left-0 h-0.5 bg-white/50 animate-shrink"></div>
+      <div class="absolute bottom-0 left-0 h-0.5 bg-black/50 animate-shrink"></div>
     </div>
   }
 </div>

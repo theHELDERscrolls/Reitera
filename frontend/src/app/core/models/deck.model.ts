@@ -3,6 +3,7 @@ export interface DeckRequest {
   description: string;
   isPublic: boolean;
   categoryId: number | null;
+  categoryName: string | null;
 }
 
 export interface DeckResponse {

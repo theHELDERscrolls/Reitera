@@ -130,7 +130,13 @@ src/app/
 ├── features/           → One folder per feature; each has its own routes file and components
 │   ├── auth/           → auth.routes.ts, LoginComponent, RegisterComponent
 │   ├── dashboard/      → DashboardComponent (stub)
-│   ├── decks/          → DecksComponent (stub)
+│   ├── decks/          → DecksComponent — paginated deck list with category filter and CRUD dialogs
+│   │   ├── components/
+│   │   │   ├── deck-card/         → DeckCardComponent (accent color, options menu, edit/delete outputs)
+│   │   │   ├── category-filter/   → CategoryFilterComponent (collapsible dropdown, click-outside aware)
+│   │   │   └── deck-form/         → DeckFormComponent (create/edit dialog, reactive form, save confirm)
+│   │   └── services/
+│   │       └── decks.service.ts   → DecksService (CRUD + pagination + categories)
 │   ├── profile/        → ProfileComponent (stub)
 │   ├── shell/          → AppShellComponent + all layout sub-components
 │   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
@@ -141,7 +147,7 @@ src/app/
 │   │           └── profile-panel/ → ProfilePanelComponent (view profile, theme, language, logout)
 │   └── study/          → StudyComponent (stub)
 └── shared/             → Reusable components with no feature-specific logic
-    └── components/     → ToastComponent, LanguageSwitcherComponent
+    └── components/     → ToastComponent, LanguageSwitcherComponent, ConfirmDialogComponent
 ```
 
 ### Routing Pattern
