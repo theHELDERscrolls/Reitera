@@ -52,9 +52,9 @@
 
   <!-- Deck grid -->
   @if (!isLoading()) {
-    @if (filteredDecks().length > 0) {
+    @if (decks().length > 0) {
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        @for (deck of filteredDecks(); track deck.id) {
+        @for (deck of decks(); track deck.id) {
           <app-deck-card
             [deck]="deck"
             (edit)="openEditDialog($event)"

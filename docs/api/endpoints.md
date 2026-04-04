@@ -145,6 +145,7 @@ Returns a paginated list of decks owned by the authenticated user.
 | `page` | Integer | `0` | Zero-based page number |
 | `size` | Integer | `20` | Items per page |
 | `sort` | String | `createdAt,desc` | Field and direction (e.g. `title,asc`) |
+| `categoryId` | Integer | — | Optional. When provided, only decks belonging to that category are returned. Pagination applies after filtering. |
 
 **Response `200 OK`:** `Page<DeckResponseDTO>`
 ```json

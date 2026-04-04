@@ -42,12 +42,6 @@ export default class DecksComponent implements OnInit {
   readonly isLoading = signal(true);
   readonly totalPages = signal(0);
 
-  readonly filteredDecks = computed(() => {
-    const category = this.activeCategory();
-    if (!category) return this.decks();
-    return this.decks().filter((d) => d.categoryName === category);
-  });
-
   readonly pageRange = computed((): Array<number | 'gap'> => {
     const total = this.totalPages();
     const cur = this.currentPage();
@@ -66,6 +60,8 @@ export default class DecksComponent implements OnInit {
 
   setActiveCategory(value: string | null): void {
     this.activeCategory.set(value);
+    this.currentPage.set(0);
+    this.loadDecks();
   }
 
   goToPage(page: number): void {
@@ -85,16 +81,16 @@ export default class DecksComponent implements OnInit {
 
   onDeckSaved(deck: DeckResponse): void {
     const isEdit = this.deckToEdit() !== null;
+    this.isDialogOpen.set(false);
+    this.deckToEdit.set(null);
     if (isEdit) {
       this.decks.update((current) => current.map((d) => (d.id === deck.id ? deck : d)));
       this.toastService.success(this.transloco.translate('decks.toast.updated'));
+      this.refreshCategories();
     } else {
-      this.decks.update((current) => [deck, ...current]);
       this.toastService.success(this.transloco.translate('decks.toast.created'));
+      this.loadDecks();
     }
-    this.isDialogOpen.set(false);
-    this.deckToEdit.set(null);
-    this.refreshCategories();
   }
 
   requestDeleteDeck(deck: DeckResponse): void {
@@ -107,9 +103,8 @@ export default class DecksComponent implements OnInit {
     this.deckToDelete.set(null);
     this.decksService.deleteDeck(deck.id).subscribe({
       complete: () => {
-        this.decks.update((current) => current.filter((d) => d.id !== deck.id));
         this.toastService.success(this.transloco.translate('decks.toast.deleted'));
-        this.refreshCategories();
+        this.loadDecks();
       },
       error: () => this.toastService.error(this.transloco.translate('common.error')),
     });
@@ -117,7 +112,11 @@ export default class DecksComponent implements OnInit {
 
   private loadDecks(): void {
     this.isLoading.set(true);
-    this.decksService.getDecks(this.currentPage(), PAGE_SIZE).subscribe({
+    const activeCategoryName = this.activeCategory();
+    const categoryId = activeCategoryName
+      ? this.categories().find((c) => c.name === activeCategoryName)?.id
+      : undefined;
+    this.decksService.getDecks(this.currentPage(), PAGE_SIZE, categoryId).subscribe({
       next: (page) => {
         this.decks.set(page.content);
         this.totalPages.set(page.totalPages);

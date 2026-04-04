@@ -15,10 +15,10 @@ export class DecksService {
   private readonly baseUrl = `${environment.apiUrl}/decks`;
   private readonly categoriesUrl = `${environment.apiUrl}/categories`;
 
-  getDecks(page = 0, size = 12): Observable<Page<DeckResponse>> {
-    return this.http.get<Page<DeckResponse>>(this.baseUrl, {
-      params: { page, size, sort: 'createdAt,desc' },
-    });
+  getDecks(page = 0, size = 12, categoryId?: number): Observable<Page<DeckResponse>> {
+    const params: Record<string, string | number> = { page, size, sort: 'createdAt,desc' };
+    if (categoryId !== undefined) params['categoryId'] = categoryId;
+    return this.http.get<Page<DeckResponse>>(this.baseUrl, { params });
   }
 
   getCategories(): Observable<Category[]> {

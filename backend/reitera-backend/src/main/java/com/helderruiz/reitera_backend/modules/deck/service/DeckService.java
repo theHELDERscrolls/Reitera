@@ -46,8 +46,14 @@ public class DeckService {
 
     /**
      * Returns a paginated list of decks owned by the authenticated user.
+     * If categoryId is provided, only decks belonging to that category are returned.
      */
-    public Page<DeckResponseDTO> getUserDecks(User owner, Pageable pageable) {
+    public Page<DeckResponseDTO> getUserDecks(User owner, Integer categoryId, Pageable pageable) {
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
+            return deckRepository.findAllByOwnerAndCategory(owner, category, pageable).map(this::toResponseDTO);
+        }
         return deckRepository.findAllByOwner(owner, pageable).map(this::toResponseDTO);
     }
 
