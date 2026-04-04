@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.helderruiz</groupId>
     <artifactId>reitera-backend</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.17.0</version>
     <name>Reitera</name>
     <description>Spaced repetition flashcard application (TFG)</description>
     <url/>

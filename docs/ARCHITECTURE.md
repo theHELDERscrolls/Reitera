@@ -72,16 +72,17 @@ Authentication uses a **two-token stateless strategy**:
 
 | Token | Type | Expiry | Storage |
 |---|---|---|---|
-| Access token | Signed JWT (HMAC-SHA) | 15 minutes | Client memory |
+| Access token | Signed JWT (HMAC-SHA) | 15 minutes | `localStorage` |
 | Refresh token | Random UUID (SHA-256 hashed) | 7 days | `refresh_tokens` table |
 
 **Flow:**
 1. `POST /auth/login` → server issues both tokens; refresh token hash persisted in DB
 2. Client sends `Authorization: Bearer <accessToken>` on every request
-3. `JwtAuthenticationFilter` validates the JWT and populates the `SecurityContext`
+3. `JwtAuthenticationFilter` validates the JWT and populates the `SecurityContext`; if the token is missing, malformed, or expired (`JwtException`) the filter skips authentication and continues the chain — Spring Security then returns `401 Unauthorized` via the configured `AuthenticationEntryPoint`
 4. Controllers receive the authenticated `User` via `@AuthenticationPrincipal`
-5. When the access token expires → `POST /auth/refresh` → server validates refresh token hash, revokes the old one, and issues a new pair (rotation)
-6. `POST /auth/logout` → server revokes all active refresh tokens for the user
+5. When the access token expires, `jwtInterceptor` intercepts the `401`, calls `POST /auth/refresh` transparently, persists the new token pair, and retries the original request — the user never notices the renewal
+6. If the refresh token is also expired or revoked, `AuthService.logout()` is called and the user is redirected to the login page
+7. `POST /auth/logout` → server revokes all active refresh tokens for the user
 
 Public endpoints (no token required): `/register`, `/login`, `/refresh`, `/logout`
 All other endpoints are protected.
@@ -122,7 +123,7 @@ src/app/
 ├── core/               → Singleton services, guards, interceptors, and models (never imported by feature modules)
 │   ├── auth/           → AuthService (login, register, logout, GET /users/me, token storage)
 │   ├── guards/         → authGuard, noAuthGuard (functional CanActivateFn)
-│   ├── interceptors/   → jwtInterceptor (functional HttpInterceptorFn)
+│   ├── interceptors/   → jwtInterceptor (attaches Bearer token; intercepts 401 to refresh and retry)
 │   ├── models/         → TypeScript interfaces mapping all backend DTOs
 │   ├── profile-panel/  → ProfilePanelService (stub — scaffolded for future use)
 │   ├── theme/          → ThemeService (dark/light, localStorage persistence, data-theme on <html>)
