@@ -16,6 +16,8 @@ public interface DeckRepository extends JpaRepository<Deck, Integer> {
 
     Page<Deck> findAllByOwner(User owner, Pageable pageable);
 
+    Page<Deck> findAllByOwnerAndCategory(User owner, Category category, Pageable pageable);
+
     /**
      * Returns the distinct categories used across all decks owned by the given user.
      * Decks without a category (category IS NULL) are excluded.

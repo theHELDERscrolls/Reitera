@@ -11,6 +11,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.18.0] — 2026-04-04 — fix/36-deck-pagination-and-category-filter
+### Fixed
+- `GET /api/v1/decks` — added optional `categoryId` query param; `DeckRepository` gained `findAllByOwnerAndCategory(User, Category, Pageable)` and `DeckService.getUserDecks()` now delegates to it when `categoryId` is present, so pagination and filtering are applied together on the backend
+- `DecksComponent.onDeckSaved()` — create path now calls `loadDecks()` instead of locally prepending the deck, so `totalPages` is recalculated from the backend response and the pagination bar appears/disappears correctly
+- `DecksComponent.confirmDeleteDeck()` — now calls `loadDecks()` instead of locally filtering the array, keeping `totalPages` in sync after deletion
+- `DecksComponent.setActiveCategory()` — resets `currentPage` to `0` before calling `loadDecks()`, preventing out-of-range page requests when switching categories
+- `DecksService.getDecks()` — accepts optional `categoryId` and appends it as a query param when provided
+
+### Changed
+- `filteredDecks` computed signal removed from `DecksComponent` — filtering is now fully server-side; template uses `decks()` directly
+- `docs/api/endpoints.md` — `GET /api/v1/decks` table updated with the new `categoryId` param
+
+---
+
 ## [0.17.0] — 2026-04-04 — fix/34-jwt-refresh
 ### Fixed
 - `JwtAuthenticationFilter` — added `try-catch (JwtException)` around `extractUsername()`; on failure the filter now calls `filterChain.doFilter` and returns early, leaving the `SecurityContext` empty so Spring Security can respond with a clean `401`. Previously the uncaught `ExpiredJwtException` propagated to Spring Boot's error dispatcher, which hit the unprotected `/error` path and returned a `403` with no body

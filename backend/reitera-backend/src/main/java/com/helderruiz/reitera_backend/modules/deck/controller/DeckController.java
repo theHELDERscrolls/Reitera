@@ -43,13 +43,15 @@ public class DeckController {
     /**
      * Returns a paginated list of decks owned by the authenticated user.
      * GET /api/v1/decks?page=0&size=20&sort=createdAt,desc
+     * GET /api/v1/decks?categoryId=3&page=0&size=20  (filtered by category)
      */
     @GetMapping
     public ResponseEntity<Page<DeckResponseDTO>> getUserDecks(
             @AuthenticationPrincipal User user,
+            @RequestParam(required = false) Integer categoryId,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(deckService.getUserDecks(user, pageable));
+        return ResponseEntity.ok(deckService.getUserDecks(user, categoryId, pageable));
     }
 
     /**
