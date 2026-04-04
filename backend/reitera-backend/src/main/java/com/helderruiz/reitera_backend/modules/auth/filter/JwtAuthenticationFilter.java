@@ -1,6 +1,7 @@
 package com.helderruiz.reitera_backend.modules.auth.filter;
 
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,8 +50,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 2. Extract the JWT payload string (removing the "Bearer " prefix)
         jwt = authHeader.substring(7);
 
-        // 3. Extract the subject (email) using the JwtService
-        userEmail = jwtService.extractUsername(jwt);
+        // 3. Extract the subject (email) using the JwtService.
+        try {
+            userEmail = jwtService.extractUsername(jwt);
+        } catch (JwtException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 4. Proceed with authentication if the subject exists and the context is currently unauthenticated
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

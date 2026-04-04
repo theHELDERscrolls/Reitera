@@ -11,6 +11,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.17.0] — 2026-04-04 — fix/34-jwt-refresh
+### Fixed
+- `JwtAuthenticationFilter` — added `try-catch (JwtException)` around `extractUsername()`; on failure the filter now calls `filterChain.doFilter` and returns early, leaving the `SecurityContext` empty so Spring Security can respond with a clean `401`. Previously the uncaught `ExpiredJwtException` propagated to Spring Boot's error dispatcher, which hit the unprotected `/error` path and returned a `403` with no body
+- `SecurityConfig` — added `.exceptionHandling()` with a custom `AuthenticationEntryPoint` that returns `401 Unauthorized`; the default `Http403ForbiddenEntryPoint` was causing all unauthenticated requests to return `403` instead of the correct `401`
+- `jwtInterceptor` — rewritten to handle the full token refresh cycle: on `401`, reads the stored `refreshToken`, calls `POST /auth/refresh`, persists the new token pair, and retries the original request transparently; if the refresh call fails the interceptor calls `AuthService.logout()` and redirects to login; `/auth/` requests are excluded from the retry logic to prevent infinite loops
+
+### Changed
+- `ARCHITECTURE.md` — access token storage corrected from "Client memory" to `localStorage`; security flow updated to document the `JwtException` handling, `AuthenticationEntryPoint`, and the `jwtInterceptor` refresh cycle
+
+---
+
 ## [0.16.0] — 2026-04-03 — feature/31-deck-page
 ### Added
 - `DecksService` in `features/decks/services/` — full CRUD: `getDecks(page, size)` with backend pagination (`?sort=createdAt,desc`), `getCategories()`, `createDeck()`, `updateDeck()`, `deleteDeck()`
