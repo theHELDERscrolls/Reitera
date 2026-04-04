@@ -1,17 +1,17 @@
 import { Component, input, output } from '@angular/core';
-import { LucideLayoutDashboard, LucideBookOpen, LucideBrain } from '@lucide/angular';
+import { LucideLayoutDashboard, LucideBrain, LucideWalletCards } from '@lucide/angular';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-sidebar-nav',
   imports: [
+    LucideBrain,
+    LucideLayoutDashboard,
+    LucideWalletCards,
     RouterLink,
     RouterLinkActive,
     TranslocoPipe,
-    LucideLayoutDashboard,
-    LucideBookOpen,
-    LucideBrain,
   ],
   templateUrl: './sidebar-nav.component.html',
 })

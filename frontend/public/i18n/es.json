@@ -2,7 +2,10 @@
   "common": {
     "loading": "Cargando...",
     "error": "Algo ha ido mal. Por favor, inténtalo de nuevo.",
-    "or": "o"
+    "or": "o",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar"
   },
   "auth": {
     "login": {
@@ -58,6 +61,61 @@
         "password_mismatch": "Las contraseñas no coinciden.",
         "server": "El registro ha fallado. Por favor, inténtalo de nuevo."
       }
+    }
+  },
+  "decks": {
+    "title": "Mis mazos",
+    "subtitle": "Gestiona y estudia tus mazos de tarjetas",
+    "newDeck": "Nuevo mazo",
+    "filter": {
+      "all": "Todos"
+    },
+    "pagination": {
+      "prev": "Página anterior",
+      "next": "Página siguiente"
+    },
+    "card": {
+      "public": "Público",
+      "private": "Privado",
+      "options": "Opciones del mazo",
+      "edit": "Editar mazo",
+      "delete": "Eliminar mazo"
+    },
+    "empty": {
+      "title": "Aún no tienes mazos",
+      "subtitle": "Crea tu primer mazo para empezar a estudiar"
+    },
+    "form": {
+      "createTitle": "Nuevo mazo",
+      "editTitle": "Editar mazo",
+      "titleLabel": "Título",
+      "titlePlaceholder": "ej. Vocabulario de inglés",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "¿De qué trata este mazo?",
+      "categoryLabel": "Categoría",
+      "categoryPlaceholder": "Busca o crea una categoría...",
+      "isPublicLabel": "Mazo público",
+      "isPublicHint": "Cualquier usuario podrá descargar este mazo",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "error": {
+        "titleRequired": "El título es obligatorio.",
+        "titleMax": "El título no puede superar los 100 caracteres."
+      }
+    },
+    "edit": {
+      "title": "Guardar cambios",
+      "message": "¿Estás seguro de que quieres guardar los cambios en \"{{ title }}\"?"
+    },
+    "delete": {
+      "title": "Eliminar mazo",
+      "message": "¿Estás seguro de que quieres eliminar \"{{ title }}\"? Esta acción no se puede deshacer."
+    },
+    "toast": {
+      "created": "Mazo creado correctamente",
+      "updated": "Mazo actualizado correctamente",
+      "deleted": "Mazo eliminado correctamente"
     }
   },
   "shell": {

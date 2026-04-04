@@ -11,6 +11,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.16.0] — 2026-04-03 — feature/31-deck-page
+### Added
+- `DecksService` in `features/decks/services/` — full CRUD: `getDecks(page, size)` with backend pagination (`?sort=createdAt,desc`), `getCategories()`, `createDeck()`, `updateDeck()`, `deleteDeck()`
+- `DeckCardComponent` — displays a single deck with accent color (cycled from six `--color-accent-*` tokens by `id % 6`), visibility badge, last-updated date, and a click-outside-aware options menu with edit and delete outputs
+- `CategoryFilterComponent` — collapsible dropdown filter; emits `categorySelected` output; closes on outside click via `@HostListener` + `data-category-filter` attribute guard; "All" option clears the filter
+- `DeckFormComponent` — modal dialog for create and edit; Angular Reactive Form with title (required, max 100), description, category (`<datalist>` autocomplete against existing categories), and isPublic toggle; edit mode pre-populated via `effect()`; on save in edit mode a warning `ConfirmDialogComponent` is shown before the API call; category resolved as find-or-create: existing match by name → `categoryId`, no match → `categoryName` forwarded to backend
+- `ConfirmDialogComponent` in `shared/components/confirm-dialog/` — generic confirm dialog with `variant` input (`danger` | `warning` | `success` | `info`); icon, button color and background driven by `VARIANT_CONFIG` map; configurable `title`, `message` (supports Transloco interpolation) and `confirmLabel`; `confirmed` and `cancelled` outputs; backdrop click cancels
+- Pagination UI in `DecksComponent` — prev/next buttons + page-number strip with gap logic (`pageRange` computed signal: always shows first, last, current ±1, with `…` gaps); disabled states on edges
+- `filteredDecks` computed signal — client-side category filter applied on top of the paginated page
+- Toast notifications (via `ToastService`) on deck created, updated and deleted
+- i18n keys added to `en.json`, `es.json` and `fr.json`: `decks.filter`, `decks.pagination`, `decks.card.*`, `decks.empty.*`, `decks.form.*`, `decks.edit.*`, `decks.delete.*`, `decks.toast.*`, `common.cancel`, `common.confirm`, `common.delete`
+
+### Changed
+- `DecksComponent` — fully implemented; replaced the previous stub with paginated grid, category filter, CRUD dialogs and delete/edit-save confirm flows
+- `ConfirmDialogComponent` added to `shared/components/` (previously only `ToastComponent` and `LanguageSwitcherComponent` lived there)
+
+---
+
+## [0.15.0] — 2026-03-30 — feature/30-category-lifecycle
+### Added
+- `CategoryRepository.findByNameIgnoreCase(String name)` — case-insensitive lookup used by find-or-create
+- `DeckRepository.countByCategory(Category category)` — used by orphan cleanup to check whether a category is still referenced
+
+### Changed
+- `DeckRequestDTO` — added optional `categoryName` field (max 50 chars); `categoryId` continues to work and takes precedence when both are supplied
+- `DeckService.createDeck()` — replaced `resolveCategory` with `findOrCreateCategory`: uses `categoryId` if provided, otherwise finds or creates by `categoryName`; annotated `@Transactional`
+- `DeckService.updateDeck()` — same find-or-create logic; saves the old category reference before reassignment and runs orphan check after save; annotated `@Transactional`
+- `DeckService.deleteDeck()` — saves the category reference before deletion and runs orphan check after; annotated `@Transactional`
+
+---
+
 ## [0.14.0] — 2026-03-29 — feature/28-app-shell-sidebar
 ### Added
 - `AppShellComponent` in `features/shell/` — layout wrapper for all authenticated routes; `<router-outlet>` renders child views inside the main content area

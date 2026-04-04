@@ -1,1 +1,125 @@
-<p>decks works!</p>
+@if (isDialogOpen()) {
+  <app-deck-form
+    [deckToEdit]="deckToEdit()"
+    [categories]="categories()"
+    (saved)="onDeckSaved($event)"
+    (closed)="isDialogOpen.set(false); deckToEdit.set(null)"
+  />
+}
+
+@if (deckToDelete()) {
+  <app-confirm-dialog
+    [variant]="'danger'"
+    [title]="'decks.delete.title' | transloco"
+    [message]="'decks.delete.message' | transloco: { title: deckToDelete()!.title }"
+    [confirmLabel]="'common.delete' | transloco"
+    (confirmed)="confirmDeleteDeck()"
+    (cancelled)="deckToDelete.set(null)"
+  />
+}
+
+<div class="flex flex-col gap-6">
+  <!-- Page header -->
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-foreground">{{ 'decks.title' | transloco }}</h1>
+      <p class="text-sm text-muted">{{ 'decks.subtitle' | transloco }}</p>
+    </div>
+    <button
+      (click)="openCreateDialog()"
+      class="flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
+    >
+      <svg lucidePlus class="size-4" />
+      <span class="hidden sm:flex">{{ 'decks.newDeck' | transloco }}</span>
+    </button>
+  </div>
+
+  <!-- Category filter -->
+  <app-category-filter
+    [activeCategory]="activeCategory()"
+    [categories]="categories()"
+    (categorySelected)="setActiveCategory($event)"
+  />
+
+  <!-- Loading skeleton -->
+  @if (isLoading()) {
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (_ of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track $index) {
+        <div class="rounded-lg h-36 bg-overlay animate-pulse"></div>
+      }
+    </div>
+  }
+
+  <!-- Deck grid -->
+  @if (!isLoading()) {
+    @if (filteredDecks().length > 0) {
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        @for (deck of filteredDecks(); track deck.id) {
+          <app-deck-card
+            [deck]="deck"
+            (edit)="openEditDialog($event)"
+            (delete)="requestDeleteDeck($event)"
+          />
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="flex items-center justify-center gap-1 pt-2">
+          <button
+            (click)="goToPage(currentPage() - 1)"
+            [disabled]="currentPage() === 0"
+            [attr.aria-label]="'decks.pagination.prev' | transloco"
+            class="p-2 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <svg lucideChevronLeft class="size-4" />
+          </button>
+
+          @for (item of pageRange(); track $index) {
+            @if (item === 'gap') {
+              <span class="px-2 text-sm select-none text-muted">…</span>
+            } @else {
+              <button
+                (click)="goToPage(item)"
+                class="h-8 text-sm font-medium transition-colors rounded-lg min-w-8"
+                [class]="
+                  item === currentPage()
+                    ? 'bg-primary text-background'
+                    : 'text-muted hover:text-foreground hover:bg-overlay'
+                "
+              >
+                {{ item + 1 }}
+              </button>
+            }
+          }
+
+          <button
+            (click)="goToPage(currentPage() + 1)"
+            [disabled]="currentPage() === totalPages() - 1"
+            [attr.aria-label]="'decks.pagination.next' | transloco"
+            class="p-2 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <svg lucideChevronRight class="size-4" />
+          </button>
+        </div>
+      }
+    } @else {
+      <!-- Empty state -->
+      <div class="flex flex-col items-center justify-center gap-4 py-20 text-center">
+        <div class="flex items-center justify-center rounded-full size-16 bg-overlay">
+          <svg lucidePlus class="size-8 text-muted" />
+        </div>
+        <div>
+          <p class="font-semibold text-foreground">{{ 'decks.empty.title' | transloco }}</p>
+          <p class="mt-1 text-sm text-muted">{{ 'decks.empty.subtitle' | transloco }}</p>
+        </div>
+        <button
+          (click)="openCreateDialog()"
+          class="px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
+        >
+          {{ 'decks.newDeck' | transloco }}
+        </button>
+      </div>
+    }
+  }
+</div>

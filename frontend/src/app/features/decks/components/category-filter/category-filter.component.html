@@ -1,0 +1,49 @@
+@if (categories().length > 0) {
+  <div class="relative inline-block" data-category-filter>
+    <button
+      (click)="toggleFilter()"
+      class="flex min-w-3xs justify-between items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors border rounded-lg bg-surface border-border hover:border-border-strong"
+      [class]="activeCategory() ? 'text-foreground' : 'text-muted'"
+    >
+      <span>{{ activeCategory() ?? ('decks.filter.all' | transloco) }}</span>
+      <svg
+        lucideChevronDown
+        class="transition-transform duration-200 size-4 shrink-0"
+        [class]="isFilterOpen() ? 'rotate-180' : ''"
+      />
+    </button>
+
+    @if (isFilterOpen()) {
+      <div
+        class="absolute left-0 z-20 mt-1 overflow-hidden border rounded-lg shadow-lg bg-surface border-border min-w-3xs"
+      >
+        <div class="flex flex-wrap gap-1.5 p-2.5">
+          <button
+            (click)="selectCategory(null)"
+            class="px-2.5 py-1 text-xs font-medium transition-colors rounded-full"
+            [class]="
+              activeCategory() === null
+                ? 'bg-primary text-background'
+                : 'bg-overlay text-muted hover:text-foreground'
+            "
+          >
+            {{ 'decks.filter.all' | transloco }}
+          </button>
+          @for (cat of categories(); track cat.id) {
+            <button
+              (click)="selectCategory(cat.name)"
+              class="px-2.5 py-1 text-xs font-medium transition-colors rounded-full"
+              [class]="
+                activeCategory() === cat.name
+                  ? 'bg-primary text-background'
+                  : 'bg-overlay text-muted hover:text-foreground'
+              "
+            >
+              {{ cat.name }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

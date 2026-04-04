@@ -2,7 +2,7 @@
   <app-sidebar #sidebar />
   <div class="flex flex-col flex-1 overflow-hidden">
     <app-mobile-header (openMenu)="sidebar.toggleMobile()" />
-    <main class="flex-1 overflow-auto p-6">
+    <main class="flex-1 p-6 overflow-auto">
       <router-outlet />
     </main>
   </div>
