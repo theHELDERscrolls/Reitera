@@ -6,6 +6,15 @@ export interface DeckRequest {
   categoryName: string | null;
 }
 
+export interface DeckStats {
+  totalCards: number;
+  newCards: number;
+  learningCards: number;
+  reviewCards: number;
+  relearningCards: number;
+  dueCards: number;
+}
+
 export interface DeckResponse {
   id: number;
   title: string;

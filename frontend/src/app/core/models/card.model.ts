@@ -1,10 +1,6 @@
-export type CardType = 'BASIC' | 'CLOZE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
+import { Tag } from './tag.model';
 
-export interface TagSummary {
-  id: number;
-  name: string;
-  hexColor: string;
-}
+export type CardType = 'BASIC' | 'CLOZE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
 
 export interface CardRequest {
   type: CardType;
@@ -12,6 +8,7 @@ export interface CardRequest {
   answerJson: Record<string, unknown>;
   explanation: string | null;
   tagIds: number[];
+  newTags?: { name: string; hexColor: string }[];
 }
 
 export interface CardResponse {
@@ -21,5 +18,6 @@ export interface CardResponse {
   question: string;
   answerJson: Record<string, unknown>;
   explanation: string | null;
-  tags: TagSummary[];
+  tags: Tag[];
+  state: number | null;
 }

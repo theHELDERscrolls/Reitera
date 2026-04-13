@@ -1,0 +1,132 @@
+@if (isLoading()) {
+  <!-- Loading skeleton -->
+  <div class="flex flex-col gap-2">
+    @for (_ of [1, 2, 3, 4, 5]; track $index) {
+      <div class="rounded-lg h-14 bg-overlay animate-pulse"></div>
+    }
+  </div>
+} @else if (cards().length === 0) {
+  <!-- Empty state -->
+  <div
+    class="flex flex-col items-center gap-3 py-16 text-center border border-dashed rounded-xl border-border"
+  >
+    <svg lucideBookOpen class="size-10 text-muted" />
+    <div class="flex flex-col gap-1">
+      <p class="text-sm font-medium text-foreground">
+        {{ 'deckDetail.cards.empty.title' | transloco }}
+      </p>
+      <p class="text-xs text-muted">
+        {{ 'deckDetail.cards.empty.subtitle' | transloco }}
+      </p>
+    </div>
+    <button
+      (click)="addCard.emit()"
+      class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
+    >
+      <svg lucidePlus class="size-4" />
+      {{ 'deckDetail.addCard' | transloco }}
+    </button>
+  </div>
+} @else {
+  <!-- Cards table -->
+  <div class="overflow-x-auto border rounded-xl border-border">
+    <table class="w-full table-auto text-sm">
+      <thead>
+        <tr class="border-b border-border bg-overlay/50">
+          <th class="w-full min-w-52 px-4 py-2.5 text-left text-xs font-medium text-muted">
+            <button
+              type="button"
+              (click)="sort.emit('question')"
+              class="flex items-center gap-1 hover:text-foreground transition-colors"
+            >
+              {{ 'deckDetail.cards.table.question' | transloco }}
+              @if (sortField() === 'question') {
+                @if (sortDir() === 'asc') {
+                  <svg lucideArrowUp class="size-3" />
+                } @else {
+                  <svg lucideArrowDown class="size-3" />
+                }
+              } @else {
+                <svg lucideArrowUpDown class="size-3 opacity-40" />
+              }
+            </button>
+          </th>
+          <th class="px-3 py-2.5 text-left text-xs font-medium text-muted whitespace-nowrap">
+            <button
+              type="button"
+              (click)="sort.emit('type')"
+              class="flex items-center gap-1 hover:text-foreground transition-colors"
+            >
+              {{ 'deckDetail.cards.table.type' | transloco }}
+              @if (sortField() === 'type') {
+                @if (sortDir() === 'asc') {
+                  <svg lucideArrowUp class="size-3" />
+                } @else {
+                  <svg lucideArrowDown class="size-3" />
+                }
+              } @else {
+                <svg lucideArrowUpDown class="size-3 opacity-40" />
+              }
+            </button>
+          </th>
+          <th class="px-3 py-2.5 text-left text-xs font-medium text-muted whitespace-nowrap">
+            {{ 'deckDetail.cards.table.state' | transloco }}
+          </th>
+          <th
+            class="hidden sm:table-cell px-3 py-2.5 text-right text-xs font-medium text-muted"
+          >
+            {{ 'deckDetail.cards.table.actions' | transloco }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (card of cards(); track card.id) {
+          <tr
+            class="border-b border-border/50 last:border-0 hover:bg-overlay/40 cursor-pointer transition-colors"
+            (click)="edit.emit(card)"
+            (keydown.enter)="edit.emit(card)"
+          >
+            <!-- Question -->
+            <td class="px-4 py-3 max-w-0 min-w-52">
+              <span class="line-clamp-2 sm:line-clamp-1 text-foreground">{{ card.question }}</span>
+            </td>
+
+            <!-- Type badge -->
+            <td class="px-3 py-3 whitespace-nowrap">
+              <app-card-type-badge [type]="card.type" />
+            </td>
+
+            <!-- State badge -->
+            <td class="px-3 py-3 whitespace-nowrap">
+              <app-card-state-badge [state]="card.state" />
+            </td>
+
+            <!-- Actions -->
+            <td
+              class="hidden sm:table-cell px-3 py-3"
+              (click)="$event.stopPropagation()"
+              (keydown)="$event.stopPropagation()"
+            >
+              <div class="flex items-center justify-end gap-1">
+                <button
+                  (click)="edit.emit(card)"
+                  class="p-1.5 rounded-md text-muted hover:text-primary hover:bg-primary/10 transition-colors"
+                  [attr.aria-label]="'deckDetail.cards.editCard' | transloco"
+                >
+                  <svg lucideSquarePen class="size-4" />
+                </button>
+                <button
+                  (click)="delete.emit(card)"
+                  class="p-1.5 rounded-md text-muted hover:text-error hover:bg-error/10 transition-colors"
+                  [attr.aria-label]="'deckDetail.cards.deleteCard' | transloco"
+                >
+                  <svg lucideTrash2 class="size-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

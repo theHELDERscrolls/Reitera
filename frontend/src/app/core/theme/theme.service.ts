@@ -13,7 +13,7 @@ export class ThemeService {
   constructor() {
     effect(() => {
       const theme = this._theme();
-      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.dataset['theme'] = theme;
       localStorage.setItem(STORAGE_KEY, theme);
     });
   }
@@ -23,8 +23,8 @@ export class ThemeService {
   }
 
   private resolveInitialTheme(): Theme {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'dark' || stored === 'light') return stored;
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    return globalThis.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   }
 }

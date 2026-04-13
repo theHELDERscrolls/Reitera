@@ -1,4 +1,5 @@
 <div
+  [routerLink]="['/decks', deck().id]"
   class="relative flex flex-col gap-3 p-3 min-h-43.75 overflow-hidden transition-all duration-300 ease-in-out border rounded-lg bg-surface border-border group hover:border-border-strong cursor-pointer"
 >
   <div
@@ -10,25 +11,12 @@
     <!-- Header -->
     <div class="flex items-start justify-between gap-2">
       <div class="flex flex-col items-start justify-between w-full gap-2">
-        <span
-          class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full shrink-0 font-medium"
-          [class]="
-            deck().isPublic ? 'bg-success/10 text-success' : 'bg-overlay text-muted-foreground'
-          "
-        >
-          @if (deck().isPublic) {
-            <svg lucideGlobe class="size-3" />
-            <span>{{ 'decks.card.public' | transloco }}</span>
-          } @else {
-            <svg lucideLock class="size-3" />
-            <span>{{ 'decks.card.private' | transloco }}</span>
-          }
-        </span>
+        <app-visibility-badge [isPublic]="deck().isPublic" />
         <h3 class="font-semibold line-clamp-1 text-foreground">{{ deck().title }}</h3>
       </div>
 
       <!-- Contextual menu -->
-      <div class="absolute top-1 right-1" data-deck-menu>
+      <div class="absolute top-1 right-1" data-deck-menu (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
         <button
           (click)="toggleMenu()"
           class="p-1 transition-all rounded-md text-muted hover:text-foreground hover:bg-overlay"
@@ -45,7 +33,7 @@
               (click)="edit.emit(deck()); isMenuOpen.set(false)"
               class="flex items-center w-full gap-2 px-3 py-2 text-sm transition-all text-muted hover:text-foreground hover:bg-overlay"
             >
-              <svg lucideEdit class="size-4 shrink-0" />
+              <svg lucideSquarePen class="size-4 shrink-0" />
               {{ 'decks.card.edit' | transloco }}
             </button>
             <button

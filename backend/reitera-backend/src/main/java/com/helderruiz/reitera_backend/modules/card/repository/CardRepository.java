@@ -15,6 +15,21 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 
     Page<Card> findAllByDeck(Deck deck, Pageable pageable);
 
+    long countByDeck(Deck deck);
+
+    /**
+     * Counts cards in a deck that the user has never studied (no StudyProgress record).
+     * Uses the same NOT EXISTS logic as findNewCardsByDeckAndUser but returns a scalar count.
+     */
+    @Query("SELECT COUNT(c) FROM Card c " +
+            "WHERE c.deck.id = :deckId " +
+            "AND NOT EXISTS (" +
+            "    SELECT sp FROM StudyProgress sp " +
+            "    WHERE sp.card = c AND sp.user.id = :userId" +
+            ")")
+    long countNewCardsByDeckAndUser(@Param("deckId") Integer deckId,
+                                    @Param("userId") UUID userId);
+
     /**
      * Returns cards in a deck that the user has never studied before.
      * <p>

@@ -118,6 +118,107 @@
       "deleted": "Deck deleted successfully"
     }
   },
+  "deckDetail": {
+    "createdAt": "Created",
+    "addCard": "Add card",
+    "study": "Study",
+    "stats": {
+      "total": "Total",
+      "new": "New",
+      "learning": "Learning",
+      "review": "Review",
+      "relearning": "Relearning",
+      "due": "Due"
+    },
+    "cards": {
+      "title": "Cards",
+      "editCard": "Edit card",
+      "deleteCard": "Delete card",
+      "table": {
+        "question": "Question",
+        "type": "Type",
+        "state": "State",
+        "actions": "Actions"
+      },
+      "empty": {
+        "title": "No cards yet",
+        "subtitle": "Add your first card to start studying"
+      },
+      "type": {
+        "basic": "Basic",
+        "cloze": "Cloze",
+        "multiple_choice": "Multi",
+        "true_false": "True / False"
+      },
+      "state": {
+        "new": "New",
+        "learning": "Learning",
+        "review": "Review",
+        "relearning": "Relearning"
+      }
+    },
+    "deleteCard": {
+      "title": "Delete card",
+      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    },
+    "toast": {
+      "cardCreated": "Card created successfully",
+      "cardUpdated": "Card updated successfully",
+      "cardDeleted": "Card deleted successfully"
+    }
+  },
+  "cardForm": {
+    "createTitle": "New card",
+    "editTitle": "Edit card",
+    "type": {
+      "label": "Card type",
+      "basic": "Basic",
+      "cloze": "Cloze",
+      "multiple_choice": "MC",
+      "true_false": "T/F"
+    },
+    "question": {
+      "label": "Question",
+      "placeholder": "Enter the question...",
+      "placeholderCloze": "Use {{blank}} to mark the hidden word, e.g. The capital of {{France}}"
+    },
+    "answer": {
+      "label": "Answer",
+      "placeholder": "Enter the answer..."
+    },
+    "options": {
+      "label": "Options (click the circle to mark the correct one)",
+      "placeholder": "Enter option...",
+      "markCorrect": "Mark as correct",
+      "remove": "Remove option",
+      "add": "Add option"
+    },
+    "correct": {
+      "label": "Correct answer"
+    },
+    "trueFalse": {
+      "true": "True",
+      "false": "False"
+    },
+    "explanation": {
+      "label": "Explanation (optional)",
+      "placeholder": "Explain why this is the correct answer..."
+    },
+    "tags": {
+      "label": "Tags",
+      "search": "Search or add a tag...",
+      "create": "Create '{{ name }}'",
+      "remove": "Remove tag"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete card",
+    "error": {
+      "questionRequired": "Question is required.",
+      "questionMax": "Question must be at most 500 characters."
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Dashboard",

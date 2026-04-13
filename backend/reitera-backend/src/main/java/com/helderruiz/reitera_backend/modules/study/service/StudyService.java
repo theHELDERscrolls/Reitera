@@ -184,15 +184,15 @@ public class StudyService {
         Deck deck = card.getDeck();
 
         if (!deck.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Card " + card.getId() + " does not belong to the authenticated user");
+            throw new ResourceNotFoundException("Card not found");
         }
 
         if (deckId != null && !deck.getId().equals(deckId)) {
-            throw new RuntimeException("Card " + card.getId() + " does not belong to deck " + deckId);
+            throw new IllegalArgumentException("Card does not belong to the specified deck");
         }
 
         if (categoryId != null && (deck.getCategory() == null || !deck.getCategory().getId().equals(categoryId))) {
-            throw new RuntimeException("Card " + card.getId() + " does not belong to category " + categoryId);
+            throw new IllegalArgumentException("Card does not belong to the specified category");
         }
     }
 
@@ -204,7 +204,7 @@ public class StudyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Deck not found with id: " + deckId));
 
         if (!deck.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("You do not have permission to access this deck");
+            throw new ResourceNotFoundException("Deck not found with id: " + deckId);
         }
 
         return deck;

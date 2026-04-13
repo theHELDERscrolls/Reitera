@@ -118,6 +118,107 @@
       "deleted": "Mazo eliminado correctamente"
     }
   },
+  "deckDetail": {
+    "createdAt": "Creado",
+    "addCard": "Añadir tarjeta",
+    "study": "Estudiar",
+    "stats": {
+      "total": "Total",
+      "new": "Nuevas",
+      "learning": "Aprendiendo",
+      "review": "Repaso",
+      "relearning": "Reaprendiendo",
+      "due": "Pendientes"
+    },
+    "cards": {
+      "title": "Tarjetas",
+      "editCard": "Editar tarjeta",
+      "deleteCard": "Eliminar tarjeta",
+      "table": {
+        "question": "Pregunta",
+        "type": "Tipo",
+        "state": "Estado",
+        "actions": "Acciones"
+      },
+      "empty": {
+        "title": "Aún no hay tarjetas",
+        "subtitle": "Añade tu primera tarjeta para empezar a estudiar"
+      },
+      "type": {
+        "basic": "Básica",
+        "cloze": "Cloze",
+        "multiple_choice": "Multi",
+        "true_false": "Verdadero / Falso"
+      },
+      "state": {
+        "new": "Nueva",
+        "learning": "Aprendiendo",
+        "review": "Repaso",
+        "relearning": "Reaprendiendo"
+      }
+    },
+    "deleteCard": {
+      "title": "Eliminar tarjeta",
+      "message": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer."
+    },
+    "toast": {
+      "cardCreated": "Tarjeta creada correctamente",
+      "cardUpdated": "Tarjeta actualizada correctamente",
+      "cardDeleted": "Tarjeta eliminada correctamente"
+    }
+  },
+  "cardForm": {
+    "createTitle": "Nueva tarjeta",
+    "editTitle": "Editar tarjeta",
+    "type": {
+      "label": "Tipo de tarjeta",
+      "basic": "Básica",
+      "cloze": "Cloze",
+      "multiple_choice": "OM",
+      "true_false": "V/F"
+    },
+    "question": {
+      "label": "Pregunta",
+      "placeholder": "Escribe la pregunta...",
+      "placeholderCloze": "Usa {{espacio}} para marcar la palabra oculta, ej. La capital de {{Francia}}"
+    },
+    "answer": {
+      "label": "Respuesta",
+      "placeholder": "Escribe la respuesta..."
+    },
+    "options": {
+      "label": "Opciones (haz clic en el círculo para marcar la correcta)",
+      "placeholder": "Escribe una opción...",
+      "markCorrect": "Marcar como correcta",
+      "remove": "Eliminar opción",
+      "add": "Añadir opción"
+    },
+    "correct": {
+      "label": "Respuesta correcta"
+    },
+    "trueFalse": {
+      "true": "Verdadero",
+      "false": "Falso"
+    },
+    "explanation": {
+      "label": "Explicación (opcional)",
+      "placeholder": "Explica por qué esta es la respuesta correcta..."
+    },
+    "tags": {
+      "label": "Etiquetas",
+      "search": "Buscar o añadir una etiqueta...",
+      "create": "Crear '{{ name }}'",
+      "remove": "Eliminar etiqueta"
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "delete": "Eliminar tarjeta",
+    "error": {
+      "questionRequired": "La pregunta es obligatoria.",
+      "questionMax": "La pregunta no puede superar los 500 caracteres."
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Inicio",

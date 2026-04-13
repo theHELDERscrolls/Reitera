@@ -69,7 +69,7 @@ Import the collection at `docs/api/reitera-postman-collection.json` into Postman
 The collection includes:
 - Pre-configured `base_url` variable (`http://localhost:8080`)
 - Auto-save script on the Login request that stores the JWT into the `token` variable
-- Example request bodies for all 3 card types (BASIC, CLOZE, MULTIPLE_CHOICE)
+- Example request bodies for all 4 card types (BASIC, CLOZE, MULTIPLE_CHOICE, TRUE_FALSE)
 
 **Recommended flow:**
 1. Run **Register** to create a test user
@@ -84,4 +84,4 @@ The backend reads configuration from `application.yml`. For local development, n
 |----------|---------|-------------|
 | `server.port` | `8080` | Backend API port |
 | `spring.datasource.url` | `jdbc:postgresql://localhost:5432/reitera_db` | Database URL |
-| `api.security.jwt.expiration-time` | `86400000` (24h) | JWT token lifetime in ms |
+| `api.security.jwt.expiration-time` | `900000` (15 min) | JWT token lifetime in ms |

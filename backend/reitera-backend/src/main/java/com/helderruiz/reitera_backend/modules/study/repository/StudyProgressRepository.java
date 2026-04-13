@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 public interface StudyProgressRepository extends JpaRepository<StudyProgress, StudyProgressId> {
 
@@ -42,4 +43,38 @@ public interface StudyProgressRepository extends JpaRepository<StudyProgress, St
     List<StudyProgress> findDueByUserAndCategory(@Param("userId") UUID userId,
                                                  @Param("categoryId") Integer categoryId,
                                                  @Param("now") LocalDateTime now);
+
+    /**
+     * Counts StudyProgress records for a user in a given deck that match a specific FSRS state.
+     * Used to build the deck stats dashboard (learning / review / relearning counts).
+     */
+    @Query("SELECT COUNT(sp) FROM StudyProgress sp " +
+            "WHERE sp.user.id = :userId " +
+            "AND sp.card.deck.id = :deckId " +
+            "AND sp.state = :state")
+    long countByUserIdAndDeckIdAndState(@Param("userId") UUID userId,
+                                        @Param("deckId") Integer deckId,
+                                        @Param("state") Integer state);
+
+    /**
+     * Counts cards in a deck that are due for review right now (nextReview <= now).
+     * Covers all states — a due card can be learning, review, or relearning.
+     */
+    @Query("SELECT COUNT(sp) FROM StudyProgress sp " +
+            "WHERE sp.user.id = :userId " +
+            "AND sp.card.deck.id = :deckId " +
+            "AND sp.nextReview <= :now")
+    long countDueByUserIdAndDeckId(@Param("userId") UUID userId,
+                                   @Param("deckId") Integer deckId,
+                                   @Param("now") LocalDateTime now);
+
+    /**
+     * Returns all StudyProgress records for a user across all cards in a given deck.
+     * Used to enrich CardResponseDTO with per-card state without N+1 queries.
+     */
+    @Query("SELECT sp FROM StudyProgress sp " +
+            "WHERE sp.user.id = :userId " +
+            "AND sp.card.deck.id = :deckId")
+    List<StudyProgress> findAllByUserIdAndDeckId(@Param("userId") UUID userId,
+                                                 @Param("deckId") Integer deckId);
 }

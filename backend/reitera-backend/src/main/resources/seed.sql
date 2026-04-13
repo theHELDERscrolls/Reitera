@@ -58,12 +58,12 @@ INSERT INTO categories (name, description) VALUES
 
 
 -- 4. TAGS
-INSERT INTO tags (name, hex_color) VALUES
-    ('importante', '#E74C3C'),
-    ('difícil',    '#E67E22'),
-    ('repaso',     '#3498DB'),
-    ('vocabulario','#27AE60')
-ON CONFLICT (name) DO NOTHING;
+INSERT INTO tags (name, hex_color, owner_id) VALUES
+    ('importante', '#E74C3C', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+    ('difícil',    '#E67E22', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+    ('repaso',     '#3498DB', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+    ('vocabulario','#27AE60', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11')
+ON CONFLICT (name, owner_id) DO NOTHING;
 
 
 -- 5. DECKS

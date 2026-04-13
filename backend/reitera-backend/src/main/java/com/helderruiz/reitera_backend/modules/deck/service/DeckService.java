@@ -1,18 +1,23 @@
 package com.helderruiz.reitera_backend.modules.deck.service;
 
 import com.helderruiz.reitera_backend.core.exception.ResourceNotFoundException;
+import com.helderruiz.reitera_backend.modules.card.repository.CardRepository;
 import com.helderruiz.reitera_backend.modules.deck.dto.DeckRequestDTO;
 import com.helderruiz.reitera_backend.modules.deck.dto.DeckResponseDTO;
+import com.helderruiz.reitera_backend.modules.deck.dto.DeckStatsDTO;
 import com.helderruiz.reitera_backend.modules.deck.model.Category;
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
 import com.helderruiz.reitera_backend.modules.deck.repository.CategoryRepository;
 import com.helderruiz.reitera_backend.modules.deck.repository.DeckRepository;
+import com.helderruiz.reitera_backend.modules.study.repository.StudyProgressRepository;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 /**
  * Core business logic for Deck management.
@@ -24,6 +29,8 @@ public class DeckService {
 
     private final DeckRepository deckRepository;
     private final CategoryRepository categoryRepository;
+    private final CardRepository cardRepository;
+    private final StudyProgressRepository studyProgressRepository;
 
     /**
      * Creates a new deck and assigns it to the authenticated user.
@@ -65,6 +72,25 @@ public class DeckService {
     }
 
     /**
+     * Returns aggregated stats for a deck: total cards and a breakdown by FSRS state.
+     * All counts are computed from the database in one method call (6 queries total).
+     * The deck ownership check is performed first to enforce IDOR protection.
+     */
+    public DeckStatsDTO getDeckStats(Integer id, User owner) {
+        Deck deck = findOwnedDeck(id, owner);
+        LocalDateTime now = LocalDateTime.now();
+
+        long totalCards = cardRepository.countByDeck(deck);
+        long newCards = cardRepository.countNewCardsByDeckAndUser(id, owner.getId());
+        long learningCards = studyProgressRepository.countByUserIdAndDeckIdAndState(owner.getId(), id, 1);
+        long reviewCards = studyProgressRepository.countByUserIdAndDeckIdAndState(owner.getId(), id, 2);
+        long relearningCards = studyProgressRepository.countByUserIdAndDeckIdAndState(owner.getId(), id, 3);
+        long dueCards = studyProgressRepository.countDueByUserIdAndDeckId(owner.getId(), id, now);
+
+        return new DeckStatsDTO(totalCards, newCards, learningCards, reviewCards, relearningCards, dueCards);
+    }
+
+    /**
      * Updates an existing deck. Only the owner can perform this operation.
      * If the category changes, the old category is checked for orphan status and deleted if unreferenced.
      */
@@ -72,7 +98,6 @@ public class DeckService {
     public DeckResponseDTO updateDeck(Integer id, DeckRequestDTO dto, User owner) {
         Deck deck = findOwnedDeck(id, owner);
 
-        // Keep a reference to the old category before overwriting it
         Category oldCategory = deck.getCategory();
         Category newCategory = findOrCreateCategory(dto.categoryId(), dto.categoryName());
 
@@ -83,7 +108,6 @@ public class DeckService {
 
         DeckResponseDTO response = toResponseDTO(deckRepository.save(deck));
 
-        // If the category changed, check whether the old one is now orphaned
         boolean categoryChanged = !isSameCategory(oldCategory, newCategory);
         if (categoryChanged) {
             deleteOrphanedCategory(oldCategory);
@@ -106,8 +130,6 @@ public class DeckService {
         deleteOrphanedCategory(formerCategory);
     }
 
-    // --- Private helpers ---
-
     /**
      * Finds a deck by ID and verifies the requesting user is its owner.
      * Throws ResourceNotFoundException (404) in both cases — whether the deck does not exist
@@ -126,12 +148,12 @@ public class DeckService {
 
     /**
      * Resolves the category to assign to a deck using a two-step strategy:
-     *
+     * <p>
      * 1. If categoryId is provided, fetch the existing category by ID (fails with 404 if not found).
      * 2. Otherwise, if categoryName is provided, search by name (case-insensitive).
-     *    If a match is found it is reused; if not, a new Category row is created and saved.
+     * If a match is found it is reused; if not, a new Category row is created and saved.
      * 3. If neither is provided, returns null (deck without category is valid).
-     *
+     * <p>
      * categoryId takes precedence over categoryName when both are supplied.
      */
     private Category findOrCreateCategory(Integer categoryId, String categoryName) {

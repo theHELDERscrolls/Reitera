@@ -1,0 +1,12 @@
+<span
+  class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium"
+  [class]="isPublic() ? 'bg-success/10 text-success' : 'bg-overlay text-muted-foreground'"
+>
+  @if (isPublic()) {
+    <svg lucideGlobe class="size-3" />
+    {{ 'decks.card.public' | transloco }}
+  } @else {
+    <svg lucideLock class="size-3" />
+    {{ 'decks.card.private' | transloco }}
+  }
+</span>

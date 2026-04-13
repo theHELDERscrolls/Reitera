@@ -2,6 +2,7 @@ package com.helderruiz.reitera_backend.modules.deck.controller;
 
 import com.helderruiz.reitera_backend.modules.deck.dto.DeckRequestDTO;
 import com.helderruiz.reitera_backend.modules.deck.dto.DeckResponseDTO;
+import com.helderruiz.reitera_backend.modules.deck.dto.DeckStatsDTO;
 import com.helderruiz.reitera_backend.modules.deck.service.DeckService;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import jakarta.validation.Valid;
@@ -90,5 +91,17 @@ public class DeckController {
 
         deckService.deleteDeck(id, user);
         return ResponseEntity.noContent().build(); // HTTP 204: success with no response body
+    }
+
+    /**
+     * Returns aggregated stats for a deck owned by the authenticated user.
+     * GET /api/v1/decks/{id}/stats
+     */
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<DeckStatsDTO> getDeckStats(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal User user) {
+
+        return ResponseEntity.ok(deckService.getDeckStats(id, user));
     }
 }

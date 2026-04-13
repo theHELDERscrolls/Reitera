@@ -1,29 +1,29 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { LucideChevronLeft, LucideChevronRight, LucidePlus } from '@lucide/angular';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { LucidePlus } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import { DeckResponse } from '@core/models/deck.model';
+import PaginationComponent from '@shared/components/pagination/pagination.component';
 import { Category } from '@core/models/category.model';
-import { ToastService } from '@core/toast/toast.service';
-import { DecksService } from './services/decks.service';
-import { DeckCardComponent } from './components/deck-card/deck-card.component';
 import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
-import { DeckFormComponent } from './components/deck-form/deck-form.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { DeckCardComponent } from './components/deck-card/deck-card.component';
+import { DeckFormComponent } from './components/deck-form/deck-form.component';
+import { DeckResponse } from '@core/models/deck.model';
+import { DecksService } from './services/decks.service';
+import { ToastService } from '@core/toast/toast.service';
 
 const PAGE_SIZE = 12;
 
 @Component({
   selector: 'app-decks',
   imports: [
-    TranslocoPipe,
-    LucidePlus,
-    LucideChevronLeft,
-    LucideChevronRight,
-    DeckCardComponent,
     CategoryFilterComponent,
-    DeckFormComponent,
     ConfirmDialogComponent,
+    DeckCardComponent,
+    DeckFormComponent,
+    LucidePlus,
+    PaginationComponent,
+    TranslocoPipe,
   ],
   templateUrl: './decks.component.html',
 })
@@ -41,18 +41,6 @@ export default class DecksComponent implements OnInit {
   readonly isDialogOpen = signal(false);
   readonly isLoading = signal(true);
   readonly totalPages = signal(0);
-
-  readonly pageRange = computed((): Array<number | 'gap'> => {
-    const total = this.totalPages();
-    const cur = this.currentPage();
-    if (total <= 7) return Array.from({ length: total }, (_, i) => i);
-    const result: Array<number | 'gap'> = [0];
-    if (cur > 2) result.push('gap');
-    for (let i = Math.max(1, cur - 1); i <= Math.min(total - 2, cur + 1); i++) result.push(i);
-    if (cur < total - 3) result.push('gap');
-    result.push(total - 1);
-    return result;
-  });
 
   ngOnInit(): void {
     this.loadDecks();
@@ -83,6 +71,7 @@ export default class DecksComponent implements OnInit {
     const isEdit = this.deckToEdit() !== null;
     this.isDialogOpen.set(false);
     this.deckToEdit.set(null);
+
     if (isEdit) {
       this.decks.update((current) => current.map((d) => (d.id === deck.id ? deck : d)));
       this.toastService.success(this.transloco.translate('decks.toast.updated'));
@@ -112,10 +101,12 @@ export default class DecksComponent implements OnInit {
 
   private loadDecks(): void {
     this.isLoading.set(true);
+
     const activeCategoryName = this.activeCategory();
     const categoryId = activeCategoryName
       ? this.categories().find((c) => c.name === activeCategoryName)?.id
       : undefined;
+
     this.decksService.getDecks(this.currentPage(), PAGE_SIZE, categoryId).subscribe({
       next: (page) => {
         this.decks.set(page.content);
