@@ -1,19 +1,19 @@
-import { LucideBookOpen, LucidePlus } from '@lucide/angular';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { LucideBookOpen, LucideChevronRight, LucidePlus } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
+import PaginationComponent from '@shared/components/pagination/pagination.component';
 import { CardFormComponent } from '../card-form/card-form.component';
 import { CardResponse } from '@core/models/card.model';
 import { CardsTableComponent } from '../cards-table/cards-table.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
-import { VisibilityBadgeComponent } from '../visibility-badge/visibility-badge.component';
 import { DeckDetailService } from '../../services/deck-detail.service';
 import { DeckResponse, DeckStats } from '@core/models/deck.model';
 import { Tag } from '@core/models/tag.model';
 import { ToastService } from '@core/toast/toast.service';
-import PaginationComponent from '@shared/components/pagination/pagination.component';
+import { VisibilityBadgeComponent } from '../visibility-badge/visibility-badge.component';
 
 const PAGE_SIZE = 20;
 
@@ -25,6 +25,7 @@ const PAGE_SIZE = 20;
     ConfirmDialogComponent,
     DatePipe,
     LucideBookOpen,
+    LucideChevronRight,
     LucidePlus,
     PaginationComponent,
     RouterLink,
