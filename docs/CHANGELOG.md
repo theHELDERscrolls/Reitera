@@ -11,6 +11,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.20.0] — 2026-04-14 — feature/40-ci-pipeline
+### Added
+- `.github/workflows/ci.yml` — GitHub Actions CI pipeline with two independent parallel jobs:
+  - **Backend — Build & Test**: sets up JDK 21 (Temurin) with Maven cache; starts a PostgreSQL 16 service container (same credentials as local dev); applies `init.sql` via `psql`; runs `mvn --batch-mode test`
+  - **Frontend — Lint, Test & Build**: sets up Node 22 with npm cache; runs `npm ci`, `npx ng lint`, `ng test --watch=false` (Vitest, no browser), and `ng build` (production)
+- Pipeline triggers on `push` and `pull_request` targeting `develop` and `main`
+- Maven (`~/.m2`) and npm dependencies cached between runs to reduce job duration
+
+---
+
 ## [0.19.0] — 2026-04-12 — feature/38-deck-detail-page
 ### Added
 - `DeckDetailComponent` — full deck detail page at `/decks/:id`; shows breadcrumb, deck header (title, description, category, visibility, created date), FSRS stats chips, and a paginated sortable cards table

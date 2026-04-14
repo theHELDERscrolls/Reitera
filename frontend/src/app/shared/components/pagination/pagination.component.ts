@@ -13,13 +13,13 @@ export default class PaginationComponent {
 
   readonly pageChange = output<number>();
 
-  readonly pageRange = computed((): Array<number | 'gap'> => {
+  readonly pageRange = computed((): (number | 'gap')[] => {
     const total = this.totalPages();
     const cur = this.currentPage();
 
     if (total <= 7) return Array.from({ length: total }, (_, i) => i);
 
-    const result: Array<number | 'gap'> = [0];
+    const result: (number | 'gap')[] = [0];
 
     if (cur > 2) result.push('gap');
 

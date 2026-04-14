@@ -9,5 +9,5 @@ import { TranslocoPipe } from '@jsverse/transloco';
 })
 export class SidebarHeaderComponent {
   readonly isCollapsed = input.required<boolean>();
-  readonly toggle = output<void>();
+  readonly toggled = output<void>();
 }
