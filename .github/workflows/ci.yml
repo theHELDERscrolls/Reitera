@@ -6,7 +6,16 @@ on:
   pull_request:
     branches: [develop, main]
 
+permissions:
+  contents: read
+
 jobs:
+
+  # ──────────────────────────────────────────────────────────────
+  # BACKEND
+  # Spins up a real PostgreSQL 16 instance as a service container,
+  # applies the schema, then runs all JUnit tests via Maven.
+  # ──────────────────────────────────────────────────────────────
   backend:
     name: Backend — Build & Test
     runs-on: ubuntu-latest
@@ -20,6 +29,8 @@ jobs:
           POSTGRES_PASSWORD: reitera_password
         ports:
           - 5432:5432
+        # GitHub waits until Postgres passes the health check before
+        # running any step — prevents "connection refused" race conditions.
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -28,10 +39,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 1
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4
         with:
           java-version: "21"
           distribution: "temurin"
@@ -49,16 +62,23 @@ jobs:
         working-directory: backend/reitera-backend
         run: mvn --batch-mode test
 
+  # ──────────────────────────────────────────────────────────────
+  # FRONTEND
+  # No browser needed — Vitest runs under jsdom.
+  # Steps: install → lint → test → build (production).
+  # ──────────────────────────────────────────────────────────────
   frontend:
     name: Frontend — Lint, Test & Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 1
 
       - name: Set up Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
           cache: npm
