@@ -232,6 +232,21 @@ The same enumeration principle applies here. Returning `404` for a non-existent 
 
 ### `authorName` uses the nickname (`username` field), not `firstName + lastName`
 
+---
+
+## CI Pipeline
+
+A GitHub Actions workflow (`.github/workflows/ci.yml`) validates every push and pull request targeting `develop` or `main`. Two jobs run in parallel:
+
+| Job | Steps |
+|-----|-------|
+| **Backend — Build & Test** | Checkout → JDK 21 (Temurin, Maven cache) → PostgreSQL 16 service container → apply `init.sql` → `mvn --batch-mode test` |
+| **Frontend — Lint, Test & Build** | Checkout → Node 22 (npm cache) → `npm ci` → `ng lint` → `ng test --watch=false` → `ng build` |
+
+**Why a real PostgreSQL, not H2?** The backend uses `hibernate.ddl-auto: none`, native JSONB columns, and `pgcrypto` — none of which H2 supports. The service container matches the exact production database engine and avoids a false sense of security from a divergent in-memory DB.
+
+**Branch protection:** `develop` is configured to require both jobs to be green before any PR can be merged.
+
 Deck author attribution uses the unique `username` field (the user's chosen nickname) rather than `firstName + lastName`. Full names are not unique — multiple users can share the same name. The `username` column has a unique constraint and unambiguously identifies the author.
 
 **Implementation note:** `User` implements Spring Security's `UserDetails`, which forces an override of `getUsername()` to return the email (the authentication principal). Lombok cannot generate a getter for the `username` field because that method name is taken. A dedicated `getNickname()` method exposes the actual nickname value. Any code that needs the display username must call `getNickname()`, not `getUsername()`.
