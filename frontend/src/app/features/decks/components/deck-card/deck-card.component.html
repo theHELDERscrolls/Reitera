@@ -16,7 +16,7 @@
       </div>
 
       <!-- Contextual menu -->
-      <div class="absolute top-1 right-1" data-deck-menu (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <div class="absolute top-1 right-1" tabindex="0" data-deck-menu (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
         <button
           (click)="toggleMenu()"
           class="p-1 transition-all rounded-md text-muted hover:text-foreground hover:bg-overlay"
