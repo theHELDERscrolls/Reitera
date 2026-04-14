@@ -292,7 +292,7 @@
     },
     {
       "name": "Tags",
-      "description": "Tag endpoints. Returns only tags used on cards in the authenticated user's decks.",
+      "description": "Tag endpoints. Tags are user-scoped — unique per (name, owner_id). Created inline during card save via the newTags field. Orphan cleanup automatically deletes tags with no remaining cards.",
       "item": [
         {
           "name": "Get My Tags",
@@ -315,7 +315,7 @@
                 "tags"
               ]
             },
-            "description": "Returns the distinct tags assigned to cards in the authenticated user's decks. With seed data (alumno): importante, difícil, vocabulario. Note: 'repaso' exists in the DB but is not assigned to any card, so it will NOT appear here."
+            "description": "Returns all tags owned by the authenticated user. With seed data (alumno): importante, difícil, repaso, vocabulario (all 4 appear because findAllByOwnerId is used, not card-navigation). In practice orphan cleanup keeps this list in sync — tags deleted from all cards are removed automatically."
           },
           "response": []
         },
@@ -494,6 +494,33 @@
           "response": []
         },
         {
+          "name": "Get Deck Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "stats"
+              ]
+            },
+            "description": "Returns aggregated card counts for a deck broken down by FSRS state. Fields: totalCards, newCards (no StudyProgress for this user), learningCards (state=1), reviewCards (state=2), relearningCards (state=3), dueCards (nextReview <= now). Returns 404 if not found or not owned by the user."
+          },
+          "response": []
+        },
+        {
           "name": "Update Deck",
           "request": {
             "method": "PUT",
@@ -588,9 +615,9 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"type\": \"BASIC\",\n  \"question\": \"¿En qué año comenzó la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"answer\": \"1936\"\n  },\n  \"explanation\": \"El conflicto se inició el 17 de julio de 1936 con el alzamiento militar.\",\n  \"tagIds\": []\n}"
+              "raw": "{\n  \"type\": \"BASIC\",\n  \"question\": \"¿En qué año comenzó la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"answer\": \"1936\"\n  },\n  \"explanation\": \"El conflicto se inició el 17 de julio de 1936 con el alzamiento militar.\",\n  \"tagIds\": [1],\n  \"newTags\": [\n    { \"name\": \"siglo XX\", \"hexColor\": \"#3b82f6\" }\n  ]\n}"
             },
-            "description": "Creates a BASIC card (question / answer). `answerJson` for this type must contain a single `answer` key."
+            "description": "Creates a BASIC card (question / answer). `answerJson` must contain a single `answer` key. `tagIds` attaches existing tags by ID. `newTags` creates tags inline (find-or-create per user): if the name already exists for this user it is reused, otherwise a new tag row is created. Both fields are optional."
           },
           "response": []
         },
@@ -710,7 +737,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/decks/1/cards?page=0&size=20",
+              "raw": "{{base_url}}/api/v1/decks/1/cards?page=0&size=20&sort=question,asc",
               "host": [
                 "{{base_url}}"
               ],
@@ -731,10 +758,15 @@
                   "key": "size",
                   "value": "20",
                   "description": "Items per page"
+                },
+                {
+                  "key": "sort",
+                  "value": "question,asc",
+                  "description": "Sort field and direction. Sortable fields: question, type. The state column is not sortable (computed in-memory from StudyProgress)."
                 }
               ]
             },
-            "description": "Returns a paginated list of cards belonging to the specified deck. Only accessible by the deck owner. Response is a Page object with 'content', 'totalElements', 'totalPages', 'number', and 'size' fields."
+            "description": "Returns a paginated list of cards belonging to the specified deck. Only accessible by the deck owner. Each card includes a 'state' field with the requesting user's FSRS state (null=New, 1=Learning, 2=Review, 3=Relearning). Sortable by 'question' or 'type' via the sort param."
           },
           "response": []
         },

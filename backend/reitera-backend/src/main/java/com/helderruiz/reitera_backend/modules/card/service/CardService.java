@@ -5,18 +5,25 @@ import com.helderruiz.reitera_backend.modules.card.dto.CardRequestDTO;
 import com.helderruiz.reitera_backend.modules.card.dto.CardResponseDTO;
 import com.helderruiz.reitera_backend.modules.card.model.Card;
 import com.helderruiz.reitera_backend.modules.card.repository.CardRepository;
+import com.helderruiz.reitera_backend.modules.deck.dto.NewTagDTO;
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
 import com.helderruiz.reitera_backend.modules.deck.model.Tag;
 import com.helderruiz.reitera_backend.modules.deck.repository.DeckRepository;
 import com.helderruiz.reitera_backend.modules.deck.repository.TagRepository;
+import com.helderruiz.reitera_backend.modules.deck.service.TagService;
+import com.helderruiz.reitera_backend.modules.study.model.StudyProgress;
+import com.helderruiz.reitera_backend.modules.study.repository.StudyProgressRepository;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,15 +38,17 @@ public class CardService {
     private final CardRepository cardRepository;
     private final DeckRepository deckRepository;
     private final TagRepository tagRepository;
+    private final TagService tagService;
+    private final StudyProgressRepository studyProgressRepository;
 
     /**
      * Creates a new card inside a deck owned by the authenticated user.
      */
+    @Transactional
     public CardResponseDTO createCard(Integer deckId, CardRequestDTO dto, User owner) {
         Deck deck = findOwnedDeck(deckId, owner);
 
-        // Load the Tag entities from the provided IDs (empty set if none provided)
-        Set<Tag> tags = resolveTags(dto.tagIds());
+        Set<Tag> tags = resolveTags(dto.tagIds(), dto.newTags(), owner);
 
         Card card = Card.builder()
                 .deck(deck)
@@ -55,44 +64,70 @@ public class CardService {
 
     /**
      * Returns a paginated list of cards belonging to a deck owned by the authenticated user.
+     * Each card is enriched with the user's FSRS state for that card (null if never studied).
      */
     public Page<CardResponseDTO> getCardsByDeck(Integer deckId, User owner, Pageable pageable) {
         Deck deck = findOwnedDeck(deckId, owner);
-        return cardRepository.findAllByDeck(deck, pageable).map(this::toResponseDTO);
+
+        Map<Integer, Integer> stateByCardId = studyProgressRepository
+                .findAllByUserIdAndDeckId(owner.getId(), deckId)
+                .stream()
+                .collect(Collectors.toMap(
+                        sp -> sp.getCard().getId(),
+                        StudyProgress::getState
+                ));
+
+        return cardRepository.findAllByDeck(deck, pageable)
+                .map(card -> toResponseDTO(card, stateByCardId.get(card.getId())));
     }
 
     /**
      * Returns a single card by ID, verifying deck ownership.
      */
     public CardResponseDTO getCardById(Integer deckId, Integer cardId, User owner) {
-        findOwnedDeck(deckId, owner); // Ensure the deck belongs to the user
+        findOwnedDeck(deckId, owner);
         Card card = findCardInDeck(cardId, deckId);
         return toResponseDTO(card);
     }
 
     /**
      * Updates an existing card. Only the deck owner can perform this operation.
+     * After saving, orphaned tags (removed from this card and no longer used anywhere) are deleted.
      */
+    @Transactional
     public CardResponseDTO updateCard(Integer deckId, Integer cardId, CardRequestDTO dto, User owner) {
         findOwnedDeck(deckId, owner);
         Card card = findCardInDeck(cardId, deckId);
 
-        // Apply updated values from the request DTO
+        Set<Tag> oldTags = new HashSet<>(card.getTags());
+
+        Set<Tag> newTags = resolveTags(dto.tagIds(), dto.newTags(), owner);
         card.setType(dto.type());
         card.setQuestion(dto.question());
         card.setAnswerJson(dto.answerJson());
         card.setExplanation(dto.explanation());
-        card.setTags(resolveTags(dto.tagIds()));
+        card.setTags(newTags);
 
-        return toResponseDTO(cardRepository.save(card));
+        CardResponseDTO result = toResponseDTO(cardRepository.save(card));
+
+        cleanupOrphanTags(oldTags, newTags);
+
+        return result;
     }
 
     /**
      * Deletes a card by ID. Only the deck owner can perform this operation.
+     * After deletion, orphaned tags (no longer used anywhere) are deleted.
      */
+    @Transactional
     public void deleteCard(Integer deckId, Integer cardId, User owner) {
         findOwnedDeck(deckId, owner);
-        cardRepository.delete(findCardInDeck(cardId, deckId));
+        Card card = findCardInDeck(cardId, deckId);
+        Set<Tag> cardTags = new HashSet<>(card.getTags());
+
+        cardRepository.delete(card);
+
+        cleanupOrphanTags(cardTags, Collections.emptySet());
     }
 
     /**
@@ -103,8 +138,6 @@ public class CardService {
     public Page<CardResponseDTO> getCardsByTag(Integer tagId, User owner, Pageable pageable) {
         return cardRepository.findByTagIdAndOwner(tagId, owner.getId(), pageable).map(this::toResponseDTO);
     }
-
-    // --- Private helpers ---
 
     /**
      * Finds a deck by ID and verifies the requesting user is its owner.
@@ -129,31 +162,68 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card not found with id: " + cardId));
 
-        // Extra safety check: ensure the card actually belongs to the declared deck
         if (!card.getDeck().getId().equals(deckId)) {
-            throw new ResourceNotFoundException("Card " + cardId + " does not belong to deck " + deckId);
+            throw new ResourceNotFoundException("Card not found in the specified deck");
         }
 
         return card;
     }
 
     /**
-     * Loads Tag entities from a set of IDs.
-     * Returns an empty set if no IDs are provided.
+     * Resolves the full set of Tag entities to assign to a card.
+     * <p>
+     * Two sources:
+     * - tagIds: existing tags the user selected from the dropdown (verify they own them).
+     * - newTags: name+color pairs typed by the user → find-or-create per user.
+     * <p>
+     * Ownership check on tagIds prevents IDOR: a user cannot attach another user's tag to their card.
      */
-    private Set<Tag> resolveTags(Set<Integer> tagIds) {
-        if (tagIds == null || tagIds.isEmpty()) return Collections.emptySet();
-        return tagIds.stream()
-                .map(id -> tagRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Tag not found with id: " + id)))
-                .collect(Collectors.toSet());
+    private Set<Tag> resolveTags(Set<Integer> tagIds, List<NewTagDTO> newTags, User owner) {
+        Set<Tag> result = new HashSet<>();
+
+        if (tagIds != null) {
+            tagIds.forEach(id -> {
+                Tag tag = tagRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Tag not found with id: " + id));
+                if (!tag.getOwner().getId().equals(owner.getId())) {
+                    throw new ResourceNotFoundException("Tag not found with id: " + id);
+                }
+                result.add(tag);
+            });
+        }
+
+        if (newTags != null) {
+            newTags.forEach(dto -> result.add(tagService.findOrCreateTag(dto.name(), dto.hexColor(), owner)));
+        }
+
+        return result;
+    }
+
+    /**
+     * Deletes tags that were removed from a card and are no longer used by any other card.
+     * This is the same orphan-cleanup pattern used for categories in DeckService.
+     * <p>
+     * oldTags: tags the card had before the update/delete.
+     * newTags: tags the card has after (empty set for deletes).
+     */
+    private void cleanupOrphanTags(Set<Tag> oldTags, Set<Tag> newTags) {
+        Set<Integer> newTagIds = newTags.stream().map(Tag::getId).collect(Collectors.toSet());
+
+        oldTags.stream()
+                .filter(t -> !newTagIds.contains(t.getId()))
+                .forEach(t -> {
+                    if (tagRepository.countCardsByTagId(t.getId()) == 0) {
+                        tagRepository.deleteById(t.getId());
+                    }
+                });
     }
 
     /**
      * Maps a Card entity to its response DTO.
      * Converts the Tag set into lightweight TagSummary records.
+     * State is null for cards the user has never studied.
      */
-    private CardResponseDTO toResponseDTO(Card card) {
+    private CardResponseDTO toResponseDTO(Card card, Integer state) {
         Set<CardResponseDTO.TagSummary> tagSummaries = card.getTags().stream()
                 .map(tag -> new CardResponseDTO.TagSummary(tag.getId(), tag.getName(), tag.getHexColor()))
                 .collect(Collectors.toSet());
@@ -165,7 +235,16 @@ public class CardService {
                 card.getQuestion(),
                 card.getAnswerJson(),
                 card.getExplanation(),
-                tagSummaries
+                tagSummaries,
+                state
         );
+    }
+
+    /**
+     * Overload for contexts where state is not available (single card lookups, create, update).
+     * State is set to null — the caller is not in a deck-list context.
+     */
+    private CardResponseDTO toResponseDTO(Card card) {
+        return toResponseDTO(card, null);
     }
 }

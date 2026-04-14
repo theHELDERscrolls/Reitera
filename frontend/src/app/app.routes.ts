@@ -28,6 +28,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/decks/decks.component'),
       },
       {
+        path: 'decks/:id',
+        loadComponent: () =>
+          import('./features/decks/components/deck-detail/deck-detail.component'),
+      },
+      {
         path: 'study',
         loadComponent: () => import('./features/study/study.component'),
       },

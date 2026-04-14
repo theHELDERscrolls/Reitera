@@ -170,6 +170,29 @@ Returns a single deck by ID.
 
 ---
 
+### GET `/api/v1/decks/{id}/stats`
+Returns aggregated card counts for a deck, broken down by FSRS state.
+
+**Response `200 OK`:**
+```json
+{
+  "totalCards": 21,
+  "newCards": 10,
+  "learningCards": 3,
+  "reviewCards": 5,
+  "relearningCards": 1,
+  "dueCards": 4
+}
+```
+
+- `newCards` — cards with no `StudyProgress` row for the requesting user
+- `dueCards` — cards whose `nextReview ≤ now` (overdue)
+- Counts are computed from `StudyProgress` per user, not per deck — two users studying the same deck have independent counts
+
+**Errors:** `404` if deck not found or not owned by the user
+
+---
+
 ### PUT `/api/v1/decks/{id}`
 Updates an existing deck (full replacement of all fields).
 
@@ -219,11 +242,12 @@ The `answerJson` structure varies by card type:
   "question": "¿En qué año comenzó la Guerra Civil Española?",
   "answerJson": { "answer": "1936" },
   "explanation": "El conflicto se inició el 17 de julio de 1936.",
-  "tagIds": []
+  "tagIds": [1],
+  "newTags": [{ "name": "siglo XX", "hexColor": "#3b82f6" }]
 }
 ```
 
-**MULTIPLE_CHOICE** — one correct option among several:
+**MULTIPLE_CHOICE** — one correct option among several (min 2, max 8 options):
 ```json
 {
   "type": "MULTIPLE_CHOICE",
@@ -259,7 +283,9 @@ The `answerJson` structure varies by card type:
 }
 ```
 
-`tagIds` is optional — send an empty array or omit it if no tags apply.
+Tags can be attached in two ways (both optional):
+- `tagIds` — IDs of existing tags the user owns
+- `newTags` — name + hexColor pairs for inline tag creation; if a tag with that name already exists for the user it is reused (find-or-create); otherwise a new tag row is created and attached
 
 **Response `201 Created`:** `CardResponseDTO`
 
@@ -324,9 +350,12 @@ Deletes a card by ID.
   "explanation": "El conflicto se inició el 17 de julio de 1936.",
   "tags": [
     { "id": 1, "name": "historia", "hexColor": "#FF5733" }
-  ]
+  ],
+  "state": null
 }
 ```
+
+`state` — the requesting user's FSRS state for this card: `null` or `0` = New · `1` = Learning · `2` = Review · `3` = Relearning. Always `null` for single-card lookups (GET by ID, create, update); populated for paginated list responses.
 
 ---
 
@@ -370,10 +399,12 @@ Returns an empty array if the user has no decks with a category assigned.
 
 ## Tags
 
-Returns only the tags used on cards in the authenticated user's own decks.
+Tags are user-scoped. A tag belongs to exactly one user; two users can share the same name independently.
+Tags have no dedicated creation endpoint — they are created inline during card save via `newTags` in `CardRequestDTO`.
+Tags with no remaining cards are automatically deleted by `CardService` after every card update or delete (orphan cleanup).
 
 ### GET `/api/v1/tags`
-Returns all distinct tags used on the user's cards.
+Returns all tags owned by the authenticated user.
 
 **Response `200 OK`:**
 ```json
@@ -383,7 +414,7 @@ Returns all distinct tags used on the user's cards.
 ]
 ```
 
-Tags that exist in the system but are not assigned to any of the user's cards will **not** appear.
+Because orphan cleanup deletes unused tags automatically, this list in practice only contains tags that are assigned to at least one card.
 
 ---
 

@@ -58,13 +58,15 @@ modules/
 │   ├── repository/ → RefreshTokenRepository
 │   └── service/    → JwtService, RefreshTokenService
 ├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
-├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories and tags APIs
-├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search
+├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories, tags and deck stats APIs
+├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search + inline tag find-or-create
 └── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
 
 core/
 └── exception/      → GlobalExceptionHandler, ResourceNotFoundException
 ```
+
+**Tag lifecycle:** Tags are user-scoped — the uniqueness constraint is `UNIQUE(name, owner_id)`, not global. Tags are created inline during card save via `TagService.findOrCreateTag()` (same find-or-create pattern as categories). Tags with no remaining cards are automatically deleted by `CardService.cleanupOrphanTags()` after every update or delete, inside the same `@Transactional` block.
 
 ## Security Model
 
@@ -133,11 +135,16 @@ src/app/
 │   ├── dashboard/      → DashboardComponent (stub)
 │   ├── decks/          → DecksComponent — paginated deck list with category filter and CRUD dialogs
 │   │   ├── components/
-│   │   │   ├── deck-card/         → DeckCardComponent (accent color, options menu, edit/delete outputs)
+│   │   │   ├── card-form/         → CardFormComponent (create/edit card dialog; tag combobox; dynamic MC options)
+│   │   │   ├── cards-table/       → CardsTableComponent (sortable table; loading skeleton; empty state; reusable)
 │   │   │   ├── category-filter/   → CategoryFilterComponent (collapsible dropdown, click-outside aware)
-│   │   │   └── deck-form/         → DeckFormComponent (create/edit dialog, reactive form, save confirm)
+│   │   │   ├── deck-card/         → DeckCardComponent (accent color, options menu, edit/delete outputs)
+│   │   │   ├── deck-detail/       → DeckDetailComponent (breadcrumb, header, stats chips, cards table, pagination)
+│   │   │   ├── deck-form/         → DeckFormComponent (create/edit dialog, reactive form, save confirm)
+│   │   │   └── visibility-badge/  → VisibilityBadgeComponent (public/private pill; used in deck-card and deck-detail)
 │   │   └── services/
-│   │       └── decks.service.ts   → DecksService (CRUD + pagination + categories)
+│   │       ├── deck-detail.service.ts → DeckDetailService (deck, stats, cards, tags, card CRUD)
+│   │       └── decks.service.ts       → DecksService (CRUD + pagination + categories)
 │   ├── profile/        → ProfileComponent (stub)
 │   ├── shell/          → AppShellComponent + all layout sub-components
 │   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
@@ -148,7 +155,14 @@ src/app/
 │   │           └── profile-panel/ → ProfilePanelComponent (view profile, theme, language, logout)
 │   └── study/          → StudyComponent (stub)
 └── shared/             → Reusable components with no feature-specific logic
-    └── components/     → ToastComponent, LanguageSwitcherComponent, ConfirmDialogComponent
+    └── components/
+        ├── card-state-badge/  → CardStateBadgeComponent (FSRS state pill; input: state: number | null)
+        ├── card-type-badge/   → CardTypeBadgeComponent (card type pill; input: type: CardType)
+        ├── confirm-dialog/    → ConfirmDialogComponent
+        ├── language-switcher/ → LanguageSwitcherComponent
+        ├── pagination/        → PaginationComponent (page strip with gap logic; input: currentPage, totalPages)
+        ├── tag-pill/          → TagPillComponent (colored pill; inputs: name, hexColor, removable; output: remove)
+        └── toast/             → ToastComponent
 ```
 
 ### Routing Pattern

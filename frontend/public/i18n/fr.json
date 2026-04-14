@@ -118,6 +118,107 @@
       "deleted": "Paquet supprimé avec succès"
     }
   },
+  "deckDetail": {
+    "createdAt": "Créé le",
+    "addCard": "Ajouter une carte",
+    "study": "Étudier",
+    "stats": {
+      "total": "Total",
+      "new": "Nouvelles",
+      "learning": "En cours",
+      "review": "Révision",
+      "relearning": "Réapprentissage",
+      "due": "À revoir"
+    },
+    "cards": {
+      "title": "Cartes",
+      "editCard": "Modifier la carte",
+      "deleteCard": "Supprimer la carte",
+      "table": {
+        "question": "Question",
+        "type": "Type",
+        "state": "État",
+        "actions": "Actions"
+      },
+      "empty": {
+        "title": "Aucune carte pour l'instant",
+        "subtitle": "Ajoutez votre première carte pour commencer à étudier"
+      },
+      "type": {
+        "basic": "Basique",
+        "cloze": "Lacune",
+        "multiple_choice": "Multi",
+        "true_false": "Vrai / Faux"
+      },
+      "state": {
+        "new": "Nouvelle",
+        "learning": "En cours",
+        "review": "Révision",
+        "relearning": "Réapprentissage"
+      }
+    },
+    "deleteCard": {
+      "title": "Supprimer la carte",
+      "message": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible."
+    },
+    "toast": {
+      "cardCreated": "Carte créée avec succès",
+      "cardUpdated": "Carte mise à jour avec succès",
+      "cardDeleted": "Carte supprimée avec succès"
+    }
+  },
+  "cardForm": {
+    "createTitle": "Nouvelle carte",
+    "editTitle": "Modifier la carte",
+    "type": {
+      "label": "Type de carte",
+      "basic": "Basique",
+      "cloze": "Lacune",
+      "multiple_choice": "QCM",
+      "true_false": "V/F"
+    },
+    "question": {
+      "label": "Question",
+      "placeholder": "Saisissez la question...",
+      "placeholderCloze": "Utilisez {{espace}} pour indiquer le mot caché, ex. La capitale de {{France}}"
+    },
+    "answer": {
+      "label": "Réponse",
+      "placeholder": "Saisissez la réponse..."
+    },
+    "options": {
+      "label": "Options (cliquez sur le cercle pour marquer la bonne réponse)",
+      "placeholder": "Saisir une option...",
+      "markCorrect": "Marquer comme correcte",
+      "remove": "Supprimer l'option",
+      "add": "Ajouter une option"
+    },
+    "correct": {
+      "label": "Bonne réponse"
+    },
+    "trueFalse": {
+      "true": "Vrai",
+      "false": "Faux"
+    },
+    "explanation": {
+      "label": "Explication (facultatif)",
+      "placeholder": "Expliquez pourquoi c'est la bonne réponse..."
+    },
+    "tags": {
+      "label": "Étiquettes",
+      "search": "Rechercher ou ajouter une étiquette...",
+      "create": "Créer '{{ name }}'",
+      "remove": "Supprimer l'étiquette"
+    },
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "delete": "Supprimer la carte",
+    "error": {
+      "questionRequired": "La question est obligatoire.",
+      "questionMax": "La question ne peut pas dépasser 500 caractères."
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Accueil",

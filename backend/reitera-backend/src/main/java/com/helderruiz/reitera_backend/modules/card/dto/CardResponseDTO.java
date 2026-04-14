@@ -14,7 +14,8 @@ public record CardResponseDTO(
         String question,
         Map<String, Object> answerJson,
         String explanation,
-        Set<TagSummary> tags
+        Set<TagSummary> tags,
+        Integer state
 ) {
 
     /**

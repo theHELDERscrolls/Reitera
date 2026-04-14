@@ -11,6 +11,51 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.19.0] — 2026-04-12 — feature/38-deck-detail-page
+### Added
+- `DeckDetailComponent` — full deck detail page at `/decks/:id`; shows breadcrumb, deck header (title, description, category, visibility, created date), FSRS stats chips, and a paginated sortable cards table
+- `DeckDetailService` — feature-scoped service handling `GET /decks/{id}`, `GET /decks/{id}/stats`, `GET /decks/{id}/cards`, `GET /tags`, card CRUD
+- `GET /api/v1/decks/{id}/stats` backend endpoint — returns `DeckStatsDTO` with total, new, learning, review, relearning and due card counts; all counts derived from `StudyProgress` in a single service call
+- Card table sorting by question or type — sort applied on the backend via `Pageable` (`?sort=field,direction`); state column excluded from sorting (computed in-memory from `StudyProgress`)
+- `CardFormComponent` — create/edit dialog modal for cards; stays open after create so users can add multiple cards without reopening; closes after edit
+- Tag system (full implementation):
+  - Tags are user-scoped: `UNIQUE(name, owner_id)` DB constraint; two users can share the same tag name independently
+  - Find-or-create: user types a tag name in the card form → existing tag is reused, new tag is created on card save
+  - Tags carry a hex color chosen from a 10-color predefined palette in the form UI
+  - `newTags` field added to `CardRequestDTO` — carries `name + hexColor` pairs for inline tag creation
+  - Orphan cleanup: tags with no remaining cards are deleted automatically after `updateCard` / `deleteCard` (same pattern as category cleanup in `DeckService`)
+  - `TagRepository` — added `findAllByOwnerId`, `findByNameIgnoreCaseAndOwnerId`, `countCardsByTagId`
+  - `TagService.findOrCreateTag()` — core find-or-create method, `@Transactional`
+  - `CardService` — `createCard`, `updateCard`, `deleteCard` are now `@Transactional`; added `resolveTags()` and `cleanupOrphanTags()` private helpers
+
+- Component extraction refactor:
+  - `<app-pagination>` at `shared/components/pagination` — `pageRange` computed moved inside; used in `DecksComponent` and `DeckDetailComponent`
+  - `<app-card-type-badge>` at `shared/components/card-type-badge` — encapsulates type pill color logic; input: `type: CardType`
+  - `<app-card-state-badge>` at `shared/components/card-state-badge` — encapsulates FSRS state pill color logic; input: `state: number | null`
+  - `<app-cards-table>` at `features/decks/components/cards-table` — full cards table with loading skeleton, empty state, sorting headers; outputs: `sort`, `edit`, `delete`, `addCard`; reusable for the future all-cards page
+  - `<app-tag-pill>` at `shared/components/tag-pill` — colored pill with optional remove button; inputs: `name`, `hexColor`, `removable`; output: `remove`
+  - `<app-visibility-badge>` at `features/decks/components/visibility-badge` — public/private pill; used in `DeckCardComponent` and `DeckDetailComponent`
+
+- Study button in `DeckDetailComponent` routes to `/study?deckId=X` (query param, not nested route, so the study page can work without a deck filter)
+
+### Changed
+- `Tag.java` — added `owner: User` (`@ManyToOne LAZY`); `name` column uniqueness moved from `@Column(unique=true)` to a DB-level `UNIQUE(name, owner_id)` constraint
+- `init.sql` — added `DROP TABLE IF EXISTS … CASCADE` block at the top so the script is safe to re-run in development; `tags` table updated with `owner_id` column and `UNIQUE(name, owner_id)` constraint
+- `seed.sql` — tag inserts updated to include `owner_id`; `ON CONFLICT` updated to `(name, owner_id)`
+- `DeckCardComponent` — now uses `<app-visibility-badge>` instead of inline badge markup
+- `DeckDetailComponent` — cards table replaced with `<app-cards-table>`; visibility badge replaced with `<app-visibility-badge>`
+- `DecksComponent` and `DeckDetailComponent` — `pageRange` computed and Chevron icon imports removed; pagination replaced with `<app-pagination>`
+- `CardFormComponent` — tag combobox replaces static toggle pills; dynamic `FormArray` replaces hardcoded 4-option MC controls (min 2, max 8); form stays open after create
+
+### Fixed
+- SonarQube S7723 — `Array(n)` → `new Array(n)` in `card-form.component.ts`
+- SonarQube S7778 — consecutive `FormArray.push()` calls → `form.setControl('options', fb.array([...]))` in `card-form.component.ts`
+- SonarQube S6847 — added keyboard handlers to clickable divs in `deck-card.component.html` and `deck-form.component.html`
+- SonarQube S6853 — toggle switch `<label>` in `deck-form.component.html` now has accessible text via `<span class="sr-only">`
+- Delete confirm dialog was closing the card form on cancel — `(deleted)` output now only calls `requestDeleteCard()`; form is closed only after the API confirms deletion in `confirmDeleteCard()`
+
+---
+
 ## [0.18.0] — 2026-04-04 — fix/36-deck-pagination-and-category-filter
 ### Fixed
 - `GET /api/v1/decks` — added optional `categoryId` query param; `DeckRepository` gained `findAllByOwnerAndCategory(User, Category, Pageable)` and `DeckService.getUserDecks()` now delegates to it when `categoryId` is present, so pagination and filtering are applied together on the backend

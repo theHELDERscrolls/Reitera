@@ -1,16 +1,16 @@
 import { Component, HostListener, computed, input, output, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import {
   LucideCalendar,
-  LucideEdit,
   LucideEllipsisVertical,
-  LucideGlobe,
-  LucideLock,
+  LucideSquarePen,
   LucideTrash2,
 } from '@lucide/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { DeckResponse } from '@core/models/deck.model';
-import { DatePipe } from '@angular/common';
+import { VisibilityBadgeComponent } from '../visibility-badge/visibility-badge.component';
 
 const ACCENT_COLORS = [
   'var(--color-accent-1)',
@@ -26,12 +26,12 @@ const ACCENT_COLORS = [
   imports: [
     DatePipe,
     LucideCalendar,
-    LucideEdit,
+    LucideSquarePen,
     LucideEllipsisVertical,
-    LucideGlobe,
-    LucideLock,
     LucideTrash2,
+    RouterLink,
     TranslocoPipe,
+    VisibilityBadgeComponent,
   ],
   templateUrl: './deck-card.component.html',
 })

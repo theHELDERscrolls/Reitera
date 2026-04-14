@@ -57,7 +57,7 @@ backend/reitera-backend/src/main/resources/init.sql
 | `roles` | RBAC roles (STUDENT, ADMIN) |
 | `users` | User accounts |
 | `categories` | High-level groupings for decks |
-| `tags` | Cross-deck labels for cards |
+| `tags` | User-scoped labels for cards; unique per `(name, owner_id)` |
 | `decks` | Flashcard collections |
 | `cards` | Individual flashcards (JSONB answers) |
 | `card_tags` | Many-to-many: cards ↔ tags |

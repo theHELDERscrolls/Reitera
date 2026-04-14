@@ -1,14 +1,29 @@
 -- ============================================================
 -- Reitera — Database Schema Initialization
 -- ============================================================
--- Run this script ONCE when setting up a new local environment.
+-- Safe to re-run in development: drops all tables first so schema
+-- changes (new columns, new constraints) are always applied cleanly.
 -- Prerequisites: Docker container 'reitera_postgres' running,
 -- connected to 'reitera_db' as 'reitera_admin'.
--- See docs/setup/database-setup.md for full instructions.
 -- ============================================================
 
 -- Required by seed.sql to generate BCrypt password hashes.
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Drop all tables in reverse dependency order so FK constraints don't block the drops.
+-- CASCADE is not needed here because we respect the dependency order,
+-- but it is kept as a safety net.
+DROP TABLE IF EXISTS refresh_tokens         CASCADE;
+DROP TABLE IF EXISTS review_logs            CASCADE;
+DROP TABLE IF EXISTS study_progress         CASCADE;
+DROP TABLE IF EXISTS card_tags              CASCADE;
+DROP TABLE IF EXISTS user_deck_subscriptions CASCADE;
+DROP TABLE IF EXISTS cards                  CASCADE;
+DROP TABLE IF EXISTS decks                  CASCADE;
+DROP TABLE IF EXISTS tags                   CASCADE;
+DROP TABLE IF EXISTS categories             CASCADE;
+DROP TABLE IF EXISTS users                  CASCADE;
+DROP TABLE IF EXISTS roles                  CASCADE;
 
 
 -- 1. ROLES
@@ -42,10 +57,14 @@ CREATE TABLE IF NOT EXISTS categories (
 
 
 -- 4. TAGS
+-- owner_id scopes tags to a user — two users can have the same tag name independently.
+-- The unique constraint is (name, owner_id), not just name.
 CREATE TABLE IF NOT EXISTS tags (
     id        SERIAL      PRIMARY KEY,
-    name      VARCHAR(30) NOT NULL UNIQUE,
-    hex_color VARCHAR(7)
+    name      VARCHAR(30) NOT NULL,
+    hex_color VARCHAR(7),
+    owner_id  UUID        NOT NULL REFERENCES users(id),
+    UNIQUE (name, owner_id)
 );
 
 
