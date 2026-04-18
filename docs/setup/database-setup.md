@@ -100,13 +100,13 @@ backend/reitera-backend/src/main/resources/seed.sql
 | Categories | 3 | Historia de España · Programación Java · Inglés B2 |
 | Tags | 4 | importante · difícil · repaso · vocabulario |
 | Decks | 4 | Two under "Historia de España" (enables category-scoped study demo), one under "Programación Java", one under "Inglés B2" |
-| Cards | 21 | BASIC(8) · CLOZE(3) · MULTIPLE_CHOICE(5) · TRUE_FALSE(5) |
-| StudyProgress | 6 | Cards from Deck 1, all states covered: Learning(2), Review(2), Relearning(2) |
-| ReviewLogs | 14 | Historical review entries for the 6 progress records |
+| Cards | 48 | BASIC(18) · CLOZE(9) · MULTIPLE_CHOICE(12) · TRUE_FALSE(9) — 12 per deck |
+| StudyProgress | 10 | Deck 1: 6 records (Learning, Review, Relearning); Decks 2 & 3: 2 records each |
+| ReviewLogs | 20 | Historical review entries for all 10 progress records |
 
 ### FSRS states in the seed
 
-The 6 `study_progress` records in Deck 1 (*La Segunda Guerra Mundial*) are configured so that **5 cards are immediately due** (past `next_review`) and **1 is scheduled for the future**. This means a call to `GET /study/due?deckId=1` will return those 5 cards plus the 10 new cards from Decks 2 and 3.
+The 10 `study_progress` records are distributed across three decks: Deck 1 (*La Segunda Guerra Mundial*) has 6 records with **5 cards immediately due** and 1 scheduled for the future; Decks 2 and 3 have 2 records each with 1 due card each. New cards (no prior progress) fill the remainder of each session. A call to `GET /study/due?deckId=1` returns the 5 overdue cards plus 6 new cards from that deck.
 
 ### Idempotency
 

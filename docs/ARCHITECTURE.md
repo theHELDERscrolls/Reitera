@@ -153,13 +153,22 @@ src/app/
 │   │       ├── sidebar-nav/       → SidebarNavComponent (nav links with icons)
 │   │       └── sidebar-footer/    → SidebarFooterComponent (avatar, username, email, profile panel trigger)
 │   │           └── profile-panel/ → ProfilePanelComponent (view profile, theme, language, logout)
-│   └── study/          → StudyComponent (stub)
+│   └── study/          → StudyComponent (hub — deck picker, due counts, category study)
+│       ├── components/
+│       │   ├── study-hub/     → StudyHubComponent (deck list with card count badges)
+│       │   ├── study-session/ → StudySessionComponent (card review flow, progress bar, confirm-dialog back guard)
+│       │   └── study-card/    → StudyCardComponent (renders BASIC, CLOZE, MC, TF; reveals explanation)
+│       └── services/
+│           └── study.service.ts → StudyService (getDueCards, processSession)
 └── shared/             → Reusable components with no feature-specific logic
     └── components/
+        ├── card-count-badges/ → CardCountBadgesComponent (new/due/relearning pill group; used in study hub)
         ├── card-state-badge/  → CardStateBadgeComponent (FSRS state pill; input: state: number | null)
         ├── card-type-badge/   → CardTypeBadgeComponent (card type pill; input: type: CardType)
         ├── confirm-dialog/    → ConfirmDialogComponent
+        ├── empty-state/       → EmptyStateComponent (icon + title + subtitle + action content projection)
         ├── language-switcher/ → LanguageSwitcherComponent
+        ├── page-header/       → PageHeaderComponent (page title + subtitle)
         ├── pagination/        → PaginationComponent (page strip with gap logic; input: currentPage, totalPages)
         ├── tag-pill/          → TagPillComponent (colored pill; inputs: name, hexColor, removable; output: remove)
         └── toast/             → ToastComponent
@@ -210,7 +219,7 @@ Three-layer token system in `styles.css`:
 
 ### i18n
 
-Transloco v8 — translation files live in `public/i18n/{lang}.json`. Components use `TranslocoPipe` (`| transloco`), never the deprecated `TranslocoDirective` with `inlineRead`.
+Transloco v8 — translation files live in `public/i18n/{lang}.json`. Available languages: `en` (English), `es` (Spanish), `fr` (French), `pt` (Portuguese). Components use `TranslocoPipe` (`| transloco`), never the deprecated `TranslocoDirective` with `inlineRead`.
 
 ---
 

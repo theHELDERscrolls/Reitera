@@ -25,4 +25,7 @@ export interface DeckResponse {
   categoryName: string | null;
   createdAt: string;
   updatedAt: string;
+  newCount: number;
+  dueCount: number;
+  relearningCount: number;
 }

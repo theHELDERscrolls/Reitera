@@ -219,6 +219,67 @@
       "questionMax": "Question must be at most 500 characters."
     }
   },
+  "study": {
+    "hub": {
+      "title": "Study",
+      "subtitle": "Choose what to study today",
+      "studyDeck": "Study deck",
+      "studyCategory": "Study all",
+      "uncategorized": "Uncategorized",
+      "empty": {
+        "title": "No decks to study",
+        "subtitle": "Create your first deck to start studying"
+      },
+      "stats": {
+        "new": "new",
+        "due": "due",
+        "relearning": "relearning"
+      }
+    },
+    "session": {
+      "state": {
+        "new": "New",
+        "learning": "Learning",
+        "review": "Review",
+        "relearning": "Relearning"
+      },
+      "type": {
+        "BASIC": "Basic",
+        "CLOZE": "Cloze",
+        "MULTIPLE_CHOICE": "Multiple choice",
+        "TRUE_FALSE": "True / False"
+      },
+      "showAnswer": "Show answer",
+      "true": "True",
+      "false": "False",
+      "explanation": "Explanation",
+      "rating": {
+        "again": "Again",
+        "hard": "Hard",
+        "good": "Good",
+        "easy": "Easy"
+      },
+      "endSession": "End session",
+      "backToHub": "Back to hub",
+      "backDialog": {
+        "title": "Leave session?",
+        "message": "Your progress won't be saved if you go back now.",
+        "confirm": "Leave"
+      },
+      "saving": "Saving results...",
+      "empty": {
+        "title": "All caught up!",
+        "subtitle": "No cards are due for review right now.",
+        "back": "Back to hub"
+      },
+      "complete": {
+        "title": "Session complete!",
+        "subtitle": "Your progress has been saved.",
+        "reviewed": "cards reviewed",
+        "back": "Back to hub"
+      }
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Dashboard",

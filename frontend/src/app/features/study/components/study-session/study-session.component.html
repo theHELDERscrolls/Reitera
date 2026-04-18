@@ -1,0 +1,125 @@
+@switch (sessionState()) {
+  <!-- Loading -->
+  @case ('loading') {
+    <div class="flex flex-col gap-6">
+      <div class="h-8 rounded-lg bg-overlay animate-pulse"></div>
+      <div class="flex flex-col gap-6 p-6 border rounded-xl bg-surface border-border">
+        <div class="flex justify-between">
+          <div class="w-16 h-5 rounded-full bg-overlay animate-pulse"></div>
+          <div class="w-20 h-5 rounded bg-overlay animate-pulse"></div>
+        </div>
+        <div class="space-y-2">
+          <div class="w-full h-4 rounded bg-overlay animate-pulse"></div>
+          <div class="w-3/4 h-4 rounded bg-overlay animate-pulse"></div>
+        </div>
+        <hr class="border-border" />
+        <div class="w-full h-10 rounded-lg bg-overlay animate-pulse"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Empty: no cards due -->
+  @case ('empty') {
+    <app-empty-state
+      [title]="'study.session.empty.title' | transloco"
+      [subtitle]="'study.session.empty.subtitle' | transloco"
+    >
+      <svg icon lucideBookOpen class="size-8 text-muted" />
+      <a
+        action
+        [routerLink]="['/study']"
+        class="px-4 py-2 text-sm font-medium transition-all rounded-lg bg-primary text-background hover:bg-primary/90"
+      >
+        {{ 'study.session.empty.back' | transloco }}
+      </a>
+    </app-empty-state>
+  }
+
+  <!-- Active: studying cards -->
+  @case ('active') {
+    @if (showBackDialog()) {
+      <app-confirm-dialog
+        variant="warning"
+        [title]="'study.session.backDialog.title' | transloco"
+        [message]="'study.session.backDialog.message' | transloco"
+        [confirmLabel]="'study.session.backDialog.confirm' | transloco"
+        (confirmed)="confirmGoBack()"
+        (cancelled)="showBackDialog.set(false)"
+      />
+    }
+
+    <div class="flex flex-col w-full max-w-3xl gap-3 mx-auto sm:gap-6">
+      <!-- Top bar -->
+      <div class="flex items-center gap-4">
+        <!-- Go back arrow -->
+        <button
+          (click)="goBack()"
+          class="flex items-center cursor-default gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all text-background ease-in-out duration-200 bg-error/90 hover:bg-error disabled:opacity-50"
+          [attr.aria-label]="'study.session.backToHub' | transloco"
+        >
+          <svg lucideArrowLeft class="sm:stroke-3 size-6 sm:size-4" />
+        </button>
+
+        <!-- Progress bar -->
+        <div class="flex flex-col flex-1 gap-1">
+          <div class="h-2 overflow-hidden rounded-full bg-surface">
+            <div
+              class="h-full transition-all duration-500 rounded-full bg-primary"
+              [style.width.%]="progress().percent"
+            ></div>
+          </div>
+          <p class="text-xs font-bold text-right text-muted">
+            {{ progress().reviewed }} / {{ progress().total }}
+          </p>
+        </div>
+
+        <!-- End session -->
+        <button
+          (click)="endSession()"
+          [disabled]="isSubmitting()"
+          class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all text-background ease-in-out duration-200 bg-success/90 hover:bg-success disabled:opacity-50"
+        >
+          <svg lucideBookCheck class="size-6 sm:size-4" />
+          <span class="hidden sm:inline">{{ 'study.session.endSession' | transloco }}</span>
+        </button>
+      </div>
+
+      <!-- Card or submitting state -->
+      @if (isSubmitting()) {
+        <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+          <p class="text-muted">{{ 'study.session.saving' | transloco }}</p>
+        </div>
+      } @else if (currentCard()) {
+        <app-study-card
+          [card]="currentCard()!"
+          [revealed]="revealed()"
+          (reveal)="revealAnswer()"
+          (rate)="rate($event)"
+        />
+      }
+    </div>
+  }
+
+  <!-- Complete -->
+  @case ('complete') {
+    <div class="flex flex-col items-center justify-center max-w-sm gap-6 py-20 mx-auto text-center">
+      <div class="flex items-center justify-center rounded-full size-20 bg-accent-5/10">
+        <svg lucideCircleCheck class="size-10 text-accent-5" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <h2 class="text-2xl font-bold text-foreground">
+          {{ 'study.session.complete.title' | transloco }}
+        </h2>
+        <p class="text-sm text-muted">{{ 'study.session.complete.subtitle' | transloco }}</p>
+        <p class="mt-2 text-3xl font-bold text-primary">{{ progress().reviewed }}</p>
+        <p class="text-sm text-muted">{{ 'study.session.complete.reviewed' | transloco }}</p>
+      </div>
+      <a
+        [routerLink]="['/study']"
+        class="w-full py-3 text-sm font-semibold text-center transition-all rounded-lg bg-primary text-background hover:bg-primary/90"
+      >
+        {{ 'study.session.complete.back' | transloco }}
+      </a>
+    </div>
+  }
+}

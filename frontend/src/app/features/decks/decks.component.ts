@@ -11,6 +11,8 @@ import { DeckFormComponent } from './components/deck-form/deck-form.component';
 import { DeckResponse } from '@core/models/deck.model';
 import { DecksService } from './services/decks.service';
 import { ToastService } from '@core/toast/toast.service';
+import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 
 const PAGE_SIZE = 12;
 
@@ -21,7 +23,9 @@ const PAGE_SIZE = 12;
     ConfirmDialogComponent,
     DeckCardComponent,
     DeckFormComponent,
+    EmptyStateComponent,
     LucidePlus,
+    PageHeaderComponent,
     PaginationComponent,
     TranslocoPipe,
   ],
@@ -88,7 +92,9 @@ export default class DecksComponent implements OnInit {
 
   confirmDeleteDeck(): void {
     const deck = this.deckToDelete();
+    
     if (!deck) return;
+    
     this.deckToDelete.set(null);
     this.decksService.deleteDeck(deck.id).subscribe({
       complete: () => {

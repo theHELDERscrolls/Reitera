@@ -1,0 +1,127 @@
+<div class="flex flex-col gap-6">
+  <!-- Page header -->
+  <app-page-header
+    [title]="'study.hub.title' | transloco"
+    [subtitle]="'study.hub.subtitle' | transloco"
+  >
+    @if (!isLoading() && allDecks().length > 0) {
+      <div extra class="mt-2">
+        <app-card-count-badges
+          [newCount]="totalNew()"
+          [dueCount]="totalDue()"
+          [relearningCount]="totalRelearning()"
+          size="lg"
+          [newLabel]="'study.hub.stats.new' | transloco"
+          [dueLabel]="'study.hub.stats.due' | transloco"
+          [relearningLabel]="'study.hub.stats.relearning' | transloco"
+        />
+      </div>
+    }
+  </app-page-header>
+
+  <!-- Loading skeleton -->
+  @if (isLoading()) {
+    <div class="flex flex-col gap-4">
+      @for (_ of [1, 2, 3]; track $index) {
+        <div class="overflow-hidden border border-l-4 rounded-lg border-border border-l-overlay">
+          <div class="h-12 border-b border-border bg-overlay animate-pulse"></div>
+          <div class="divide-y divide-border">
+            @for (__ of [1, 2]; track $index) {
+              <div class="h-16 bg-surface animate-pulse"></div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!isLoading()) {
+    <!-- Empty state -->
+    @if (allDecks().length === 0) {
+      <app-empty-state
+        [title]="'study.hub.empty.title' | transloco"
+        [subtitle]="'study.hub.empty.subtitle' | transloco"
+      >
+        <svg icon lucideBookOpen class="size-8 text-muted" />
+      </app-empty-state>
+    }
+
+    <!-- Category groups -->
+    @if (allDecks().length > 0) {
+      <div class="flex flex-col gap-4">
+        @for (group of groupedDecks(); track group.categoryId) {
+          <div
+            class="overflow-hidden border border-l-4 rounded-lg border-border"
+            [style.border-left-color]="groupAccentColor(group.categoryId)"
+          >
+            <!-- Category header -->
+            <button
+              class="flex items-center justify-between w-full px-4 py-3 transition-all border-b bg-overlay/75 border-border hover:bg-overlay"
+              (click)="toggleGroup(group.categoryId)"
+            >
+              <div class="flex flex-col justify-center gap-2 sm:items-center sm:flex-row sm:gap-4">
+                <span
+                  class="flex items-center gap-2 font-semibold transition-all text-foreground hover:text-primary"
+                >
+                  <svg
+                    lucideChevronDown
+                    class="transition-transform duration-200 size-4 text-muted"
+                    [class.-rotate-90]="collapsedGroups().has(group.categoryId)"
+                  />
+                  {{ group.categoryName ?? ('study.hub.uncategorized' | transloco) }}
+                </span>
+                <app-card-count-badges
+                  [newCount]="group.totalNew"
+                  [dueCount]="group.totalDue"
+                  [relearningCount]="group.totalRelearning"
+                />
+              </div>
+
+              @if (group.categoryId !== null) {
+                <a
+                  [routerLink]="['/study']"
+                  [queryParams]="{ categoryId: group.categoryId }"
+                  class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-all rounded-lg bg-primary/10 text-primary hover:bg-primary/20"
+                  (click)="$event.stopPropagation()"
+                >
+                  <svg lucidePlay class="size-3.5" />
+                  <span class="hidden sm:inline">{{ 'study.hub.studyCategory' | transloco }}</span>
+                </a>
+              }
+            </button>
+
+            <!-- Collapsible deck list -->
+            <div
+              class="grid grid-cols-1 overflow-hidden transition-all duration-300"
+              [style.grid-template-rows]="collapsedGroups().has(group.categoryId) ? '0fr' : '1fr'"
+            >
+              <div class="min-h-0 divide-y divide-border">
+                @for (deck of group.decks; track deck.id) {
+                  <a
+                    [routerLink]="['/study']"
+                    [queryParams]="{ deckId: deck.id }"
+                    class="flex items-center gap-4 px-4 py-3 transition-all bg-surface/75 hover:bg-surface"
+                  >
+                    <div class="flex flex-col flex-1 min-w-0 gap-1 overflow-hidden">
+                      <p class="font-medium truncate text-foreground">{{ deck.title }}</p>
+
+                      @if (deck.description) {
+                        <p class="text-sm truncate text-muted">{{ deck.description }}</p>
+                      }
+
+                      <app-card-count-badges
+                        [newCount]="deck.newCount"
+                        [dueCount]="deck.dueCount"
+                        [relearningCount]="deck.relearningCount"
+                      />
+                    </div>
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

@@ -18,6 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Core business logic for Deck management.
@@ -52,16 +56,54 @@ public class DeckService {
     }
 
     /**
-     * Returns a paginated list of decks owned by the authenticated user.
-     * If categoryId is provided, only decks belonging to that category are returned.
+     * Returns a paginated list of decks owned by the authenticated user,
+     * enriched with per-deck study counts (new, due, relearning).
+     * <p>
+     * Counts are computed with 2 batch GROUP BY queries regardless of page size,
+     * avoiding the N+1 problem of querying stats per deck individually.
      */
     public Page<DeckResponseDTO> getUserDecks(User owner, Integer categoryId, Pageable pageable) {
+        Page<Deck> deckPage;
+
         if (categoryId != null) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-            return deckRepository.findAllByOwnerAndCategory(owner, category, pageable).map(this::toResponseDTO);
+            deckPage = deckRepository.findAllByOwnerAndCategory(owner, category, pageable);
+        } else {
+            deckPage = deckRepository.findAllByOwner(owner, pageable);
         }
-        return deckRepository.findAllByOwner(owner, pageable).map(this::toResponseDTO);
+
+        if (deckPage.isEmpty()) {
+            return deckPage.map(this::toResponseDTO);
+        }
+
+        List<Integer> deckIds = deckPage.getContent().stream().map(Deck::getId).toList();
+        UUID userId = owner.getId();
+        LocalDateTime now = LocalDateTime.now();
+
+        Map<Integer, Long> newCountMap = new HashMap<>();
+        cardRepository.countNewCardsByDeckIdsAndUser(deckIds, userId)
+                .forEach(row -> newCountMap.put((Integer) row[0], (Long) row[1]));
+
+        Map<Integer, Long> dueCountMap = new HashMap<>();
+        Map<Integer, Long> relearningCountMap = new HashMap<>();
+        studyProgressRepository.countDueByUserAndDeckIds(userId, deckIds, now)
+                .forEach(row -> {
+                    Integer deckId = (Integer) row[0];
+                    int state = ((Number) row[1]).intValue();
+                    long count = (Long) row[2];
+                    if (state == 3) {
+                        relearningCountMap.merge(deckId, count, Long::sum);
+                    } else {
+                        dueCountMap.merge(deckId, count, Long::sum);
+                    }
+                });
+
+        return deckPage.map(deck -> toResponseDTO(deck,
+                newCountMap.getOrDefault(deck.getId(), 0L),
+                dueCountMap.getOrDefault(deck.getId(), 0L),
+                relearningCountMap.getOrDefault(deck.getId(), 0L)
+        ));
     }
 
     /**
@@ -194,10 +236,18 @@ public class DeckService {
     }
 
     /**
-     * Maps a Deck entity to its response DTO.
-     * Flattens the Category and Owner relationships into simple fields.
+     * Maps a Deck entity to its response DTO with zero card counts.
+     * Used for single-deck operations (create, update, getById) where counts are not needed.
      */
     private DeckResponseDTO toResponseDTO(Deck deck) {
+        return toResponseDTO(deck, 0L, 0L, 0L);
+    }
+
+    /**
+     * Maps a Deck entity to its response DTO with pre-computed card counts.
+     * Used by getUserDecks where counts come from batch queries.
+     */
+    private DeckResponseDTO toResponseDTO(Deck deck, long newCount, long dueCount, long relearningCount) {
         return new DeckResponseDTO(
                 deck.getId(),
                 deck.getTitle(),
@@ -207,7 +257,10 @@ public class DeckService {
                 deck.getCategory() != null ? deck.getCategory().getId() : null,
                 deck.getCategory() != null ? deck.getCategory().getName() : null,
                 deck.getCreatedAt(),
-                deck.getUpdatedAt()
+                deck.getUpdatedAt(),
+                newCount,
+                dueCount,
+                relearningCount
         );
     }
 }

@@ -69,6 +69,22 @@ public interface StudyProgressRepository extends JpaRepository<StudyProgress, St
                                    @Param("now") LocalDateTime now);
 
     /**
+     * Returns [deckId, state, count] tuples for all due progress records across a list of decks.
+     * Used by the Study Hub to show per-deck counts in a single batch query instead of N+1.
+     * Only states 1 (Learning), 2 (Review) and 3 (Relearning) are included — state 0 (New)
+     * has no StudyProgress row and is counted separately via CardRepository.
+     */
+    @Query("SELECT sp.card.deck.id, sp.state, COUNT(sp) FROM StudyProgress sp " +
+            "WHERE sp.user.id = :userId " +
+            "AND sp.card.deck.id IN :deckIds " +
+            "AND sp.nextReview <= :now " +
+            "AND sp.state IN (1, 2, 3) " +
+            "GROUP BY sp.card.deck.id, sp.state")
+    List<Object[]> countDueByUserAndDeckIds(@Param("userId") UUID userId,
+                                            @Param("deckIds") List<Integer> deckIds,
+                                            @Param("now") LocalDateTime now);
+
+    /**
      * Returns all StudyProgress records for a user across all cards in a given deck.
      * Used to enrich CardResponseDTO with per-card state without N+1 queries.
      */
