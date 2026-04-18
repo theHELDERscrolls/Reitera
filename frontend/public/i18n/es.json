@@ -219,6 +219,67 @@
       "questionMax": "La pregunta no puede superar los 500 caracteres."
     }
   },
+  "study": {
+    "hub": {
+      "title": "Estudiar",
+      "subtitle": "Elige qué estudiar hoy",
+      "studyDeck": "Estudiar mazo",
+      "studyCategory": "Estudiar todo",
+      "uncategorized": "Sin categoría",
+      "empty": {
+        "title": "No hay mazos para estudiar",
+        "subtitle": "Crea tu primer mazo para empezar a estudiar"
+      },
+      "stats": {
+        "new": "nuevas",
+        "due": "pendientes",
+        "relearning": "reaprendiendo"
+      }
+    },
+    "session": {
+      "state": {
+        "new": "Nueva",
+        "learning": "Aprendiendo",
+        "review": "Repaso",
+        "relearning": "Reaprendiendo"
+      },
+      "type": {
+        "BASIC": "Básica",
+        "CLOZE": "Cloze",
+        "MULTIPLE_CHOICE": "Múltiple opción",
+        "TRUE_FALSE": "Verdadero / Falso"
+      },
+      "showAnswer": "Mostrar respuesta",
+      "true": "Verdadero",
+      "false": "Falso",
+      "explanation": "Explicación",
+      "rating": {
+        "again": "Otra vez",
+        "hard": "Difícil",
+        "good": "Bien",
+        "easy": "Fácil"
+      },
+      "endSession": "Terminar sesión",
+      "backToHub": "Volver al inicio",
+      "backDialog": {
+        "title": "¿Salir de la sesión?",
+        "message": "Tu progreso no se guardará si vuelves atrás ahora.",
+        "confirm": "Salir"
+      },
+      "saving": "Guardando resultados...",
+      "empty": {
+        "title": "¡Al día!",
+        "subtitle": "No hay tarjetas pendientes de repaso ahora mismo.",
+        "back": "Volver al inicio"
+      },
+      "complete": {
+        "title": "¡Sesión completada!",
+        "subtitle": "Tu progreso ha sido guardado.",
+        "reviewed": "tarjetas repasadas",
+        "back": "Volver al inicio"
+      }
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Inicio",

@@ -13,12 +13,14 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { CardResponse } from '@core/models/card.model';
 import { CardStateBadgeComponent } from '@shared/components/card-state-badge/card-state-badge.component';
 import { CardTypeBadgeComponent } from '@shared/components/card-type-badge/card-type-badge.component';
+import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-cards-table',
   imports: [
     CardStateBadgeComponent,
     CardTypeBadgeComponent,
+    EmptyStateComponent,
     LucideArrowDown,
     LucideArrowUp,
     LucideArrowUpDown,
@@ -32,12 +34,12 @@ import { CardTypeBadgeComponent } from '@shared/components/card-type-badge/card-
 })
 export class CardsTableComponent {
   readonly cards = input.required<CardResponse[]>();
-  readonly sortField = input.required<'question' | 'type'>();
-  readonly sortDir = input.required<'asc' | 'desc'>();
   readonly isLoading = input.required<boolean>();
+  readonly sortDir = input.required<'asc' | 'desc'>();
+  readonly sortField = input.required<'question' | 'type'>();
 
-  readonly sort = output<'question' | 'type'>();
-  readonly edit = output<CardResponse>();
-  readonly delete = output<CardResponse>();
   readonly addCard = output<void>();
+  readonly delete = output<CardResponse>();
+  readonly edit = output<CardResponse>();
+  readonly sort = output<'question' | 'type'>();
 }

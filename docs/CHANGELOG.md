@@ -11,6 +11,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.21.0] — 2026-04-18 — feature/43-study-page
+### Added
+- Study hub (`StudyComponent`) — deck picker with per-deck new/due/relearning counts; category-scoped study button; empty state when no decks exist
+- Study session (`StudySessionComponent`) — full card review flow: progress bar, reveal/rate cycle, Again re-queue (up to 3 times), end-session button, completion screen
+- `StudyCardComponent` — renders all 4 card types (BASIC, CLOZE, MULTIPLE_CHOICE, TRUE_FALSE); shows explanation after reveal
+- `StudyHubComponent` — deck picker page with `<app-card-count-badges>` and category study shortcut
+- `StudyService` in `features/study/services/` — `getDueCards(deckId?, categoryId?)` and `processSession(request)` wrappers over the study API
+- Back-button guard — clicking the back arrow during an active session shows a `warning` `ConfirmDialogComponent`; the session is abandoned only on confirmation, never silently
+- Shared components: `EmptyStateComponent` (icon + title + subtitle + action slot), `PageHeaderComponent` (title + subtitle), `CardCountBadgesComponent` (new/due/relearning pill group)
+- Portuguese (`pt`) language support — `public/i18n/pt.json` created (European Portuguese); `availableLangs` in `app.config.ts` updated to `['en', 'es', 'fr', 'pt']`
+- `DeckResponse` model updated with `newCount`, `dueCount`, `relearningCount` fields consumed by the study hub badges
+
+### Changed
+- `StudyComponent` — replaced the previous stub with the full study hub and session routing
+- `seed.sql` — expanded from 21 to 48 cards (12 per deck), all 4 card types represented in every deck; 4 new `study_progress` rows added across Decks 2 and 3 for a more realistic demo
+
+---
+
 ## [0.20.0] — 2026-04-14 — feature/40-ci-pipeline
 ### Added
 - `.github/workflows/ci.yml` — GitHub Actions CI pipeline with two independent parallel jobs:

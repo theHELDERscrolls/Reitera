@@ -219,6 +219,67 @@
       "questionMax": "La question ne peut pas dépasser 500 caractères."
     }
   },
+  "study": {
+    "hub": {
+      "title": "Étudier",
+      "subtitle": "Choisissez ce que vous souhaitez étudier aujourd'hui",
+      "studyDeck": "Étudier le paquet",
+      "studyCategory": "Tout étudier",
+      "uncategorized": "Sans catégorie",
+      "empty": {
+        "title": "Aucun paquet à étudier",
+        "subtitle": "Créez votre premier paquet pour commencer à étudier"
+      },
+      "stats": {
+        "new": "nouvelles",
+        "due": "à réviser",
+        "relearning": "en révision"
+      }
+    },
+    "session": {
+      "state": {
+        "new": "Nouvelle",
+        "learning": "Apprentissage",
+        "review": "Révision",
+        "relearning": "Réapprentissage"
+      },
+      "type": {
+        "BASIC": "Basique",
+        "CLOZE": "Cloze",
+        "MULTIPLE_CHOICE": "Choix multiple",
+        "TRUE_FALSE": "Vrai / Faux"
+      },
+      "showAnswer": "Afficher la réponse",
+      "true": "Vrai",
+      "false": "Faux",
+      "explanation": "Explication",
+      "rating": {
+        "again": "Encore",
+        "hard": "Difficile",
+        "good": "Bien",
+        "easy": "Facile"
+      },
+      "endSession": "Terminer la session",
+      "backToHub": "Retour au menu",
+      "backDialog": {
+        "title": "Quitter la session ?",
+        "message": "Votre progression ne sera pas sauvegardée si vous revenez en arrière maintenant.",
+        "confirm": "Quitter"
+      },
+      "saving": "Sauvegarde en cours...",
+      "empty": {
+        "title": "Tout est à jour !",
+        "subtitle": "Aucune carte n'est due pour révision pour l'instant.",
+        "back": "Retour au menu"
+      },
+      "complete": {
+        "title": "Session terminée !",
+        "subtitle": "Votre progression a été sauvegardée.",
+        "reviewed": "cartes révisées",
+        "back": "Retour au menu"
+      }
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Accueil",

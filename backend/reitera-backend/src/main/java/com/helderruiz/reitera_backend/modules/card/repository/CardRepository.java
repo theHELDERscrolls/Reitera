@@ -18,6 +18,20 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
     long countByDeck(Deck deck);
 
     /**
+     * Returns [deckId, count] tuples for new cards (no StudyProgress) across a list of decks.
+     * Used by the Study Hub to show per-deck new-card counts in one batch query.
+     */
+    @Query("SELECT c.deck.id, COUNT(c) FROM Card c " +
+            "WHERE c.deck.id IN :deckIds " +
+            "AND NOT EXISTS (" +
+            "    SELECT sp FROM StudyProgress sp " +
+            "    WHERE sp.card = c AND sp.user.id = :userId" +
+            ") " +
+            "GROUP BY c.deck.id")
+    List<Object[]> countNewCardsByDeckIdsAndUser(@Param("deckIds") List<Integer> deckIds,
+                                                 @Param("userId") UUID userId);
+
+    /**
      * Counts cards in a deck that the user has never studied (no StudyProgress record).
      * Uses the same NOT EXISTS logic as findNewCardsByDeckAndUser but returns a scalar count.
      */

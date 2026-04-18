@@ -248,7 +248,7 @@ public class FsrsService {
                 * hardPenalty
                 * easyBonus;
 
-        return Math.max(newS, stability + 0.01);
+        return Math.max(newS, 0.01);
     }
 
     /**

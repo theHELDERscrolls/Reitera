@@ -20,19 +20,16 @@
 
 <div class="flex flex-col gap-6">
   <!-- Page header -->
-  <div class="flex items-start justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-bold text-foreground">{{ 'decks.title' | transloco }}</h1>
-      <p class="text-sm text-muted">{{ 'decks.subtitle' | transloco }}</p>
-    </div>
+  <app-page-header [title]="'decks.title' | transloco" [subtitle]="'decks.subtitle' | transloco">
     <button
+      action
       (click)="openCreateDialog()"
       class="flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
     >
       <svg lucidePlus class="size-4" />
       <span class="hidden sm:flex">{{ 'decks.newDeck' | transloco }}</span>
     </button>
-  </div>
+  </app-page-header>
 
   <!-- Category filter -->
   <app-category-filter
@@ -71,21 +68,19 @@
       />
     } @else {
       <!-- Empty state -->
-      <div class="flex flex-col items-center justify-center gap-4 py-20 text-center">
-        <div class="flex items-center justify-center rounded-full size-16 bg-overlay">
-          <svg lucidePlus class="size-8 text-muted" />
-        </div>
-        <div>
-          <p class="font-semibold text-foreground">{{ 'decks.empty.title' | transloco }}</p>
-          <p class="mt-1 text-sm text-muted">{{ 'decks.empty.subtitle' | transloco }}</p>
-        </div>
+      <app-empty-state
+        [title]="'decks.empty.title' | transloco"
+        [subtitle]="'decks.empty.subtitle' | transloco"
+      >
+        <svg icon lucidePlus class="size-8 text-muted" />
         <button
+          action
           (click)="openCreateDialog()"
           class="px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
         >
           {{ 'decks.newDeck' | transloco }}
         </button>
-      </div>
+      </app-empty-state>
     }
   }
 </div>

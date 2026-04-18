@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS decks (
 -- See docs/api/endpoints.md for the format per type (BASIC, CLOZE, MULTIPLE_CHOICE, TRUE_FALSE).
 CREATE TABLE IF NOT EXISTS cards (
     id          SERIAL      PRIMARY KEY,
-    deck_id     INTEGER     NOT NULL REFERENCES decks(id),
+    deck_id     INTEGER     NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
     type        VARCHAR(50) NOT NULL,
     question    TEXT        NOT NULL,
     answer_json JSONB       NOT NULL,
@@ -97,8 +97,8 @@ CREATE TABLE IF NOT EXISTS cards (
 
 -- 7. CARD_TAGS (many-to-many: cards ↔ tags)
 CREATE TABLE IF NOT EXISTS card_tags (
-    card_id INTEGER NOT NULL REFERENCES cards(id),
-    tag_id  INTEGER NOT NULL REFERENCES tags(id),
+    card_id INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+    tag_id  INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (card_id, tag_id)
 );
 
@@ -107,8 +107,8 @@ CREATE TABLE IF NOT EXISTS card_tags (
 -- One row per (user, card) pair. Stores FSRS state variables.
 -- States: 0=New, 1=Learning, 2=Review, 3=Relearning.
 CREATE TABLE IF NOT EXISTS study_progress (
-    user_id        UUID             NOT NULL REFERENCES users(id),
-    card_id        INTEGER          NOT NULL REFERENCES cards(id),
+    user_id        UUID             NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    card_id        INTEGER          NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
     stability      FLOAT8           NOT NULL DEFAULT 0.0,
     difficulty     FLOAT8           NOT NULL DEFAULT 0.0,
     elapsed_days   INTEGER          NOT NULL DEFAULT 0,
@@ -126,8 +126,8 @@ CREATE TABLE IF NOT EXISTS study_progress (
 -- Immutable audit ledger. One row per review action. Never updated, only appended.
 CREATE TABLE IF NOT EXISTS review_logs (
     id             SERIAL  PRIMARY KEY,
-    user_id        UUID    NOT NULL REFERENCES users(id),
-    card_id        INTEGER NOT NULL REFERENCES cards(id),
+    user_id        UUID    NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    card_id        INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
     rating         INTEGER NOT NULL,
     elapsed_days   INTEGER NOT NULL,
     scheduled_days INTEGER NOT NULL,
@@ -137,8 +137,8 @@ CREATE TABLE IF NOT EXISTS review_logs (
 
 -- 10. USER_DECK_SUBSCRIPTIONS
 CREATE TABLE IF NOT EXISTS user_deck_subscriptions (
-    user_id       UUID    NOT NULL REFERENCES users(id),
-    deck_id       INTEGER NOT NULL REFERENCES decks(id),
+    user_id       UUID    NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    deck_id       INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
     subscribed_at TIMESTAMP DEFAULT NOW(),
     PRIMARY KEY (user_id, deck_id)
 );

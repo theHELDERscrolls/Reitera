@@ -15,6 +15,9 @@ public record DeckResponseDTO(
         Integer categoryId,
         String categoryName,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        long newCount,
+        long dueCount,
+        long relearningCount
 ) {
 }

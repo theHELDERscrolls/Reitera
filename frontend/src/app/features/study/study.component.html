@@ -1,1 +1,7 @@
-<p>study works!</p>
+@if (mode() === 'hub') {
+  <app-study-hub />
+}
+
+@if (mode() === 'session') {
+  <app-study-session [deckId]="deckId()" [categoryId]="categoryId()" />
+}

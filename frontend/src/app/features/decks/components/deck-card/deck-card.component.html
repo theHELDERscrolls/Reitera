@@ -1,6 +1,6 @@
 <div
   [routerLink]="['/decks', deck().id]"
-  class="relative flex flex-col gap-3 p-3 min-h-43.75 overflow-hidden transition-all duration-300 ease-in-out border rounded-lg bg-surface border-border group hover:border-border-strong cursor-pointer"
+  class="relative flex flex-col gap-3 p-3 min-h-43.75 overflow-hidden transition-all duration-300 ease-in-out border rounded-lg bg-surface/75 border-border group hover:border-border-strong hover:bg-surface cursor-pointer"
 >
   <div
     class="absolute top-0 left-0 w-1 h-full transition-all duration-300 ease-in-out rounded-l-lg opacity-50 group-hover:opacity-100"
@@ -16,7 +16,12 @@
       </div>
 
       <!-- Contextual menu -->
-      <div class="absolute top-1 right-1" tabindex="0" data-deck-menu (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <button
+        class="absolute top-1 right-1"
+        data-deck-menu
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+      >
         <button
           (click)="toggleMenu()"
           class="p-1 transition-all rounded-md text-muted hover:text-foreground hover:bg-overlay"
@@ -45,7 +50,7 @@
             </button>
           </div>
         }
-      </div>
+      </button>
     </div>
 
     <!-- Description -->

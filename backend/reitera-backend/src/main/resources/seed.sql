@@ -307,6 +307,261 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
 );
 
 
+-- ---- Deck 1: La Segunda Guerra Mundial — additional cards (6 → 12) ----
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
+    'BASIC',
+    '¿Qué fue la Operación Barbarroja y cuándo se lanzó?',
+    '{"answer": "La invasión alemana de la Unión Soviética, lanzada el 22 de junio de 1941. Fue la mayor operación terrestre de la historia"}',
+    'Hitler rompió el Pacto Molotov–Ribbentrop sorprendiendo a Stalin. La URSS sufrió pérdidas catastróficas inicialmente, pero logró resistir y contraatacar hasta la victoria en 1945.'
+);
+
+-- [MULTIPLE_CHOICE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
+    'MULTIPLE_CHOICE',
+    '¿Cuándo comenzó la batalla de Stalingrado?',
+    '{"options": ["Agosto de 1942", "Junio de 1941", "Diciembre de 1942", "Enero de 1944"], "correctIndex": 0}',
+    'La batalla duró de agosto de 1942 a febrero de 1943. La rendición del Sexto Ejército alemán marcó un punto de inflexión decisivo en el frente oriental.'
+);
+
+-- [TRUE_FALSE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
+    'TRUE_FALSE',
+    'Los Estados Unidos entraron en la Segunda Guerra Mundial tras el ataque japonés a Pearl Harbor en diciembre de 1941.',
+    '{"answer": true}',
+    'El 7 de diciembre de 1941, Japón atacó la base naval de Pearl Harbor (Hawái). Al día siguiente, EE.UU. declaró la guerra a Japón; Alemania e Italia le declararon la guerra a EE.UU. el 11 de diciembre.'
+);
+
+-- [CLOZE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
+    'CLOZE',
+    'El programa de ___ permitió a EE.UU. suministrar material bélico a los Aliados sin violar formalmente su neutralidad antes de entrar en la guerra.',
+    '{"answer": "Préstamo y Arriendo"}',
+    'Firmado en marzo de 1941, el Lend-Lease Act envió más de 50.000 millones de dólares en material a Reino Unido, URSS, China y Francia Libre. Fue fundamental para sostener la resistencia aliada.'
+);
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
+    'BASIC',
+    '¿Qué fueron los Juicios de Núremberg y qué importancia tuvieron?',
+    '{"answer": "Tribunales militares internacionales celebrados entre 1945 y 1946 para juzgar a los líderes nazis por crímenes de guerra y crímenes contra la humanidad"}',
+    'Establecieron el precedente de la responsabilidad penal individual en el derecho internacional. 12 acusados fueron condenados a muerte. Sentaron las bases del derecho penal internacional moderno.'
+);
+
+-- [MULTIPLE_CHOICE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
+    'MULTIPLE_CHOICE',
+    '¿Cuántas personas aproximadamente murieron durante el Holocausto?',
+    '{"options": ["Menos de 1 millón", "Alrededor de 3 millones", "Aproximadamente 6 millones de judíos, más de 11 millones en total", "Más de 20 millones"], "correctIndex": 2}',
+    'El Holocausto fue el genocidio sistemático de 6 millones de judíos europeos perpetrado por el régimen nazi. Además, millones de polacos, gitanos, discapacitados y prisioneros de guerra soviéticos fueron exterminados.'
+);
+
+
+-- ---- Deck 2: Patrones de Diseño GoF — additional cards (5 → 12) ----
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'BASIC',
+    '¿Qué hace el patrón Decorator y en qué se diferencia de la herencia?',
+    '{"answer": "Añade responsabilidades a un objeto dinámicamente en tiempo de ejecución sin modificar su clase. La herencia extiende en compilación; el Decorator lo hace en tiempo de ejecución"}',
+    'Ejemplo clásico: los flujos de Java (BufferedReader envuelve FileReader). Se pueden apilar múltiples Decorators para combinar comportamientos de forma flexible.'
+);
+
+-- [CLOZE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'CLOZE',
+    'El patrón ___ proporciona una interfaz simplificada a un conjunto complejo de subsistemas, ocultando su complejidad al cliente.',
+    '{"answer": "Facade"}',
+    'Ejemplo: una clase HomeTheaterFacade que coordina proyector, amplificador y reproductor con un solo método watchMovie(). El cliente no necesita conocer los subsistemas internos.'
+);
+
+-- [MULTIPLE_CHOICE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'MULTIPLE_CHOICE',
+    '¿A qué categoría pertenece el patrón Builder?',
+    '{"options": ["Estructural", "Creacional", "De comportamiento", "Concurrencia"], "correctIndex": 1}',
+    'Builder es creacional: separa la construcción de un objeto complejo de su representación final. Permite construir el mismo proceso con diferentes resultados (ej. StringBuilder en Java).'
+);
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'BASIC',
+    '¿Qué es el patrón Command y qué problema resuelve?',
+    '{"answer": "Encapsula una solicitud como un objeto, permitiendo parametrizar clientes, encolar operaciones y soportar deshacer/rehacer"}',
+    'Ejemplo: un editor de texto donde cada acción es un Command. El historial de comandos permite implementar Ctrl+Z. Se usa también en sistemas de colas y transacciones.'
+);
+
+-- [CLOZE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'CLOZE',
+    'El patrón ___ define el esqueleto de un algoritmo en una superclase, dejando que las subclases implementen los pasos específicos sin cambiar la estructura general.',
+    '{"answer": "Template Method"}',
+    'Ejemplo: una clase abstracta DataMiner con un método mine() que llama a extractData(), parseData() y analyzeData(). Las subclases concretan los pasos; el flujo general es invariable.'
+);
+
+-- [TRUE_FALSE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'TRUE_FALSE',
+    'El patrón Proxy y el patrón Decorator tienen exactamente el mismo propósito y son intercambiables.',
+    '{"answer": false}',
+    'Aunque ambos envuelven un objeto, sus intenciones difieren: Proxy controla el acceso (lazy init, seguridad, caché); Decorator añade comportamiento. En Spring, @Transactional usa Proxy; los flujos de Java usan Decorator.'
+);
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
+    'BASIC',
+    '¿Qué problema resuelve el patrón Iterator?',
+    '{"answer": "Proporciona una forma de acceder secuencialmente a los elementos de una colección sin exponer su representación interna"}',
+    'El cliente usa el iterador sin saber si la colección es una lista, un árbol o un grafo. En Java, la interfaz Iterable y el bucle for-each son implementaciones directas de este patrón.'
+);
+
+
+-- ---- Deck 3: Phrasal Verbs Esenciales — additional cards (5 → 12) ----
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'BASIC',
+    'What does "break up" mean?',
+    '{"answer": "To end a romantic relationship; or to separate something into smaller parts"}',
+    'Examples: "They broke up after two years together." / "The company broke up into smaller divisions." Context determines which meaning applies.'
+);
+
+-- [MULTIPLE_CHOICE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'MULTIPLE_CHOICE',
+    'Which sentence uses "run out of" correctly?',
+    '{"options": ["We ran out of the building.", "We ran out of milk, so I need to go shopping.", "She ran out of the race early.", "He ran out of his friend."], "correctIndex": 1}',
+    '"Run out of" means to have no more of something left. It requires an object (what you have run out of). It is NOT the same as "run out" (to exit a place running).'
+);
+
+-- [TRUE_FALSE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'TRUE_FALSE',
+    '"Get along" means to have a good relationship with someone.',
+    '{"answer": true}',
+    'Example: "I get along well with my colleagues." Also used as "get along with" followed by a person. Synonyms: to get on with, to be on good terms with.'
+);
+
+-- [CLOZE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'CLOZE',
+    'After losing her job, she decided to ___ her own business from scratch.',
+    '{"answer": "set up"}',
+    '"Set up" means to start, establish, or arrange something. Other uses: "set up a meeting", "set up a system". Synonyms: to establish, to found, to start.'
+);
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'BASIC',
+    'What does "bring about" mean?',
+    '{"answer": "To cause something to happen; to make something occur"}',
+    'Example: "The new law brought about significant changes in the industry." Synonyms: to cause, to produce, to lead to. Commonly used in formal writing.'
+);
+
+-- [TRUE_FALSE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'TRUE_FALSE',
+    '"Call off" means to cancel something that was previously planned.',
+    '{"answer": true}',
+    'Example: "They called off the meeting due to bad weather." Synonyms: to cancel, to abandon. Opposite in meaning: to call on (to request/visit) or to call for (to demand).'
+);
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
+    'BASIC',
+    'What does "come across" mean?',
+    '{"answer": "To find or meet something/someone by chance; or to make a particular impression on others"}',
+    'Examples: "I came across an interesting article online." / "She comes across as very confident in interviews." Two distinct meanings — context is key.'
+);
+
+
+-- ---- Deck 4: La Guerra Civil Española — additional cards (5 → 12) ----
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'BASIC',
+    '¿Qué fueron las Brigadas Internacionales?',
+    '{"answer": "Unidades militares formadas por voluntarios extranjeros de más de 50 países que lucharon del lado de la República Española entre 1936 y 1938"}',
+    'Unos 35.000 voluntarios de todo el mundo, incluyendo intelectuales como Hemingway y Orwell. Fueron disueltas en 1938 como gesto diplomático de la República ante la Sociedad de Naciones.'
+);
+
+-- [TRUE_FALSE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'TRUE_FALSE',
+    'Alemania y la URSS firmaron el Pacto de No Intervención y cumplieron sus compromisos de no apoyar a ningún bando.',
+    '{"answer": false}',
+    'Ambas potencias firmaron el Pacto de No Intervención (1936) pero lo ignoraron: Alemania e Italia apoyaron al bando nacional con la Legión Cóndor y el CTV; la URSS suministró armas y asesores al bando republicano.'
+);
+
+-- [MULTIPLE_CHOICE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'MULTIPLE_CHOICE',
+    '¿Qué fue el Frente Popular que ganó las elecciones de febrero de 1936?',
+    '{"options": ["Una alianza de partidos de izquierdas y republicanos", "Un partido político único", "La coalición de militares y monárquicos", "Una organización sindical anarquista"], "correctIndex": 0}',
+    'El Frente Popular agrupó a republicanos de izquierda, socialistas y comunistas. Su victoria electoral fue el detonante del golpe de Estado del 17 de julio de 1936.'
+);
+
+-- [CLOZE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'CLOZE',
+    'La ___ fue la unidad aérea alemana enviada por Hitler para apoyar al bando nacional, responsable del bombardeo de Guernica en abril de 1937.',
+    '{"answer": "Legión Cóndor"}',
+    'La Legión Cóndor permitió a Alemania probar sus tácticas de guerra aérea en combate real. Sus experiencias en España influyeron directamente en la estrategia de la Luftwaffe durante la SGMU.'
+);
+
+-- [BASIC]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'BASIC',
+    '¿Qué fue el exilio republicano tras la Guerra Civil Española?',
+    '{"answer": "La huida de cientos de miles de republicanos hacia Francia, México y otros países en 1939 para escapar de la represión franquista"}',
+    'Se calcula que unos 500.000 refugiados cruzaron la frontera francesa (La Retirada). México fue el destino más destacado: el gobierno de Cárdenas acogió al gobierno republicano en el exilio.'
+);
+
+-- [TRUE_FALSE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'TRUE_FALSE',
+    'España participó directamente en la Segunda Guerra Mundial como aliada formal de la Alemania nazi.',
+    '{"answer": false}',
+    'Franco se mantuvo en una posición de "no beligerancia" y luego "neutralidad". Aunque envió la División Azul de voluntarios al frente soviético, no entró formalmente en la guerra, en parte por su debilidad económica.'
+);
+
+-- [MULTIPLE_CHOICE]
+INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
+    (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
+    'MULTIPLE_CHOICE',
+    '¿Cuál fue la principal consecuencia internacional del aislamiento de la España franquista tras la SGMU?',
+    '{"options": ["La recomendación de la ONU de retirar embajadores en 1946", "La invasión aliada de la Península Ibérica", "El embargo económico unilateral de EE.UU.", "La pérdida de las colonias africanas"], "correctIndex": 0}',
+    'La Asamblea General de la ONU recomendó en 1946 la retirada de embajadores de España por su colaboración con el Eje. El aislamiento se rompió gradualmente en los años 50 con los acuerdos con EE.UU. durante la Guerra Fría.'
+);
+
+
 -- 7. CARD TAGS
 INSERT INTO card_tags (card_id, tag_id)
 SELECT c.id, t.id FROM cards c CROSS JOIN tags t
@@ -373,6 +628,29 @@ VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1.8, 6.9, 5, 5, 3, 2, 3, NOW() - INTERVAL '5 days', NOW() - INTERVAL '1 hour');  -- Relearning, DUE
 
 
+-- Additional study_progress for Deck 2 (GoF) — 2 cards in different states
+INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
+VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    (SELECT id FROM cards WHERE question = '¿Qué problema resuelve el patrón Singleton?'),
+    15.2, 3.8, 5, 15, 2, 0, 2, NOW() - INTERVAL '5 days', NOW() + INTERVAL '10 days');  -- Review, not due
+
+INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
+VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    (SELECT id FROM cards WHERE question = '¿Qué es el patrón Strategy y cuándo se usa?'),
+    0.8, 4.5, 0, 0, 1, 0, 1, NOW() - INTERVAL '30 minutes', NOW() - INTERVAL '10 minutes');  -- Learning, DUE
+
+-- Additional study_progress for Deck 3 (Phrasal Verbs) — 2 cards in different states
+INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
+VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    (SELECT id FROM cards WHERE question = 'What does "give up" mean?'),
+    8.7, 4.1, 8, 8, 2, 0, 2, NOW() - INTERVAL '8 days', NOW() - INTERVAL '2 hours');  -- Review, DUE
+
+INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
+VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    (SELECT id FROM cards WHERE question = 'What does "put off" mean?'),
+    1.2, 5.3, 0, 0, 1, 0, 1, NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '15 minutes');  -- Learning, DUE
+
+
 -- 9. REVIEW LOGS (ratings: 1=Again, 2=Hard, 3=Good, 4=Easy)
 
 INSERT INTO review_logs (user_id, card_id, rating, elapsed_days, scheduled_days) VALUES
@@ -390,6 +668,15 @@ INSERT INTO review_logs (user_id, card_id, rating, elapsed_days, scheduled_days)
     ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 3, 0, 0),
     ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 1, 5, 5),
     ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 1, 5, 5);
+
+-- Additional review logs for the new study_progress records
+INSERT INTO review_logs (user_id, card_id, rating, elapsed_days, scheduled_days) VALUES
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué problema resuelve el patrón Singleton?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué problema resuelve el patrón Singleton?'), 4, 5, 5),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué es el patrón Strategy y cuándo se usa?'), 2, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = 'What does "give up" mean?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = 'What does "give up" mean?'), 4, 8, 8),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = 'What does "put off" mean?'), 3, 0, 0);
 
 
 COMMIT;
