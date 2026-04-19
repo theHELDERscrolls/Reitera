@@ -5,6 +5,7 @@ import com.helderruiz.reitera_backend.modules.card.dto.CardRequestDTO;
 import com.helderruiz.reitera_backend.modules.card.dto.CardResponseDTO;
 import com.helderruiz.reitera_backend.modules.card.model.Card;
 import com.helderruiz.reitera_backend.modules.card.repository.CardRepository;
+import com.helderruiz.reitera_backend.modules.card.repository.CardSpecification;
 import com.helderruiz.reitera_backend.modules.deck.dto.NewTagDTO;
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
 import com.helderruiz.reitera_backend.modules.deck.model.Tag;
@@ -17,6 +18,7 @@ import com.helderruiz.reitera_backend.modules.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,6 +130,55 @@ public class CardService {
         cardRepository.delete(card);
 
         cleanupOrphanTags(cardTags, Collections.emptySet());
+    }
+
+    /**
+     * Returns a paginated list of ALL cards owned by the current user, across all their decks.
+     * Accepts optional filters that are composed dynamically using JPA Specifications.
+     * <p>
+     * Filter parameters (all optional — null means "no filter"):
+     * question — partial case-insensitive match on the card's question text
+     * type     — exact match on card type (BASIC, MULTIPLE_CHOICE, TRUE_FALSE)
+     * state    — FSRS study state: -1 = not yet studied, 0–3 = FSRS states
+     * tagId    — must have this tag assigned
+     * <p>
+     * After fetching the page, each card is enriched with the user's study state
+     * in a single batch query (avoids N+1).
+     */
+    public Page<CardResponseDTO> getAllCards(
+            User owner, String question, String type, Integer state, Integer tagId, Pageable pageable) {
+
+        Specification<Card> spec = Specification.where(CardSpecification.byOwner(owner.getId()));
+
+        if (question != null && !question.isBlank()) {
+            spec = spec.and(CardSpecification.questionContains(question));
+        }
+        if (type != null && !type.isBlank()) {
+            spec = spec.and(CardSpecification.byType(type));
+        }
+        if (tagId != null) {
+            spec = spec.and(CardSpecification.hasTag(tagId));
+        }
+        if (state != null) {
+            if (state == -1) {
+                spec = spec.and(CardSpecification.notStudied(owner.getId()));
+            } else {
+                spec = spec.and(CardSpecification.withState(state, owner.getId()));
+            }
+        }
+
+        Page<Card> page = cardRepository.findAll(spec, pageable);
+
+        List<Integer> cardIds = page.map(Card::getId).toList();
+        Map<Integer, Integer> stateByCardId = studyProgressRepository
+                .findAllByUserIdAndCardIdIn(owner.getId(), cardIds)
+                .stream()
+                .collect(Collectors.toMap(
+                        sp -> sp.getCard().getId(),
+                        StudyProgress::getState
+                ));
+
+        return page.map(card -> toResponseDTO(card, stateByCardId.get(card.getId())));
     }
 
     /**

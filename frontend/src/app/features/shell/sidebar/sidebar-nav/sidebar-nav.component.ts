@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { LucideLayoutDashboard, LucideBrain, LucideWalletCards } from '@lucide/angular';
+import { LucideLayoutDashboard, LucideBrain, LucideWalletCards, LucideSquareStack } from '@lucide/angular';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -8,6 +8,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
   imports: [
     LucideBrain,
     LucideLayoutDashboard,
+    LucideSquareStack,
     LucideWalletCards,
     RouterLink,
     RouterLinkActive,

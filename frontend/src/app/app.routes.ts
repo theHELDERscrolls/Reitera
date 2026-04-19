@@ -33,6 +33,10 @@ export const routes: Routes = [
           import('./features/decks/components/deck-detail/deck-detail.component'),
       },
       {
+        path: 'cards',
+        loadComponent: () => import('./features/card-list/card-list.component'),
+      },
+      {
         path: 'study',
         loadComponent: () => import('./features/study/study.component'),
       },
