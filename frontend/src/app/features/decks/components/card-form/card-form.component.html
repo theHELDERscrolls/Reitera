@@ -1,13 +1,13 @@
 <!-- Backdrop -->
 <div
-  class="fixed inset-0 z-40 flex items-start justify-center p-4 pt-16 bg-black/50 backdrop-blur-sm overflow-y-auto"
+  class="fixed inset-0 z-40 flex items-start justify-center p-4 pt-16 overflow-y-auto bg-black/50 backdrop-blur-sm"
   tabindex="0"
   (click)="closed.emit()"
   (keydown.escape)="closed.emit()"
 >
   <!-- Modal card -->
   <div
-    class="flex flex-col w-full max-w-xl border shadow-xl bg-surface rounded-xl border-border mb-4"
+    class="flex flex-col w-full max-w-xl mb-4 border shadow-xl bg-surface rounded-xl border-border"
     tabindex="0"
     (click)="$event.stopPropagation()"
     (keydown)="$event.stopPropagation()"
@@ -22,7 +22,7 @@
         <button
           type="button"
           (click)="deleted.emit()"
-          class="sm:hidden px-3 py-2 text-sm font-medium rounded-lg text-error bg-error/10 transition-colors"
+          class="px-3 py-2 text-sm font-medium transition-colors rounded-lg sm:hidden text-error bg-error/10"
         >
           <svg lucideTrash2 class="size-4 shrink-0" />
         </button>
@@ -36,7 +36,7 @@
         <p class="text-sm font-medium text-foreground">
           {{ 'cardForm.type.label' | transloco }}
         </p>
-        <div class="grid grid-cols-4 gap-1 p-1 rounded-lg bg-overlay">
+        <div class="grid grid-cols-3 gap-1 p-1 rounded-lg bg-overlay">
           @for (cardType of cardTypes; track cardType) {
             <button
               type="button"
@@ -44,7 +44,7 @@
               [class]="
                 typeControl.value === cardType
                   ? 'px-2 py-1.5 text-xs font-medium rounded-md bg-surface text-foreground shadow-sm transition-all'
-                  : 'px-2 py-1.5 text-xs font-medium rounded-md text-muted hover:text-foreground transition-all'
+                  : 'px-2 py-1.5 text-xs font-medium rounded-md text-muted hover:bg-surface-alt/25 transition-all'
               "
             >
               {{ 'cardForm.type.' + cardType.toLowerCase() | transloco }}
@@ -63,11 +63,7 @@
           id="card-question"
           formControlName="question"
           rows="5"
-          [placeholder]="
-            typeControl.value === 'CLOZE'
-              ? ('cardForm.question.placeholderCloze' | transloco)
-              : ('cardForm.question.placeholder' | transloco)
-          "
+          [placeholder]="'cardForm.question.placeholder' | transloco"
           class="px-3 py-2 text-sm transition-colors border rounded-lg resize-none bg-overlay border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
         ></textarea>
         @if (questionControl.invalid && questionControl.touched) {
@@ -107,7 +103,7 @@
                 type="button"
                 (click)="form.controls.correctIndex.setValue($index)"
                 [attr.aria-label]="'cardForm.options.markCorrect' | transloco"
-                class="flex items-center justify-center size-6 rounded-full border-2 shrink-0 transition-colors"
+                class="flex items-center justify-center transition-colors border-2 rounded-full size-6 shrink-0"
                 [class]="
                   form.controls.correctIndex.value === $index
                     ? 'border-success bg-success'
@@ -115,9 +111,9 @@
                 "
               >
                 @if (form.controls.correctIndex.value === $index) {
-                  <span class="text-xs text-success-foreground font-bold">✓</span>
+                  <span class="text-xs font-bold text-success-foreground">✓</span>
                 } @else {
-                  <span class="text-xs text-muted font-medium">{{ $index + 1 }}</span>
+                  <span class="text-xs font-medium text-muted">{{ $index + 1 }}</span>
                 }
               </button>
               <input
@@ -133,7 +129,7 @@
                   type="button"
                   (click)="removeOption($index)"
                   [attr.aria-label]="'cardForm.options.remove' | transloco"
-                  class="shrink-0 p-1 rounded-md text-muted hover:text-error hover:bg-error/10 transition-colors"
+                  class="p-1 transition-colors rounded-md shrink-0 text-muted hover:text-error hover:bg-error/10"
                 >
                   <svg lucideMinus class="size-4" />
                 </button>
@@ -186,7 +182,7 @@
         </div>
       }
 
-      <!-- Explanation field (all types) -->
+      <!-- Explanation -->
       <div class="flex flex-col gap-1.5">
         <label for="card-explanation" class="text-sm font-medium text-foreground">
           {{ 'cardForm.explanation.label' | transloco }}
@@ -245,14 +241,14 @@
           <!-- Dropdown -->
           @if (isTagDropdownOpen() && (filteredTags().length > 0 || canCreateNew())) {
             <div
-              class="absolute z-10 w-full mt-1 border rounded-lg shadow-lg bg-surface border-border overflow-hidden"
+              class="absolute z-10 w-full mt-1 overflow-hidden border rounded-lg shadow-lg bg-surface border-border"
             >
               <!-- Existing tag options -->
               @for (tag of filteredTags(); track tag.id) {
                 <button
                   type="button"
                   (mousedown)="selectExistingTag(tag)"
-                  class="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-overlay transition-colors"
+                  class="flex items-center w-full gap-2 px-3 py-2 text-sm text-left transition-colors hover:bg-overlay"
                 >
                   <span
                     class="size-2.5 rounded-full shrink-0"
@@ -272,7 +268,7 @@
                         type="button"
                         (mousedown)="pendingColor.set(color)"
                         [attr.aria-label]="color"
-                        class="rounded-full shrink-0 transition-all"
+                        class="transition-all rounded-full shrink-0"
                         [class]="pendingColor() === color ? 'size-5' : 'size-4 opacity-70 hover:opacity-100'"
                         [style.background-color]="color"
                       ></button>
@@ -282,7 +278,7 @@
                   <button
                     type="button"
                     (mousedown)="addNewTag()"
-                    class="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-overlay transition-colors text-primary border-t border-border"
+                    class="flex items-center w-full gap-2 px-3 py-2 text-sm text-left transition-colors border-t hover:bg-overlay text-primary border-border"
                   >
                     <svg lucidePlus class="size-3.5 shrink-0" />
                     {{ 'cardForm.tags.create' | transloco: { name: tagInput().trim() } }}
@@ -299,7 +295,7 @@
         <button
           type="button"
           (click)="closed.emit()"
-          class="ml-auto px-4 py-2 text-sm font-medium transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
+          class="px-4 py-2 ml-auto text-sm font-medium transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
         >
           {{ 'cardForm.cancel' | transloco }}
         </button>

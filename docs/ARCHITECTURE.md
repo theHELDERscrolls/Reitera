@@ -95,7 +95,7 @@ All other endpoints are protected.
 
 - **Schema management:** Manual SQL scripts (`ddl-auto: none`). No Flyway/Liquibase yet.
 - **Primary keys:** UUID for `users`, auto-increment Integer for all other entities.
-- **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different card types (BASIC, CLOZE, MULTIPLE_CHOICE) to use different answer structures without schema changes.
+- **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different card types (BASIC, MULTIPLE_CHOICE, TRUE_FALSE) to use different answer structures without schema changes.
 - **Composite keys:** `StudyProgress` uses a composite PK of `(user_id, card_id)` — one progress record per user per card.
 - **Refresh tokens:** the raw UUID token is never stored. Only its SHA-256 hex digest (`token_hash VARCHAR(64)`) is persisted. `ON DELETE CASCADE` on `user_id` ensures cleanup on user deletion. The `revoked` flag preserves the audit trail without physically deleting rows.
 
@@ -157,7 +157,7 @@ src/app/
 │       ├── components/
 │       │   ├── study-hub/     → StudyHubComponent (deck list with card count badges)
 │       │   ├── study-session/ → StudySessionComponent (card review flow, progress bar, confirm-dialog back guard)
-│       │   └── study-card/    → StudyCardComponent (renders BASIC, CLOZE, MC, TF; reveals explanation)
+│       │   └── study-card/    → StudyCardComponent (renders BASIC, MC, TF; reveals explanation)
 │       └── services/
 │           └── study.service.ts → StudyService (getDueCards, processSession)
 └── shared/             → Reusable components with no feature-specific logic

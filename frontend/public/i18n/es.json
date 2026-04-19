@@ -146,7 +146,6 @@
       },
       "type": {
         "basic": "Básica",
-        "cloze": "Cloze",
         "multiple_choice": "Multi",
         "true_false": "Verdadero / Falso"
       },
@@ -173,14 +172,12 @@
     "type": {
       "label": "Tipo de tarjeta",
       "basic": "Básica",
-      "cloze": "Cloze",
       "multiple_choice": "OM",
       "true_false": "V/F"
     },
     "question": {
       "label": "Pregunta",
-      "placeholder": "Escribe la pregunta...",
-      "placeholderCloze": "Usa {{espacio}} para marcar la palabra oculta, ej. La capital de {{Francia}}"
+      "placeholder": "Escribe la pregunta..."
     },
     "answer": {
       "label": "Respuesta",
@@ -245,7 +242,6 @@
       },
       "type": {
         "BASIC": "Básica",
-        "CLOZE": "Cloze",
         "MULTIPLE_CHOICE": "Múltiple opción",
         "TRUE_FALSE": "Verdadero / Falso"
       },

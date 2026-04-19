@@ -657,41 +657,6 @@
           "response": []
         },
         {
-          "name": "Create Card (CLOZE)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/v1/decks/1/cards",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "decks",
-                "1",
-                "cards"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"type\": \"CLOZE\",\n  \"question\": \"La Guerra Civil Española terminó en el año ___.\",\n  \"answerJson\": {\n    \"answer\": \"1939\"\n  },\n  \"explanation\": null,\n  \"tagIds\": []\n}"
-            },
-            "description": "Creates a CLOZE (fill-in-the-blank) card. Use ___ in the question to mark the gap. `answerJson` must contain a single `answer` key with the word or phrase that fills the blank."
-          },
-          "response": []
-        },
-        {
           "name": "Create Card (TRUE_FALSE)",
           "request": {
             "method": "POST",

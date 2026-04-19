@@ -104,7 +104,7 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
     );
 
 
--- 6. CARDS (21 total — BASIC, CLOZE, MULTIPLE_CHOICE, TRUE_FALSE)
+-- 6. CARDS (21 total — BASIC, MULTIPLE_CHOICE, TRUE_FALSE)
 
 -- ---- Deck 1: La Segunda Guerra Mundial (6 cards) ----
 
@@ -174,21 +174,21 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'Se usa para recursos compartidos: pools de conexiones, loggers, configuración global. En Spring, todos los beans son Singleton por defecto.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
-    'CLOZE',
-    'El patrón ___ define una interfaz para crear objetos, pero deja que las subclases decidan qué clase instanciar.',
+    'BASIC',
+    '¿Qué patrón define una interfaz para crear objetos, pero deja que las subclases decidan qué clase instanciar?',
     '{"answer": "Factory Method"}',
     'Factory Method es un patrón creacional. Desacopla el código que usa el objeto del código que lo crea, respetando el principio Open/Closed.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
-    'CLOZE',
-    'El patrón ___ convierte la interfaz de una clase en otra que el cliente espera, actuando como intermediario entre incompatibles.',
-    '{"answer": "Adapter"}',
+    'BASIC',
+    '¿Qué patrón convierte la interfaz de una clase en otra que el cliente espera, actuando como intermediario entre incompatibles?',
+    '{"answer": "Adapter (también llamado Wrapper)"}',
     'También llamado Wrapper. Ejemplo clásico: adaptar una librería de terceros a la interfaz de tu aplicación sin modificar su código.'
 );
 
@@ -288,11 +288,11 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'La URSS suministró armas y asesores militares. Alemania e Italia apoyaron al bando nacional con la Legión Cóndor y el CTV respectivamente.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
-    'CLOZE',
-    'El bombardeo de ___ el 26 de abril de 1937, llevado a cabo por la Legión Cóndor alemana, fue inmortalizado por Picasso en un famoso cuadro.',
+    'BASIC',
+    '¿Qué ciudad vasca fue bombardeada el 26 de abril de 1937 por la Legión Cóndor alemana e inmortalizada en un famoso cuadro de Picasso?',
     '{"answer": "Guernica"}',
     'Guernica era una ciudad vasca sin valor militar estratégico. El cuadro de Picasso es uno de los símbolos antibelicistas más reconocidos del siglo XX.'
 );
@@ -336,12 +336,12 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'El 7 de diciembre de 1941, Japón atacó la base naval de Pearl Harbor (Hawái). Al día siguiente, EE.UU. declaró la guerra a Japón; Alemania e Italia le declararon la guerra a EE.UU. el 11 de diciembre.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial'),
-    'CLOZE',
-    'El programa de ___ permitió a EE.UU. suministrar material bélico a los Aliados sin violar formalmente su neutralidad antes de entrar en la guerra.',
-    '{"answer": "Préstamo y Arriendo"}',
+    'BASIC',
+    '¿Qué programa permitió a EE.UU. suministrar material bélico a los Aliados sin violar formalmente su neutralidad antes de entrar en la guerra?',
+    '{"answer": "Préstamo y Arriendo (Lend-Lease)"}',
     'Firmado en marzo de 1941, el Lend-Lease Act envió más de 50.000 millones de dólares en material a Reino Unido, URSS, China y Francia Libre. Fue fundamental para sostener la resistencia aliada.'
 );
 
@@ -375,11 +375,11 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'Ejemplo clásico: los flujos de Java (BufferedReader envuelve FileReader). Se pueden apilar múltiples Decorators para combinar comportamientos de forma flexible.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
-    'CLOZE',
-    'El patrón ___ proporciona una interfaz simplificada a un conjunto complejo de subsistemas, ocultando su complejidad al cliente.',
+    'BASIC',
+    '¿Qué patrón proporciona una interfaz simplificada a un conjunto complejo de subsistemas, ocultando su complejidad al cliente?',
     '{"answer": "Facade"}',
     'Ejemplo: una clase HomeTheaterFacade que coordina proyector, amplificador y reproductor con un solo método watchMovie(). El cliente no necesita conocer los subsistemas internos.'
 );
@@ -402,11 +402,11 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'Ejemplo: un editor de texto donde cada acción es un Command. El historial de comandos permite implementar Ctrl+Z. Se usa también en sistemas de colas y transacciones.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'Patrones de Diseño GoF'),
-    'CLOZE',
-    'El patrón ___ define el esqueleto de un algoritmo en una superclase, dejando que las subclases implementen los pasos específicos sin cambiar la estructura general.',
+    'BASIC',
+    '¿Qué patrón define el esqueleto de un algoritmo en una superclase, dejando que las subclases implementen los pasos específicos sin cambiar la estructura general?',
     '{"answer": "Template Method"}',
     'Ejemplo: una clase abstracta DataMiner con un método mine() que llama a extractData(), parseData() y analyzeData(). Las subclases concretan los pasos; el flujo general es invariable.'
 );
@@ -459,12 +459,12 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'Example: "I get along well with my colleagues." Also used as "get along with" followed by a person. Synonyms: to get on with, to be on good terms with.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales'),
-    'CLOZE',
-    'After losing her job, she decided to ___ her own business from scratch.',
-    '{"answer": "set up"}',
+    'BASIC',
+    'What does "set up" mean?',
+    '{"answer": "To start, establish, or arrange something. E.g., ''set up a meeting'', ''set up a business''"}',
     '"Set up" means to start, establish, or arrange something. Other uses: "set up a meeting", "set up a system". Synonyms: to establish, to found, to start.'
 );
 
@@ -525,12 +525,12 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     'El Frente Popular agrupó a republicanos de izquierda, socialistas y comunistas. Su victoria electoral fue el detonante del golpe de Estado del 17 de julio de 1936.'
 );
 
--- [CLOZE]
+-- [BASIC]
 INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
     (SELECT id FROM decks WHERE title = 'La Guerra Civil Española'),
-    'CLOZE',
-    'La ___ fue la unidad aérea alemana enviada por Hitler para apoyar al bando nacional, responsable del bombardeo de Guernica en abril de 1937.',
-    '{"answer": "Legión Cóndor"}',
+    'BASIC',
+    '¿Qué fue la Legión Cóndor y qué papel tuvo en la Guerra Civil Española?',
+    '{"answer": "La unidad aérea alemana enviada por Hitler para apoyar al bando nacional, responsable del bombardeo de Guernica en abril de 1937"}',
     'La Legión Cóndor permitió a Alemania probar sus tácticas de guerra aérea en combate real. Sus experiencias en España influyeron directamente en la estrategia de la Luftwaffe durante la SGMU.'
 );
 

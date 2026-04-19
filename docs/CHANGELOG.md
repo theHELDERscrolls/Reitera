@@ -15,7 +15,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Study hub (`StudyComponent`) — deck picker with per-deck new/due/relearning counts; category-scoped study button; empty state when no decks exist
 - Study session (`StudySessionComponent`) — full card review flow: progress bar, reveal/rate cycle, Again re-queue (up to 3 times), end-session button, completion screen
-- `StudyCardComponent` — renders all 4 card types (BASIC, CLOZE, MULTIPLE_CHOICE, TRUE_FALSE); shows explanation after reveal
+- `StudyCardComponent` — renders all 3 card types (BASIC, MULTIPLE_CHOICE, TRUE_FALSE); shows explanation after reveal
 - `StudyHubComponent` — deck picker page with `<app-card-count-badges>` and category study shortcut
 - `StudyService` in `features/study/services/` — `getDueCards(deckId?, categoryId?)` and `processSession(request)` wrappers over the study API
 - Back-button guard — clicking the back arrow during an active session shows a `warning` `ConfirmDialogComponent`; the session is abandoned only on confirmation, never silently
@@ -25,7 +25,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - `StudyComponent` — replaced the previous stub with the full study hub and session routing
-- `seed.sql` — expanded from 21 to 48 cards (12 per deck), all 4 card types represented in every deck; 4 new `study_progress` rows added across Decks 2 and 3 for a more realistic demo
+- `seed.sql` — expanded from 21 to 48 cards (12 per deck), all 3 card types represented in every deck; 4 new `study_progress` rows added across Decks 2 and 3 for a more realistic demo
 
 ---
 
@@ -269,7 +269,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `CategoryController` and `CategoryService` at `/api/v1/categories`
 - `TagController` and `TagService` at `/api/v1/tags`
 - `CategoryResponseDTO` and `TagResponseDTO`
-- Postman collection updated with Users, Categories and Tags folders; Login split into alumno / admin variants; CLOZE example corrected to current format
+- Postman collection updated with Users, Categories and Tags folders; Login split into alumno / admin variants
 
 ### Changed
 - `DeckService.createDeck()` — `authorName` now uses `username` instead of `firstName + lastName` to ensure uniqueness
@@ -286,7 +286,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `backend/src/main/resources/seed.sql` — idempotent demo data script
   - 2 demo users with BCrypt-hashed passwords generated at runtime via `crypt()` + `gen_salt('bf', 10)`
   - 3 categories, 4 tags, 4 decks (two under "Historia de España" to enable category-scoped study demo)
-  - 21 cards covering all 4 types: `BASIC`, `CLOZE`, `MULTIPLE_CHOICE`, `TRUE_FALSE`
+  - 21 cards covering all 3 types: `BASIC`, `MULTIPLE_CHOICE`, `TRUE_FALSE`
   - 6 `study_progress` records for Deck 1 with all FSRS states: Learning, Review, Relearning
   - 14 `review_log` entries simulating realistic review history
   - Idempotency guard: raises error if seed data already exists
@@ -331,7 +331,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.4.0] — feature/04-content-domain
 ### Added
 - `Card` entity with dynamic `JSONB` answer storage (`answer_json` column)
-  - Supported types: `BASIC`, `CLOZE`, `MULTIPLE_CHOICE`
+  - Supported types: `BASIC`, `MULTIPLE_CHOICE`, `TRUE_FALSE`
 - `Deck` entity with ownership (`owner_id`) and optional category
 - `Category` and `Tag` entities for deck/card organization
 - `UserDeckSubscription` entity with composite key for public deck subscriptions
