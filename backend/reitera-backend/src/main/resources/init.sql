@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS decks (
 
 -- 6. CARDS
 -- answer_json uses JSONB to support multiple card types with different answer structures.
--- See docs/api/endpoints.md for the format per type (BASIC, CLOZE, MULTIPLE_CHOICE, TRUE_FALSE).
+-- See docs/api/endpoints.md for the format per type (BASIC, MULTIPLE_CHOICE, TRUE_FALSE).
 CREATE TABLE IF NOT EXISTS cards (
     id          SERIAL      PRIMARY KEY,
     deck_id     INTEGER     NOT NULL REFERENCES decks(id) ON DELETE CASCADE,

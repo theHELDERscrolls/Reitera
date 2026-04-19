@@ -31,7 +31,7 @@ public class Card {
     private Deck deck;
 
     @Column(nullable = false, length = 50)
-    private String type; // e.g., "BASIC", "CLOZE", "MULTIPLE_CHOICE"
+    private String type; // e.g., "BASIC", "MULTIPLE_CHOICE", "TRUE_FALSE"
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String question;

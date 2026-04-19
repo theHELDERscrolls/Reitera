@@ -3,11 +3,9 @@
   [class]="
     type() === 'BASIC'
       ? 'bg-info/10 text-info'
-      : type() === 'CLOZE'
-        ? 'bg-accent-3/10 text-accent-3'
-        : type() === 'MULTIPLE_CHOICE'
-          ? 'bg-success/10 text-success'
-          : 'bg-warning/10 text-warning'
+      : type() === 'MULTIPLE_CHOICE'
+        ? 'bg-success/10 text-success'
+        : 'bg-warning/10 text-warning'
   "
 >
   {{ 'deckDetail.cards.type.' + type().toLowerCase() | transloco }}

@@ -1,6 +1,6 @@
 import { Tag } from './tag.model';
 
-export type CardType = 'BASIC' | 'CLOZE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
+export type CardType = 'BASIC' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
 
 export interface CardRequest {
   type: CardType;

@@ -8,7 +8,7 @@
   <!-- Answer section -->
 
   <!-- BASIC -->
-  @if (card().type === 'BASIC' || card().type === 'CLOZE') {
+  @if (card().type === 'BASIC') {
     @if (!revealed()) {
       <button
         (click)="reveal.emit()"

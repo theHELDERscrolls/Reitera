@@ -146,7 +146,6 @@
       },
       "type": {
         "basic": "Basique",
-        "cloze": "Lacune",
         "multiple_choice": "Multi",
         "true_false": "Vrai / Faux"
       },
@@ -173,14 +172,12 @@
     "type": {
       "label": "Type de carte",
       "basic": "Basique",
-      "cloze": "Lacune",
       "multiple_choice": "QCM",
       "true_false": "V/F"
     },
     "question": {
       "label": "Question",
-      "placeholder": "Saisissez la question...",
-      "placeholderCloze": "Utilisez {{espace}} pour indiquer le mot caché, ex. La capitale de {{France}}"
+      "placeholder": "Saisissez la question..."
     },
     "answer": {
       "label": "Réponse",
@@ -245,7 +242,6 @@
       },
       "type": {
         "BASIC": "Basique",
-        "CLOZE": "Cloze",
         "MULTIPLE_CHOICE": "Choix multiple",
         "TRUE_FALSE": "Vrai / Faux"
       },

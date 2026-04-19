@@ -100,7 +100,7 @@ backend/reitera-backend/src/main/resources/seed.sql
 | Categories | 3 | Historia de España · Programación Java · Inglés B2 |
 | Tags | 4 | importante · difícil · repaso · vocabulario |
 | Decks | 4 | Two under "Historia de España" (enables category-scoped study demo), one under "Programación Java", one under "Inglés B2" |
-| Cards | 48 | BASIC(18) · CLOZE(9) · MULTIPLE_CHOICE(12) · TRUE_FALSE(9) — 12 per deck |
+| Cards | 48 | BASIC(27) · MULTIPLE_CHOICE(12) · TRUE_FALSE(9) — 12 per deck |
 | StudyProgress | 10 | Deck 1: 6 records (Learning, Review, Relearning); Decks 2 & 3: 2 records each |
 | ReviewLogs | 20 | Historical review entries for all 10 progress records |
 

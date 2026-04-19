@@ -21,17 +21,6 @@ The `answerJson` structure varies by card type:
 }
 ```
 
-**CLOZE** — fill in the blank (use `___` as the gap marker in the question):
-```json
-{
-  "type": "CLOZE",
-  "question": "La Guerra Civil terminó en ___.",
-  "answerJson": { "answer": "1939" },
-  "explanation": null,
-  "tagIds": []
-}
-```
-
 **MULTIPLE_CHOICE** — one correct option among several (min 2, max 8 options):
 ```json
 {

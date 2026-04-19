@@ -79,7 +79,7 @@ export class CardFormComponent {
   readonly maxOptions = 8;
 
   readonly isEditMode = computed(() => this.cardToEdit() !== null);
-  readonly cardTypes: CardType[] = ['BASIC', 'CLOZE', 'MULTIPLE_CHOICE', 'TRUE_FALSE'];
+  readonly cardTypes: CardType[] = ['BASIC', 'MULTIPLE_CHOICE', 'TRUE_FALSE'];
 
   get optionsArray(): FormArray<FormControl<string | null>> {
     return this.form.controls.options;
@@ -192,9 +192,6 @@ export class CardFormComponent {
     const v = this.form.getRawValue();
     if (v.type === 'BASIC') {
       return { answer: v.basicAnswer ?? '' };
-    }
-    if (v.type === 'CLOZE') {
-      return {};
     }
     if (v.type === 'MULTIPLE_CHOICE') {
       return {

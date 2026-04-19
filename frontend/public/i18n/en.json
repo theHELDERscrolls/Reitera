@@ -146,7 +146,6 @@
       },
       "type": {
         "basic": "Basic",
-        "cloze": "Cloze",
         "multiple_choice": "Multi",
         "true_false": "True / False"
       },
@@ -173,14 +172,12 @@
     "type": {
       "label": "Card type",
       "basic": "Basic",
-      "cloze": "Cloze",
       "multiple_choice": "MC",
       "true_false": "T/F"
     },
     "question": {
       "label": "Question",
-      "placeholder": "Enter the question...",
-      "placeholderCloze": "Use {{blank}} to mark the hidden word, e.g. The capital of {{France}}"
+      "placeholder": "Enter the question..."
     },
     "answer": {
       "label": "Answer",
@@ -245,7 +242,6 @@
       },
       "type": {
         "BASIC": "Basic",
-        "CLOZE": "Cloze",
         "MULTIPLE_CHOICE": "Multiple choice",
         "TRUE_FALSE": "True / False"
       },
