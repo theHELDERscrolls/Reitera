@@ -583,6 +583,78 @@
       ]
     },
     {
+      "name": "Cards (Cross-Deck)",
+      "description": "Endpoints that query cards across ALL decks owned by the authenticated user. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get All Cards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cards?page=0&size=20&sort=question,asc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "question",
+                  "value": "",
+                  "description": "Partial, case-insensitive match on the question text",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "Exact card type: BASIC, MULTIPLE_CHOICE, or TRUE_FALSE",
+                  "disabled": true
+                },
+                {
+                  "key": "state",
+                  "value": "",
+                  "description": "FSRS study state: -1=never studied, 0=New, 1=Learning, 2=Review, 3=Relearning",
+                  "disabled": true
+                },
+                {
+                  "key": "tagId",
+                  "value": "",
+                  "description": "ID of a tag the card must have assigned",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Zero-based page number"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "sort",
+                  "value": "question,asc",
+                  "description": "Sort field and direction"
+                }
+              ]
+            },
+            "description": "Returns a paginated list of all cards owned by the authenticated user, across all their decks. All filter parameters are optional — omitting them returns all cards. Filters: question (partial match), type (BASIC/MULTIPLE_CHOICE/TRUE_FALSE), state (-1=never studied, 0=New, 1=Learning, 2=Review, 3=Relearning), tagId."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Cards",
       "description": "CRUD operations for flashcards. Cards are always nested under a parent deck. All endpoints require a valid JWT token (Bearer).",
       "item": [

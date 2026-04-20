@@ -38,6 +38,10 @@ export class CardsTableComponent {
   readonly sortDir = input.required<'asc' | 'desc'>();
   readonly sortField = input.required<'question' | 'type'>();
 
+  readonly emptyTitle = input<string>('deckDetail.cards.empty.title');
+  readonly emptySubtitle = input<string>('deckDetail.cards.empty.subtitle');
+  readonly showAddAction = input<boolean>(true);
+
   readonly addCard = output<void>();
   readonly delete = output<CardResponse>();
   readonly edit = output<CardResponse>();

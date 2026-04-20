@@ -145,6 +145,9 @@ src/app/
 │   │   └── services/
 │   │       ├── deck-detail.service.ts → DeckDetailService (deck, stats, cards, tags, card CRUD)
 │   │       └── decks.service.ts       → DecksService (CRUD + pagination + categories)
+│   ├── card-list/  → CardListComponent — cross-deck card list at /cards; filter bar (question, type, state, tag); edit/delete inline
+│   │   └── services/
+│   │       └── cards.service.ts → CardsService (getCards w/ filters, getTags, updateCard, deleteCard)
 │   ├── profile/        → ProfileComponent (stub)
 │   ├── shell/          → AppShellComponent + all layout sub-components
 │   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
@@ -170,6 +173,7 @@ src/app/
         ├── language-switcher/ → LanguageSwitcherComponent
         ├── page-header/       → PageHeaderComponent (page title + subtitle)
         ├── pagination/        → PaginationComponent (page strip with gap logic; input: currentPage, totalPages)
+        ├── filter-dropdown/   → FilterDropdownComponent (click-outside-aware dropdown; labelKey i18n or raw label; colorHex for tag pills)
         ├── tag-pill/          → TagPillComponent (colored pill; inputs: name, hexColor, removable; output: remove)
         └── toast/             → ToastComponent
 ```
@@ -190,6 +194,7 @@ Authenticated routes are **nested under `AppShellComponent`**, which acts as the
   children: [
     { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component') },
     { path: 'decks',     loadComponent: () => import('./features/decks/decks.component') },
+    { path: 'cards',     loadComponent: () => import('./features/card-list/card-list.component') },
     { path: 'study',     loadComponent: () => import('./features/study/study.component') },
     { path: 'profile',   loadComponent: () => import('./features/profile/profile.component') },
   ],

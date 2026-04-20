@@ -11,6 +11,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.22.0] — 2026-04-19 — feature/46-admin-card-page
+### Added
+- Cross-deck card list page at `/cards` — shows all cards owned by the user across every deck; accessible from the sidebar nav ("Cards" link with `SquareStack` icon)
+- Filter bar with four independent filters: partial question search, card type (`BASIC` / `MULTIPLE_CHOICE` / `TRUE_FALSE`), FSRS study state (not studied / New / Learning / Review / Relearning), and tag; all combinable; "Clear filters" button resets all at once
+- `GET /api/v1/cards` backend endpoint — paginated, cross-deck card query with optional `question`, `type`, `state`, and `tagId` filter params; filters composed dynamically via JPA Specifications; FSRS states enriched in a single batch query (N+1 free)
+- `CardSpecification` — static JPA Specification factory methods: `byOwner`, `questionContains`, `byType`, `hasTag`, `notStudied`, `withState`
+- `CardListController` at `/api/v1/cards` — thin controller delegating to `CardService.getAllCards()`
+- `CardsService` in `features/card-list/services/` — `getCards()` (paginated + filtered), `getTags()`, `updateCard()`, `deleteCard()`
+- `FilterDropdownComponent` in `shared/components/filter-dropdown/` — reusable click-outside-aware dropdown for filter options; supports `labelKey` (i18n) or `label` (raw string) and optional `colorHex` for tag pills
+- Global scrollbar styling in `styles.css` — thin, theme-aware scrollbar using `--color-border` / `--color-border-strong` tokens
+
+### Changed
+- `CardRepository` — extended with `JpaSpecificationExecutor<Card>` to support dynamic filter composition
+- `StudyProgressRepository` — added `findAllByUserIdAndCardIdIn` batch query for N+1-free state enrichment
+- `CardService` — added `getAllCards()` method with specification-based filtering
+- `CardsTableComponent` — added `emptyTitle`, `emptySubtitle`, and `showAddAction` inputs so the component is reusable outside the deck-detail context (card-list page omits the "Add card" action)
+- `SidebarNavComponent` — added "Cards" nav link with `LucideSquareStack` icon
+- `app.routes.ts` — added `/cards` lazy route pointing to `CardListComponent`
+- `docs/api/cards.md` — documented new `GET /api/v1/cards` endpoint and corrected `state` field description
+- `frontend/package.json` version bumped to `0.22.0`
+
+---
+
 ## [0.21.0] — 2026-04-18 — feature/43-study-page
 ### Added
 - Study hub (`StudyComponent`) — deck picker with per-deck new/due/relearning counts; category-scoped study button; empty state when no decks exist

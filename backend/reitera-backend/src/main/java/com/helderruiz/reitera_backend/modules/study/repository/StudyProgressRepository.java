@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
 
+// Note: Optional import kept for potential future use even though unused currently
+
 public interface StudyProgressRepository extends JpaRepository<StudyProgress, StudyProgressId> {
 
     /**
@@ -93,4 +95,15 @@ public interface StudyProgressRepository extends JpaRepository<StudyProgress, St
             "AND sp.card.deck.id = :deckId")
     List<StudyProgress> findAllByUserIdAndDeckId(@Param("userId") UUID userId,
                                                  @Param("deckId") Integer deckId);
+
+    /**
+     * Returns StudyProgress records for a specific user and a list of card IDs.
+     * Used by the cross-deck card list to enrich each card with its FSRS state
+     * in a single batch query instead of one query per card (N+1 prevention).
+     */
+    @Query("SELECT sp FROM StudyProgress sp " +
+            "WHERE sp.user.id = :userId " +
+            "AND sp.card.id IN :cardIds")
+    List<StudyProgress> findAllByUserIdAndCardIdIn(@Param("userId") UUID userId,
+                                                   @Param("cardIds") List<Integer> cardIds);
 }

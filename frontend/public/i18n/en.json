@@ -276,11 +276,40 @@
       }
     }
   },
+  "cardList": {
+    "title": "All Cards",
+    "filterQuestion": "Search by question...",
+    "filterType": "Type",
+    "filterState": "State",
+    "filterTag": "Tag",
+    "filterClear": "Clear filters",
+    "allTypes": "All types",
+    "allStates": "All states",
+    "allTags": "All tags",
+    "stateNotStudied": "Not studied",
+    "stateNew": "New",
+    "stateLearning": "Learning",
+    "stateReview": "Review",
+    "stateRelearning": "Relearning",
+    "empty": {
+      "title": "No cards found",
+      "subtitle": "Try adjusting your filters or add cards to a deck"
+    },
+    "deleteCard": {
+      "title": "Delete card",
+      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    },
+    "toast": {
+      "cardUpdated": "Card updated successfully",
+      "cardDeleted": "Card deleted successfully"
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Dashboard",
       "decks": "Decks",
-      "study": "Study"
+      "study": "Study",
+      "cards": "Cards"
     },
     "sidebar": {
       "collapse": "Collapse sidebar",

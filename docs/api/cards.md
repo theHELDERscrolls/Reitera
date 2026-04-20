@@ -1,6 +1,27 @@
 # Card Endpoints
 
-Cards are nested under their parent deck. All endpoints verify deck ownership before operating on cards.
+Cards are nested under their parent deck for create/update/delete operations. A separate cross-deck endpoint allows querying all cards across all decks owned by the authenticated user.
+
+---
+
+### GET `/api/v1/cards`
+Returns a paginated list of **all cards** owned by the current user, across all their decks. All filter parameters are optional — omitting them returns everything.
+
+| Query param | Type | Default | Description |
+|---|---|---|---|
+| `question` | String | — | Partial case-insensitive match on the question text |
+| `type` | String | — | Exact card type: `BASIC`, `MULTIPLE_CHOICE`, or `TRUE_FALSE` |
+| `state` | Integer | — | FSRS study state: `-1` = never studied, `0` = New, `1` = Learning, `2` = Review, `3` = Relearning |
+| `tagId` | Integer | — | ID of a tag the card must have assigned |
+| `page` | Integer | `0` | Zero-based page number |
+| `size` | Integer | `20` | Items per page |
+| `sort` | String | `question,asc` | Field and direction (`question,asc` \| `type,desc` \| …) |
+
+Filters are composed dynamically — only non-null params are applied, so any combination works.
+
+Cards with no `StudyProgress` row (never studied) return `state: null`, same as the deck-scoped list. The `-1` value is used only as a **filter query param** to request that subset — it is never present in the response. States are enriched in a single batch query (N+1 free).
+
+**Response `200 OK`:** `Page<CardResponseDTO>`
 
 ---
 
@@ -120,9 +141,10 @@ Deletes a card by ID. Tags that were assigned exclusively to this card are autom
 ```
 
 `state` — the requesting user's FSRS state for this card:
-- `null` or `0` = New (no study history, or never studied)
+- `null` = never studied (no `StudyProgress` row; only appears in deck-scoped card lists)
+- `0` = New
 - `1` = Learning
 - `2` = Review
 - `3` = Relearning
 
-Always `null` for single-card lookups (GET by ID, create, update). Populated for paginated list responses (`GET /decks/{id}/cards`).
+Always `null` for single-card lookups (GET by ID, create, update). Populated for paginated list responses (`GET /decks/{id}/cards` and `GET /cards`).

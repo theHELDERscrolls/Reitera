@@ -8,18 +8,20 @@
 } @else if (cards().length === 0) {
   <!-- Empty state -->
   <app-empty-state
-    [title]="'deckDetail.cards.empty.title' | transloco"
-    [subtitle]="'deckDetail.cards.empty.subtitle' | transloco"
+    [title]="emptyTitle() | transloco"
+    [subtitle]="emptySubtitle() | transloco"
   >
     <svg icon lucideBookOpen class="size-8 text-muted" />
-    <button
-      action
-      (click)="addCard.emit()"
-      class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
-    >
-      <svg lucidePlus class="size-4" />
-      {{ 'deckDetail.addCard' | transloco }}
-    </button>
+    @if (showAddAction()) {
+      <button
+        action
+        (click)="addCard.emit()"
+        class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
+      >
+        <svg lucidePlus class="size-4" />
+        {{ 'deckDetail.addCard' | transloco }}
+      </button>
+    }
   </app-empty-state>
 } @else {
   <!-- Cards table -->

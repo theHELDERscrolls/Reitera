@@ -1,0 +1,54 @@
+<div class="relative">
+  <button
+    type="button"
+    (click)="isOpen.update(v => !v)"
+    class="flex items-center min-w-30 sm:min-w-40 justify-between gap-2 px-3 py-1.5 text-sm border rounded-lg transition-colors bg-background border-border hover:border-border-strong"
+    [class]="isActive() ? 'text-foreground border-primary' : 'text-muted'"
+  >
+    <span>
+      @if (selectedOption().labelKey) {
+        {{ selectedOption().labelKey | transloco }}
+      } @else {
+        {{ selectedOption().label }}
+      }
+    </span>
+    <svg
+      lucideChevronDown
+      class="size-3.5 shrink-0 transition-transform duration-150"
+      [class]="isOpen() ? 'rotate-180' : ''"
+    />
+  </button>
+
+  @if (isOpen()) {
+    <div
+      class="absolute left-0 z-20 mt-1 overflow-hidden overflow-y-auto border rounded-lg shadow-lg bg-surface border-border min-w-40 max-h-52"
+    >
+      <div class="flex flex-col gap-1 p-1">
+        @for (opt of options(); track opt.value) {
+          <button
+            type="button"
+            (click)="select(opt.value)"
+            class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left"
+            [class]="
+              selected() === opt.value
+                ? 'bg-primary/15 text-primary font-medium'
+                : 'text-muted hover:text-foreground hover:bg-overlay'
+            "
+          >
+            @if (opt.colorHex) {
+              <span
+                class="rounded-full size-2 shrink-0"
+                [style.background-color]="opt.colorHex"
+              ></span>
+            }
+            @if (opt.labelKey) {
+              {{ opt.labelKey | transloco }}
+            } @else {
+              {{ opt.label }}
+            }
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

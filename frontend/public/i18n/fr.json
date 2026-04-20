@@ -276,11 +276,40 @@
       }
     }
   },
+  "cardList": {
+    "title": "Toutes les cartes",
+    "filterQuestion": "Rechercher par question...",
+    "filterType": "Type",
+    "filterState": "État",
+    "filterTag": "Étiquette",
+    "filterClear": "Effacer les filtres",
+    "allTypes": "Tous les types",
+    "allStates": "Tous les états",
+    "allTags": "Toutes les étiquettes",
+    "stateNotStudied": "Non étudié",
+    "stateNew": "Nouvelle",
+    "stateLearning": "Apprentissage",
+    "stateReview": "Révision",
+    "stateRelearning": "Réapprentissage",
+    "empty": {
+      "title": "Aucune carte trouvée",
+      "subtitle": "Essayez d'ajuster vos filtres ou ajoutez des cartes à un paquet"
+    },
+    "deleteCard": {
+      "title": "Supprimer la carte",
+      "message": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible."
+    },
+    "toast": {
+      "cardUpdated": "Carte mise à jour avec succès",
+      "cardDeleted": "Carte supprimée avec succès"
+    }
+  },
   "shell": {
     "nav": {
       "dashboard": "Accueil",
       "decks": "Paquets",
-      "study": "Étudier"
+      "study": "Étudier",
+      "cards": "Cartes"
     },
     "sidebar": {
       "collapse": "Réduire la barre latérale",

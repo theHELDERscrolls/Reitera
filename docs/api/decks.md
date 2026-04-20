@@ -113,6 +113,11 @@ Deletes a deck by ID. If the deck had a category and no other deck references it
   "categoryId": 1,
   "categoryName": "Historia de España",
   "createdAt": "2026-03-18T10:00:00",
-  "updatedAt": "2026-03-18T10:00:00"
+  "updatedAt": "2026-03-18T10:00:00",
+  "newCount": 10,
+  "dueCount": 4,
+  "relearningCount": 1
 }
 ```
+
+`newCount`, `dueCount`, `relearningCount` reflect the requesting user's study state — two users studying the same deck have fully independent counts.

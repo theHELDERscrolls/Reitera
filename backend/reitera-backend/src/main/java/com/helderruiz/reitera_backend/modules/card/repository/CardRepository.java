@@ -5,13 +5,14 @@ import com.helderruiz.reitera_backend.modules.deck.model.Deck;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface CardRepository extends JpaRepository<Card, Integer> {
+public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecificationExecutor<Card> {
 
     Page<Card> findAllByDeck(Deck deck, Pageable pageable);
 
