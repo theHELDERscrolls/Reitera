@@ -62,7 +62,8 @@ public class UserService {
                 savedUser.getEmail(),
                 savedUser.getFirstName(),
                 savedUser.getLastName(),
-                savedUser.getRole().getName()
+                savedUser.getRole().getName(),
+                savedUser.getCreatedAt()
         );
     }
 
@@ -76,7 +77,8 @@ public class UserService {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRole().getName()
+                user.getRole().getName(),
+                user.getCreatedAt()
         );
     }
 

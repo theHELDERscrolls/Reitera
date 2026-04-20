@@ -1,5 +1,6 @@
 package com.helderruiz.reitera_backend.modules.user.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record UserResponseDTO(
@@ -8,5 +9,6 @@ public record UserResponseDTO(
         String email,
         String firstName,
         String lastName,
-        String roleName
+        String roleName,
+        LocalDateTime createdAt
 ) {}

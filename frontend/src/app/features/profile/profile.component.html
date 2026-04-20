@@ -1,1 +1,60 @@
-<p>profile works!</p>
+@if (currentUser(); as user) {
+  <div class="flex flex-col max-w-2xl gap-6">
+    <!-- Page header -->
+    <app-page-header
+      [title]="'profile.title' | transloco"
+      [subtitle]="'profile.subtitle' | transloco"
+    />
+
+    <!-- Profile card -->
+    <div class="flex flex-col gap-6 p-6 border bg-surface border-border rounded-xl">
+      <!-- Avatar + name -->
+      <div class="flex items-center gap-4">
+        <div
+          class="flex items-center justify-center text-xl font-bold uppercase border rounded-full size-16 bg-overlay border-border text-foreground shrink-0"
+        >
+          {{ initial() }}
+        </div>
+        <div class="flex flex-col gap-0.5 min-w-0">
+          <span class="text-lg font-semibold truncate text-foreground">{{ displayName() }}</span>
+          <span class="text-sm truncate text-muted">@{{ user.username }}</span>
+        </div>
+      </div>
+
+      <div class="w-full h-0.5 bg-border"></div>
+
+      <!-- Info rows -->
+      <dl class="flex flex-col gap-4">
+        <!-- Full name -->
+        <div class="flex items-center gap-3">
+          <svg lucideUser class="size-4 text-muted shrink-0" />
+          <p class="w-32 text-sm text-muted shrink-0">{{ 'profile.fullName' | transloco }}</p>
+          <p class="text-sm font-medium truncate text-foreground">{{ displayName() }}</p>
+        </div>
+
+        <!-- Email -->
+        <div class="flex items-center gap-3">
+          <svg lucideMail class="size-4 text-muted shrink-0" />
+          <p class="w-32 text-sm text-muted shrink-0">{{ 'profile.email' | transloco }}</p>
+          <p class="text-sm font-medium truncate text-foreground">{{ user.email }}</p>
+        </div>
+
+        <!-- Role -->
+        <div class="flex items-center gap-3">
+          <svg lucideShield class="size-4 text-muted shrink-0" />
+          <p class="w-32 text-sm text-muted shrink-0">{{ 'profile.role' | transloco }}</p>
+          <p class="text-sm font-medium text-foreground">{{ user.roleName }}</p>
+        </div>
+
+        <!-- Member since -->
+        <div class="flex items-center gap-3">
+          <svg lucideCalendar class="size-4 text-muted shrink-0" />
+          <p class="w-32 text-sm text-muted shrink-0">{{ 'profile.memberSince' | transloco }}</p>
+          <p class="text-sm font-medium text-foreground">
+            {{ user.createdAt | date: 'mediumDate' }}
+          </p>
+        </div>
+      </dl>
+    </div>
+  </div>
+}

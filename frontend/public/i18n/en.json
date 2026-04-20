@@ -286,7 +286,6 @@
     "allTypes": "All types",
     "allStates": "All states",
     "allTags": "All tags",
-    "stateNotStudied": "Not studied",
     "stateNew": "New",
     "stateLearning": "Learning",
     "stateReview": "Review",
@@ -324,5 +323,14 @@
       "language": "Language",
       "logout": "Log out"
     }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Your account information",
+    "fullName": "Full name",
+    "username": "Username",
+    "email": "Email address",
+    "role": "Role",
+    "memberSince": "Member since"
   }
 }

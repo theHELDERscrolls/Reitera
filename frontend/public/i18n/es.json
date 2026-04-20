@@ -286,7 +286,6 @@
     "allTypes": "Todos los tipos",
     "allStates": "Todos los estados",
     "allTags": "Todas las etiquetas",
-    "stateNotStudied": "Sin estudiar",
     "stateNew": "Nueva",
     "stateLearning": "Aprendiendo",
     "stateReview": "Repaso",
@@ -324,5 +323,14 @@
       "language": "Idioma",
       "logout": "Cerrar sesión"
     }
+  },
+  "profile": {
+    "title": "Mi perfil",
+    "subtitle": "Información de tu cuenta",
+    "fullName": "Nombre completo",
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "role": "Rol",
+    "memberSince": "Miembro desde"
   }
 }
