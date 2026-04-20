@@ -65,8 +65,7 @@ export default class CardListComponent implements OnInit {
 
   readonly stateOptions: FilterOption[] = [
     { value: null, labelKey: 'cardList.allStates' },
-    { value: -1, labelKey: 'cardList.stateNotStudied' },
-    { value: 0, labelKey: 'cardList.stateNew' },
+    { value: -1, labelKey: 'cardList.stateNew' },
     { value: 1, labelKey: 'cardList.stateLearning' },
     { value: 2, labelKey: 'cardList.stateReview' },
     { value: 3, labelKey: 'cardList.stateRelearning' },
