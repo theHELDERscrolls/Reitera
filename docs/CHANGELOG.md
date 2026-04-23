@@ -11,6 +11,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.24.0] — 2026-04-23 — feature/48-stats-page
+### Added
+- Dashboard page — fully implemented; replaces the previous stub with stat badges, activity heatmap, and last studied decks panel
+- `modules/dashboard/` backend module — `DashboardController`, `DashboardService`, `DashboardStatsDTO`, `LastStudiedDeckDTO`, `DailyStudyCountDTO`
+- `GET /api/v1/dashboard/stats` — returns `{ streak, totalDueToday, studiedToday }`; streak counts consecutive days backwards from today (yesterday counts if not studied today); studiedToday counts distinct cards reviewed from `review_logs`
+- `GET /api/v1/dashboard/heatmap` — returns daily card review counts for the past 365 days; sparse data mapped to a dense 365-cell grid on the frontend
+- `GET /api/v1/dashboard/last-studied` — returns the last N decks reviewed, with name, category, and FSRS state breakdown
+- `DashboardService` in `features/dashboard/services/` — `getStats()`, `getHeatmap()`, `getLastStudied()`
+- `DashboardStats` model in `core/models/dashboard.model.ts`
+- `StatCardComponent` in `features/dashboard/components/stat-card/` — value + label + icon slot
+- `StudyHeatmapComponent` in `features/dashboard/components/study-heatmap/` — 365-cell GitHub-style calendar grid with 4 color intensity levels aligned to calendar weeks
+- `LastStudiedDecksComponent` in `features/dashboard/components/last-studied-decks/` — last N decks with state breakdown badges and conditional Study CTA
+- `dashboard.*` i18n keys added to `en.json`, `es.json`, `fr.json`, `pt.json`
+- Skeleton loaders for all three sections while API calls are in-flight; error state with message if stats call fails
+
+### Changed
+- `DeckRepository` — added `findAllIdsByOwner(User)` query used by dashboard stats
+- `ReviewLogRepository` — added `countDistinctCardsByUserAndDate()` and `findDistinctReviewDatesByUser()` queries for studiedToday and streak calculation
+- `frontend/package.json` version bumped to `0.24.0`
+
+---
+
+## [0.23.0] — 2026-04-20 — feature/47-user-profile-page
+### Added
+- `ProfileComponent` — read-only display of the authenticated user's account information: avatar circle (first-name initial), full name, @username, email, role and member-since date
+- `profile.*` i18n keys added to all 4 language files (`en.json`, `es.json`, `fr.json`, `pt.json`)
+- `UserResponseDTO` extended with `createdAt` field; `UserService` maps it from the entity
+
+### Fixed
+- Card list state filter — removed duplicate "Not studied" option (value `-1`); the concept is already covered by the "New" state; removed now-unused `stateNotStudied` i18n keys
+
+---
+
 ## [0.22.0] — 2026-04-19 — feature/46-admin-card-page
 ### Added
 - Cross-deck card list page at `/cards` — shows all cards owned by the user across every deck; accessible from the sidebar nav ("Cards" link with `SquareStack` icon)

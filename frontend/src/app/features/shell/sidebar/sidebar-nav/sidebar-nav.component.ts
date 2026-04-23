@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { LucideLayoutDashboard, LucideBrain, LucideWalletCards, LucideSquareStack } from '@lucide/angular';
+import { LucideChartBar, LucideBrain, LucideWalletCards, LucideSquareStack } from '@lucide/angular';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -7,7 +7,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
   selector: 'app-sidebar-nav',
   imports: [
     LucideBrain,
-    LucideLayoutDashboard,
+    LucideChartBar,
     LucideSquareStack,
     LucideWalletCards,
     RouterLink,

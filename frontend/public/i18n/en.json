@@ -305,7 +305,7 @@
   },
   "shell": {
     "nav": {
-      "dashboard": "Dashboard",
+      "dashboard": "Stats",
       "decks": "Decks",
       "study": "Study",
       "cards": "Cards"
@@ -332,5 +332,23 @@
     "email": "Email address",
     "role": "Role",
     "memberSince": "Member since"
+  },
+  "dashboard": {
+    "title": "Stats",
+    "welcome": "Here's your learning overview, {{ name }}",
+    "stats": {
+      "dueToday": "Due today",
+      "studiedToday": "Studied today",
+      "streak": "Day streak"
+    },
+    "heatmap": {
+      "title": "Study activity — past year"
+    },
+    "lastStudied": {
+      "title": "Recently studied",
+      "study": "Study",
+      "empty": "No decks studied yet."
+    },
+    "error": "Could not load dashboard data."
   }
 }

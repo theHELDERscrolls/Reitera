@@ -1,0 +1,62 @@
+<section class="rounded-xl border border-border bg-surface p-4">
+  <h2 class="mb-3 text-sm font-medium text-muted">
+    {{ 'dashboard.lastStudied.title' | transloco }}
+  </h2>
+
+  @if (loading()) {
+    <div class="flex flex-col divide-y divide-border">
+      @for (_ of skeletons; track $index) {
+        <div class="flex items-center gap-4 py-3">
+          <div class="flex-1 space-y-2">
+            <div class="h-4 w-2/5 animate-pulse rounded bg-overlay"></div>
+            <div class="h-3 w-1/4 animate-pulse rounded bg-overlay"></div>
+          </div>
+          <div class="h-6 w-20 animate-pulse rounded bg-overlay"></div>
+        </div>
+      }
+    </div>
+  } @else if (decks().length === 0) {
+    <p class="py-4 text-center text-sm text-muted">
+      {{ 'dashboard.lastStudied.empty' | transloco }}
+    </p>
+  } @else {
+    <div class="flex flex-col divide-y divide-border">
+      @for (deck of decks(); track deck.deckId) {
+        <div class="flex items-center gap-4 py-3">
+          <!-- Deck info -->
+          <div class="flex min-w-0 flex-1 flex-col gap-1">
+            <span class="truncate font-medium text-foreground">{{ deck.name }}</span>
+
+            <div
+              class="flex flex-col sm:flex-row justify-center sm:justify-start sm:items-center gap-2"
+            >
+              @if (deck.category) {
+                <span class="rounded px-1.5 py-0.5 text-xs w-fit font-medium bg-overlay text-muted">
+                  {{ deck.category }}
+                </span>
+              }
+
+              <app-card-count-badges
+                [newCount]="deck.newCount"
+                [dueCount]="deck.dueCount"
+                [relearningCount]="deck.relearningCount"
+              />
+            </div>
+          </div>
+
+          <!-- Study CTA -->
+          @if (hasCards(deck)) {
+            <a
+              [routerLink]="['/study']"
+              [queryParams]="{ deckId: deck.deckId }"
+              class="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-primary transition-all hover:bg-primary/20"
+            >
+              <svg lucidePlay class="size-3.5" />
+              <span>{{ 'dashboard.lastStudied.study' | transloco }}</span>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

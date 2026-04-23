@@ -305,7 +305,7 @@
   },
   "shell": {
     "nav": {
-      "dashboard": "Início",
+      "dashboard": "Estatísticas",
       "decks": "Baralhos",
       "study": "Estudar",
       "cards": "Cartões"
@@ -332,5 +332,23 @@
     "email": "Endereço de e-mail",
     "role": "Função",
     "memberSince": "Membro desde"
+  },
+  "dashboard": {
+    "title": "Estatísticas",
+    "welcome": "Aqui está o teu resumo de aprendizagem, {{ name }}",
+    "stats": {
+      "dueToday": "Pendentes hoje",
+      "studiedToday": "Estudados hoje",
+      "streak": "Dias seguidos"
+    },
+    "heatmap": {
+      "title": "Atividade de estudo — último ano"
+    },
+    "lastStudied": {
+      "title": "Estudados recentemente",
+      "study": "Estudar",
+      "empty": "Ainda não estudaste nenhum baralho."
+    },
+    "error": "Não foi possível carregar os dados do painel."
   }
 }

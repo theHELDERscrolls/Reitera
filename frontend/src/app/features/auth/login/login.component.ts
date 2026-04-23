@@ -47,7 +47,7 @@ export default class LoginComponent {
     this.authService.login(this.form.value as LoginRequest).subscribe({
       next: () => {
         this.toast.success(this.transloco.translate('auth.login.success'));
-        void this.router.navigate(['/dashboard']);
+        void this.router.navigate(['/decks']);
       },
       error: (err) => {
         this.toast.error(err.error?.message ?? this.transloco.translate('auth.login.error.server'));

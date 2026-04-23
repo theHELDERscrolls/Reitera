@@ -305,7 +305,7 @@
   },
   "shell": {
     "nav": {
-      "dashboard": "Inicio",
+      "dashboard": "Estadísticas",
       "decks": "Mazos",
       "study": "Estudiar",
       "cards": "Tarjetas"
@@ -332,5 +332,23 @@
     "email": "Correo electrónico",
     "role": "Rol",
     "memberSince": "Miembro desde"
+  },
+  "dashboard": {
+    "title": "Estadísticas",
+    "welcome": "Aquí está tu resumen de aprendizaje, {{ name }}",
+    "stats": {
+      "dueToday": "Pendientes hoy",
+      "studiedToday": "Estudiadas hoy",
+      "streak": "Racha de días"
+    },
+    "heatmap": {
+      "title": "Actividad de estudio — último año"
+    },
+    "lastStudied": {
+      "title": "Estudiados recientemente",
+      "study": "Estudiar",
+      "empty": "Aún no has estudiado ningún mazo."
+    },
+    "error": "No se pudieron cargar los datos del panel."
   }
 }

@@ -305,7 +305,7 @@
   },
   "shell": {
     "nav": {
-      "dashboard": "Accueil",
+      "dashboard": "Statistiques",
       "decks": "Paquets",
       "study": "Étudier",
       "cards": "Cartes"
@@ -332,5 +332,23 @@
     "email": "Adresse e-mail",
     "role": "Rôle",
     "memberSince": "Membre depuis"
+  },
+  "dashboard": {
+    "title": "Statistiques",
+    "welcome": "Voici votre aperçu d'apprentissage, {{ name }}",
+    "stats": {
+      "dueToday": "À réviser aujourd'hui",
+      "studiedToday": "Étudiées aujourd'hui",
+      "streak": "Jours consécutifs"
+    },
+    "heatmap": {
+      "title": "Activité d'étude — année passée"
+    },
+    "lastStudied": {
+      "title": "Récemment étudiés",
+      "study": "Étudier",
+      "empty": "Aucun paquet étudié pour l'instant."
+    },
+    "error": "Impossible de charger les données du tableau de bord."
   }
 }
