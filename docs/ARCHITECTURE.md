@@ -60,7 +60,8 @@ modules/
 ├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
 ├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories, tags and deck stats APIs
 ├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search + inline tag find-or-create
-└── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
+├── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
+└── dashboard/      → DashboardController, DashboardService — stats, heatmap and last-studied endpoints
 
 core/
 └── exception/      → GlobalExceptionHandler, ResourceNotFoundException

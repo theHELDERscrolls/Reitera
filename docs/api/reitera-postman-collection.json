@@ -1038,6 +1038,97 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Dashboard",
+      "description": "Analytics endpoints for the dashboard page. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "stats"
+              ]
+            },
+            "description": "Returns the three dashboard summary counters: study streak (consecutive days with >= 1 review ending today or yesterday), totalDueToday (overdue + new cards across all user decks), and studiedToday (distinct cards reviewed today from review_logs)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Heatmap",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/heatmap",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "heatmap"
+              ]
+            },
+            "description": "Returns per-day distinct card review counts for the past 365 days. Only days with at least one review are included in the response; absent dates represent zero activity. Each entry: { date: YYYY-MM-DD, count: long }."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Last Studied Decks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/last-studied?limit=5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "last-studied"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Max number of decks to return (default 5)"
+                }
+              ]
+            },
+            "description": "Returns the last N decks the user has studied, ordered by most recent review descending. Each entry includes the deck name, category, FSRS state breakdown (newCount, dueCount, relearningCount), and lastStudied timestamp. Used by the dashboard Last Decks Studied panel."
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

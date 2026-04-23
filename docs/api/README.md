@@ -40,3 +40,4 @@ Access tokens are valid for **15 minutes**. When expired, call `POST /api/v1/aut
 | [categories.md](categories.md) | Category listing (autocomplete) |
 | [tags.md](tags.md) | Tag listing · Cards by tag |
 | [study.md](study.md) | Due cards · Submit study session (FSRS-6) |
+| [dashboard.md](dashboard.md) | Stats badges · Activity heatmap · Last studied decks |
