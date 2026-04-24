@@ -30,4 +30,12 @@ public interface DeckRepository extends JpaRepository<Deck, Integer> {
      * Used to detect orphaned categories after a deck is deleted or reassigned.
      */
     long countByCategory(Category category);
+
+    /**
+     * Returns the IDs of all decks owned by the given user.
+     * Used by the dashboard service to batch-query due/new card counts
+     * without loading full Deck entities.
+     */
+    @Query("SELECT d.id FROM Deck d WHERE d.owner.id = :userId")
+    List<Integer> findAllIdsByOwnerId(@Param("userId") UUID userId);
 }

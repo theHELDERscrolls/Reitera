@@ -60,7 +60,8 @@ modules/
 ├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
 ├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories, tags and deck stats APIs
 ├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search + inline tag find-or-create
-└── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
+├── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
+└── dashboard/      → DashboardController, DashboardService — stats, heatmap and last-studied endpoints
 
 core/
 └── exception/      → GlobalExceptionHandler, ResourceNotFoundException
@@ -127,12 +128,12 @@ src/app/
 │   ├── guards/         → authGuard, noAuthGuard (functional CanActivateFn)
 │   ├── interceptors/   → jwtInterceptor (attaches Bearer token; intercepts 401 to refresh and retry)
 │   ├── models/         → TypeScript interfaces mapping all backend DTOs
-│   ├── profile-panel/  → ProfilePanelService (stub — scaffolded for future use)
+│   ├── profile-panel/  → ProfilePanelService
 │   ├── theme/          → ThemeService (dark/light, localStorage persistence, data-theme on <html>)
 │   └── toast/          → ToastService
 ├── features/           → One folder per feature; each has its own routes file and components
 │   ├── auth/           → auth.routes.ts, LoginComponent, RegisterComponent
-│   ├── dashboard/      → DashboardComponent (stub)
+│   ├── dashboard/      → DashboardComponent — stat badges, activity heatmap, last studied decks
 │   ├── decks/          → DecksComponent — paginated deck list with category filter and CRUD dialogs
 │   │   ├── components/
 │   │   │   ├── card-form/         → CardFormComponent (create/edit card dialog; tag combobox; dynamic MC options)
@@ -148,7 +149,7 @@ src/app/
 │   ├── card-list/  → CardListComponent — cross-deck card list at /cards; filter bar (question, type, state, tag); edit/delete inline
 │   │   └── services/
 │   │       └── cards.service.ts → CardsService (getCards w/ filters, getTags, updateCard, deleteCard)
-│   ├── profile/        → ProfileComponent (stub)
+│   ├── profile/        → ProfileComponent — user info display, avatar, joined date, account details
 │   ├── shell/          → AppShellComponent + all layout sub-components
 │   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
 │   │   └── sidebar/               → SidebarComponent (collapsible, desktop + mobile overlay)
