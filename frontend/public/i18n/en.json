@@ -59,7 +59,11 @@
         "password_pattern": "Min. 8 characters with uppercase, lowercase, number and special character (@#$%^&+=!).",
         "confirm_password_required": "Please confirm your password.",
         "password_mismatch": "Passwords do not match.",
-        "server": "Registration failed. Please try again."
+        "server": "Registration failed. Please try again.",
+        "email_max": "Email must be at most 100 characters.",
+        "first_name_max": "First name must be at most 50 characters.",
+        "last_name_max": "Last name must be at most 100 characters.",
+        "password_max": "Password must be at most 128 characters."
       }
     }
   },
@@ -101,7 +105,9 @@
       "saving": "Saving...",
       "error": {
         "titleRequired": "Title is required.",
-        "titleMax": "Title must be at most 100 characters."
+        "titleMax": "Title must be at most 100 characters.",
+        "descriptionMax": "Description must be at most 2000 characters.",
+        "categoryMax": "Category name must be at most 50 characters."
       }
     },
     "edit": {
@@ -213,7 +219,8 @@
     "delete": "Delete card",
     "error": {
       "questionRequired": "Question is required.",
-      "questionMax": "Question must be at most 500 characters."
+      "questionMax": "Question must be at most 5000 characters.",
+      "explanationMax": "Explanation must be at most 2000 characters."
     }
   },
   "study": {

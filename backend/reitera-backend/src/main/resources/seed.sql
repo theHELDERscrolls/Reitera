@@ -1,6 +1,12 @@
 -- ============================================================
 -- Reitera — Demo Seed Data
 -- ============================================================
+-- !!! DEV / DEMO ONLY — DO NOT RUN AGAINST PRODUCTION !!!
+-- The demo passwords below are public knowledge; running this
+-- script in production would expose two valid accounts.
+-- For a public demo account, manually INSERT a single user with
+-- a freshly generated strong password instead.
+-- ============================================================
 -- Prerequisites: run init.sql first.
 -- Passwords (BCrypt, strength 10): reitera2026 for both users.
 -- To re-seed: run truncate.sql first, then re-run this script.

@@ -12,13 +12,14 @@ public record DeckRequestDTO(
         @Size(max = 100, message = "Title cannot exceed 100 characters")
         String title,
 
+        @Size(max = 2000, message = "Description cannot exceed 2000 characters")
         String description,
 
         boolean isPublic,
 
-        Integer categoryId, // Optional: ID of an existing category
+        Integer categoryId,
 
         @Size(max = 50, message = "Category name cannot exceed 50 characters")
-        String categoryName // Optional: name of a new or existing category (find-or-create)
+        String categoryName
 ) {
 }

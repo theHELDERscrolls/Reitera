@@ -11,6 +11,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.24.1] — 2026-04-25 — chore/security-update
+
+### Security
+- Rate limiting on `/api/v1/auth/login` and `/api/v1/auth/register` — 5 requests per minute per IP using Bucket4j token-bucket; returns `429 Too Many Requests` with `Retry-After` header when exceeded; uses `X-Forwarded-For` for real IP on Render
+- HTTP security headers added to every response: `Strict-Transport-Security` (1 year, includeSubDomains), `Content-Security-Policy: default-src 'none'; frame-ancestors 'none'`, `X-Frame-Options: deny`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`
+- Input size constraints on all request DTOs: `UserRegisterDTO` (email ≤ 100, password ≤ 128, firstName ≤ 50, lastName ≤ 100), `RefreshRequestDTO` (token ≤ 512), `CardRequestDTO` (question ≤ 5 000, explanation ≤ 2 000, answerJson ≤ 10 KB), `DeckRequestDTO` (title ≤ 100, description ≤ 2 000, category ≤ 50), `NewTagDTO` (name ≤ 30)
+- Password complexity enforced on registration: 8+ chars, at least one digit, one lowercase, one uppercase, one special character (`@#$%^&+=!`)
+- Registration form mirrors backend constraints client-side (maxlength + pattern validators) to catch errors before submission
+- `.gitignore` updated to document and exclude secret override files (`application-local*.yml`, `application-secret.yml`, `.env.*`)
+
+### Changed
+- `backend/reitera-backend/pom.xml` version bumped to `0.21.1`; `bucket4j-core:8.10.1` added as dependency
+- `frontend/package.json` version bumped to `0.24.1`
+
+---
+
 ## [0.24.0] — 2026-04-23 — feature/48-stats-page
 ### Added
 - Dashboard page — fully implemented; replaces the previous stub with stat badges, activity heatmap, and last studied decks panel

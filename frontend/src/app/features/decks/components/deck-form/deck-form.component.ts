@@ -4,10 +4,10 @@ import { LucideX } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { Category } from '@core/models/category.model';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { DeckRequest, DeckResponse } from '@core/models/deck.model';
 import { DecksService } from '../../services/decks.service';
 import { ToastService } from '@core/toast/toast.service';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-deck-form',
@@ -31,9 +31,9 @@ export class DeckFormComponent {
 
   readonly form = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
-    description: [''],
+    description: ['', Validators.maxLength(2000)],
     isPublic: [false],
-    categoryName: [''],
+    categoryName: ['', Validators.maxLength(50)],
   });
 
   constructor() {
