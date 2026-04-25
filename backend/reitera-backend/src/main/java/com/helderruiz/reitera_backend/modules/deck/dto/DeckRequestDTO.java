@@ -17,9 +17,9 @@ public record DeckRequestDTO(
 
         boolean isPublic,
 
-        Integer categoryId, // Optional: ID of an existing category
+        Integer categoryId,
 
         @Size(max = 50, message = "Category name cannot exceed 50 characters")
-        String categoryName // Optional: name of a new or existing category (find-or-create)
+        String categoryName
 ) {
 }
