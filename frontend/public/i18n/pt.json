@@ -59,7 +59,11 @@
         "password_pattern": "Mín. 8 caracteres com maiúscula, minúscula, número e carácter especial (@#$%^&+=!).",
         "confirm_password_required": "Por favor, confirma a tua palavra-passe.",
         "password_mismatch": "As palavras-passe não coincidem.",
-        "server": "O registo falhou. Por favor, tenta novamente."
+        "server": "O registo falhou. Por favor, tenta novamente.",
+        "email_max": "O email não pode ter mais de 100 caracteres.",
+        "first_name_max": "O nome próprio não pode ter mais de 50 caracteres.",
+        "last_name_max": "O apelido não pode ter mais de 100 caracteres.",
+        "password_max": "A palavra-passe não pode ter mais de 128 caracteres."
       }
     }
   },
@@ -101,7 +105,9 @@
       "saving": "A guardar...",
       "error": {
         "titleRequired": "O título é obrigatório.",
-        "titleMax": "O título não pode ter mais de 100 caracteres."
+        "titleMax": "O título não pode ter mais de 100 caracteres.",
+        "descriptionMax": "A descrição não pode ter mais de 2000 caracteres.",
+        "categoryMax": "O nome da categoria não pode ter mais de 50 caracteres."
       }
     },
     "edit": {
@@ -213,7 +219,8 @@
     "delete": "Eliminar cartão",
     "error": {
       "questionRequired": "A pergunta é obrigatória.",
-      "questionMax": "A pergunta não pode ter mais de 500 caracteres."
+      "questionMax": "A pergunta não pode ter mais de 5000 caracteres.",
+      "explanationMax": "A explicação não pode ter mais de 2000 caracteres."
     }
   },
   "study": {

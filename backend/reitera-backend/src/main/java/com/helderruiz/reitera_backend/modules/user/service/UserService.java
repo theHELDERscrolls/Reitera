@@ -33,19 +33,19 @@ public class UserService {
      */
     public UserResponseDTO registerUser(UserRegisterDTO dto) {
         if (!dto.password().equals(dto.confirmPassword())) {
-            throw new RuntimeException("Passwords do not match");
+            throw new IllegalArgumentException("Passwords do not match");
         }
 
         if (userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new RuntimeException("The email is already registered");
+            throw new IllegalArgumentException("The email is already registered");
         }
 
         if (userRepository.findByUsername(dto.username()).isPresent()) {
-            throw new RuntimeException("The username is already in use");
+            throw new IllegalArgumentException("The username is already in use");
         }
 
         Role studentRole = roleRepository.findByName("STUDENT")
-                .orElseThrow(() -> new RuntimeException("Error: STUDENT role not found in database"));
+                .orElseThrow(() -> new IllegalStateException("STUDENT role not found in database"));
 
         User savedUser = userRepository.save(User.builder()
                 .username(dto.username())
@@ -88,10 +88,10 @@ public class UserService {
      */
     public AuthResponseDTO loginUser(UserLoginDTO dto) {
         User user = userRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
         if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new IllegalArgumentException("Invalid credentials");
         }
 
         String accessToken = jwtService.generateToken(user.getUsername(), user.getRole().getName());

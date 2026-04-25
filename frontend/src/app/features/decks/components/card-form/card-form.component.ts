@@ -1,5 +1,11 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { LucideMinus, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
@@ -11,7 +17,14 @@ import { ToastService } from '@core/toast/toast.service';
 
 @Component({
   selector: 'app-card-form',
-  imports: [LucideMinus, LucidePlus, LucideTrash2, ReactiveFormsModule, TagPillComponent, TranslocoPipe],
+  imports: [
+    LucideMinus,
+    LucidePlus,
+    LucideTrash2,
+    ReactiveFormsModule,
+    TagPillComponent,
+    TranslocoPipe,
+  ],
   templateUrl: './card-form.component.html',
 })
 export class CardFormComponent {
@@ -29,9 +42,16 @@ export class CardFormComponent {
   readonly deleted = output<void>();
 
   readonly TAG_PALETTE = [
-    '#3b82f6', '#22c55e', '#ef4444', '#a855f7',
-    '#ec4899', '#f97316', '#14b8a6', '#06b6d4',
-    '#6366f1', '#f59e0b',
+    '#3b82f6',
+    '#22c55e',
+    '#ef4444',
+    '#a855f7',
+    '#ec4899',
+    '#f97316',
+    '#14b8a6',
+    '#06b6d4',
+    '#6366f1',
+    '#f59e0b',
   ];
 
   readonly isSaving = signal(false);
@@ -51,6 +71,7 @@ export class CardFormComponent {
   readonly filteredTags = computed(() => {
     const q = this.tagInput().toLowerCase().trim();
     const selectedIds = this.selectedTagIds();
+
     return this.tags().filter(
       (t) => !selectedIds.includes(t.id) && (q === '' || t.name.toLowerCase().includes(q)),
     );
@@ -58,18 +79,21 @@ export class CardFormComponent {
 
   readonly canCreateNew = computed(() => {
     const q = this.tagInput().trim();
+
     if (!q) return false;
+
     const alreadyExists = this.tags().some((t) => t.name.toLowerCase() === q.toLowerCase());
     const alreadyPending = this.pendingNewTags().some(
       (t) => t.name.toLowerCase() === q.toLowerCase(),
     );
+
     return !alreadyExists && !alreadyPending;
   });
 
   readonly form = this.fb.group({
     type: ['BASIC' as CardType, Validators.required],
-    question: ['', [Validators.required, Validators.maxLength(500)]],
-    explanation: [''],
+    question: ['', [Validators.required, Validators.maxLength(5000)]],
+    explanation: ['', Validators.maxLength(2000)],
     basicAnswer: [''],
     options: this.fb.array([this.fb.control(''), this.fb.control('')]),
     correctIndex: [0],
@@ -93,9 +117,14 @@ export class CardFormComponent {
     return this.form.controls.question;
   }
 
+  get explanationControl() {
+    return this.form.controls.explanation;
+  }
+
   constructor() {
     effect(() => {
       const card = this.cardToEdit();
+
       if (card) {
         this.populateForm(card);
       } else {
@@ -112,12 +141,15 @@ export class CardFormComponent {
 
   removeOption(index: number): void {
     if (this.optionsArray.length <= 2) return;
+
     const current = this.form.controls.correctIndex.value ?? 0;
+
     if (current === index) {
       this.form.controls.correctIndex.setValue(0);
     } else if (current > index) {
       this.form.controls.correctIndex.setValue(current - 1);
     }
+
     this.optionsArray.removeAt(index);
   }
 
@@ -141,7 +173,9 @@ export class CardFormComponent {
 
   addNewTag(): void {
     const name = this.tagInput().trim();
+
     if (!name || !this.canCreateNew()) return;
+
     this.pendingNewTags.update((tags) => [...tags, { name, hexColor: this.pendingColor() }]);
     this.tagInput.set('');
     this.isTagDropdownOpen.set(false);
@@ -190,15 +224,18 @@ export class CardFormComponent {
 
   private buildAnswerJson(): Record<string, unknown> {
     const v = this.form.getRawValue();
+
     if (v.type === 'BASIC') {
       return { answer: v.basicAnswer ?? '' };
     }
+
     if (v.type === 'MULTIPLE_CHOICE') {
       return {
         options: this.optionsArray.controls.map((c) => c.value ?? ''),
         correctIndex: v.correctIndex ?? 0,
       };
     }
+
     return { correct: v.trueFalseCorrect ?? true };
   }
 
@@ -213,9 +250,13 @@ export class CardFormComponent {
       this.form.patchValue({ basicAnswer: (card.answerJson['answer'] as string) ?? '' });
     } else if (card.type === 'MULTIPLE_CHOICE') {
       const saved = (card.answerJson['options'] as string[]) ?? [];
-      const options = saved.length >= 2 ? saved : [...saved, ...new Array(2 - saved.length).fill('')];
+      const options =
+        saved.length >= 2 ? saved : [...saved, ...new Array(2 - saved.length).fill('')];
+
       while (this.optionsArray.length > 0) this.optionsArray.removeAt(0);
+
       options.forEach((opt) => this.optionsArray.push(this.fb.control(opt)));
+
       this.form.controls.correctIndex.setValue((card.answerJson['correctIndex'] as number) ?? 0);
     } else if (card.type === 'TRUE_FALSE') {
       this.form.patchValue({ trueFalseCorrect: (card.answerJson['correct'] as boolean) ?? true });

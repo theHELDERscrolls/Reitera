@@ -26,18 +26,18 @@
             [placeholder]="'auth.register.username_placeholder' | transloco"
             autocomplete="username"
             class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-            [class.border-error]="username?.invalid && username?.touched"
+            [class.border-error]="form.controls.username.invalid && form.controls.username.touched"
           />
-          @if (username?.invalid && username?.touched) {
-            @if (username?.hasError('required')) {
+          @if (form.controls.username.invalid && form.controls.username.touched) {
+            @if (form.controls.username.hasError('required')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.username_required' | transloco
               }}</span>
-            } @else if (username?.hasError('minlength')) {
+            } @else if (form.controls.username.hasError('minlength')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.username_min' | transloco
               }}</span>
-            } @else if (username?.hasError('maxlength')) {
+            } @else if (form.controls.username.hasError('maxlength')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.username_max' | transloco
               }}</span>
@@ -57,16 +57,20 @@
             [placeholder]="'auth.register.email_placeholder' | transloco"
             autocomplete="email"
             class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-            [class.border-error]="email?.invalid && email?.touched"
+            [class.border-error]="form.controls.email.invalid && form.controls.email.touched"
           />
-          @if (email?.invalid && email?.touched) {
-            @if (email?.hasError('required')) {
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            @if (form.controls.email.hasError('required')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.email_required' | transloco
               }}</span>
-            } @else if (email?.hasError('email')) {
+            } @else if (form.controls.email.hasError('email')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.email_invalid' | transloco
+              }}</span>
+            } @else if (form.controls.email.hasError('maxlength')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.email_max' | transloco
               }}</span>
             }
           }
@@ -85,12 +89,20 @@
               [placeholder]="'auth.register.first_name_placeholder' | transloco"
               autocomplete="given-name"
               class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              [class.border-error]="firstName?.invalid && firstName?.touched"
+              [class.border-error]="
+                form.controls.firstName.invalid && form.controls.firstName.touched
+              "
             />
-            @if (firstName?.invalid && firstName?.touched) {
-              <span class="text-xs text-error">{{
-                'auth.register.error.first_name_required' | transloco
-              }}</span>
+            @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
+              @if (form.controls.firstName.hasError('required')) {
+                <span class="text-xs text-error">{{
+                  'auth.register.error.first_name_required' | transloco
+                }}</span>
+              } @else if (form.controls.firstName.hasError('maxlength')) {
+                <span class="text-xs text-error">{{
+                  'auth.register.error.first_name_max' | transloco
+                }}</span>
+              }
             }
           </div>
 
@@ -105,12 +117,20 @@
               [placeholder]="'auth.register.last_name_placeholder' | transloco"
               autocomplete="family-name"
               class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              [class.border-error]="lastName?.invalid && lastName?.touched"
+              [class.border-error]="
+                form.controls.lastName.invalid && form.controls.lastName.touched
+              "
             />
-            @if (lastName?.invalid && lastName?.touched) {
-              <span class="text-xs text-error">{{
-                'auth.register.error.last_name_required' | transloco
-              }}</span>
+            @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
+              @if (form.controls.lastName.hasError('required')) {
+                <span class="text-xs text-error">{{
+                  'auth.register.error.last_name_required' | transloco
+                }}</span>
+              } @else if (form.controls.lastName.hasError('maxlength')) {
+                <span class="text-xs text-error">{{
+                  'auth.register.error.last_name_max' | transloco
+                }}</span>
+              }
             }
           </div>
         </div>
@@ -127,14 +147,18 @@
             [placeholder]="'auth.register.password_placeholder' | transloco"
             autocomplete="new-password"
             class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-            [class.border-error]="password?.invalid && password?.touched"
+            [class.border-error]="form.controls.password.invalid && form.controls.password.touched"
           />
-          @if (password?.invalid && password?.touched) {
-            @if (password?.hasError('required')) {
+          @if (form.controls.password.invalid && form.controls.password.touched) {
+            @if (form.controls.password.hasError('required')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.password_required' | transloco
               }}</span>
-            } @else if (password?.hasError('pattern')) {
+            } @else if (form.controls.password.hasError('maxlength')) {
+              <span class="text-xs text-error">{{
+                'auth.register.error.password_max' | transloco
+              }}</span>
+            } @else if (form.controls.password.hasError('pattern')) {
               <span class="text-xs text-error">{{
                 'auth.register.error.password_pattern' | transloco
               }}</span>
@@ -154,9 +178,11 @@
             [placeholder]="'auth.register.confirm_password_placeholder' | transloco"
             autocomplete="new-password"
             class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-            [class.border-error]="confirmPassword?.touched && form.hasError('passwordMismatch')"
+            [class.border-error]="
+              form.controls.confirmPassword.touched && form.hasError('passwordMismatch')
+            "
           />
-          @if (confirmPassword?.touched && form.hasError('passwordMismatch')) {
+          @if (form.controls.confirmPassword.touched && form.hasError('passwordMismatch')) {
             <span class="text-xs text-error">{{
               'auth.register.error.password_mismatch' | transloco
             }}</span>

@@ -194,6 +194,11 @@
           [placeholder]="'cardForm.explanation.placeholder' | transloco"
           class="px-3 py-2 text-sm transition-colors border rounded-lg resize-none bg-overlay border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
         ></textarea>
+        @if (explanationControl.invalid && explanationControl.touched) {
+          @if (explanationControl.errors?.['maxlength']) {
+            <p class="text-xs text-error">{{ 'cardForm.error.explanationMax' | transloco }}</p>
+          }
+        }
       </div>
 
       <!-- Tag combobox -->
@@ -269,7 +274,11 @@
                         (mousedown)="pendingColor.set(color)"
                         [attr.aria-label]="color"
                         class="transition-all rounded-full shrink-0"
-                        [class]="pendingColor() === color ? 'size-5' : 'size-4 opacity-70 hover:opacity-100'"
+                        [class]="
+                          pendingColor() === color
+                            ? 'size-5'
+                            : 'size-4 opacity-70 hover:opacity-100'
+                        "
                         [style.background-color]="color"
                       ></button>
                     }

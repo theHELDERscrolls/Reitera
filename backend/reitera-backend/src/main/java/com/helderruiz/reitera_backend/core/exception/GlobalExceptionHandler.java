@@ -1,5 +1,7 @@
 package com.helderruiz.reitera_backend.core.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Centralized exception handler for all REST controllers.
@@ -16,6 +19,8 @@ import java.util.Map;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * Handles Bean Validation errors (@NotBlank, @Email, etc.) and returns HTTP 400
@@ -56,22 +61,45 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handles business rule violations (duplicate email, invalid card type, etc.) and returns HTTP 400.
+     * Handles business rule violations explicitly thrown by services (duplicate email,
+     * invalid card-deck relation, etc.) and returns HTTP 400 with the original message.
+     * Messages thrown via IllegalArgumentException are considered safe to expose to clients.
      */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> handleRuntimeExceptions(RuntimeException ex) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     /**
-     * Handles unexpected internal errors and returns HTTP 500 without exposing details.
+     * Handles unexpected internal errors (e.g. missing required system data) and returns HTTP 500
+     * without exposing the original message to the client.
      */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> handleIllegalState(IllegalStateException ex) {
+        String correlationId = UUID.randomUUID().toString();
+        log.error("Internal server error [correlationId={}]", correlationId, ex);
+
         Map<String, String> error = new HashMap<>();
         error.put("error", "An internal server error occurred");
+        error.put("correlationId", correlationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    /**
+     * Catch-all for any unhandled RuntimeException. Returns HTTP 500 with a generic message
+     * and a correlation ID; the full stack trace is logged server-side so support can match
+     * a user report to a server log without leaking internal details over the wire.
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeExceptions(RuntimeException ex) {
+        String correlationId = UUID.randomUUID().toString();
+        log.error("Unhandled runtime exception [correlationId={}]", correlationId, ex);
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "An unexpected error occurred");
+        error.put("correlationId", correlationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

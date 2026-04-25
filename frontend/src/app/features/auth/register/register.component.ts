@@ -1,18 +1,26 @@
-import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { AuthService } from '@core/auth/auth.service';
+import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
 import { RegisterRequest } from '@core/models/auth.model';
 import { ToastService } from '@core/toast/toast.service';
-import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
 
 const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
 
 const matchPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
   const password = group.get('password')?.value;
   const confirmPassword = group.get('confirmPassword')?.value;
+
   return password === confirmPassword ? null : { passwordMismatch: true };
 };
 
@@ -34,21 +42,17 @@ export default class RegisterComponent {
   readonly form = this.fb.group(
     {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      password: ['', [Validators.required, Validators.pattern(passwordPattern)]],
-      confirmPassword: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(100)]],
+      password: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern(passwordPattern)],
+      ],
+      confirmPassword: ['', [Validators.required, Validators.maxLength(128)]],
     },
     { validators: matchPasswords },
   );
-
-  get username() { return this.form.get('username'); }
-  get email() { return this.form.get('email'); }
-  get firstName() { return this.form.get('firstName'); }
-  get lastName() { return this.form.get('lastName'); }
-  get password() { return this.form.get('password'); }
-  get confirmPassword() { return this.form.get('confirmPassword'); }
 
   submit(): void {
     if (this.form.invalid) {
@@ -64,7 +68,9 @@ export default class RegisterComponent {
         void this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.toast.error(err.error?.message ?? this.transloco.translate('auth.register.error.server'));
+        this.toast.error(
+          err.error?.message ?? this.transloco.translate('auth.register.error.server'),
+        );
         this.loading.set(false);
       },
     });

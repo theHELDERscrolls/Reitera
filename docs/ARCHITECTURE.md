@@ -247,6 +247,33 @@ The same enumeration principle applies here. Returning `404` for a non-existent 
 
 ### `authorName` uses the nickname (`username` field), not `firstName + lastName`
 
+### Rate limiting on authentication endpoints
+
+Login and register endpoints are rate-limited to **5 requests per minute per client IP** using Bucket4j's token-bucket algorithm (`RateLimitFilter`, runs before the JWT filter). When the bucket is empty the server returns `429 Too Many Requests` with a `Retry-After: 60` header so clients know when to retry.
+
+The real IP is read from the `X-Forwarded-For` header first (needed for the Render reverse-proxy), falling back to `request.getRemoteAddr()`. Buckets are kept in a `ConcurrentHashMap` — one bucket per IP string. This is adequate for a single-instance deployment; a Redis-backed bucket would be needed for horizontal scaling.
+
+### HTTP security headers
+
+Every response includes a fixed set of security headers applied globally in `SecurityConfig`:
+
+| Header | Value | Protects against |
+|--------|-------|-----------------|
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Protocol downgrade / MITM |
+| `Content-Security-Policy` | `default-src 'none'; frame-ancestors 'none'` | Content injection, framing |
+| `X-Frame-Options` | `deny` | Clickjacking |
+| `X-Content-Type-Options` | `nosniff` | MIME-type sniffing |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Referrer leakage |
+
+### Input size constraints
+
+All request DTOs carry `@Size` (and `@Pattern` for colors) constraints validated by Spring's `@Valid` pipeline. The limits mirror the database column sizes and prevent oversized payloads from reaching the service layer:
+
+- Auth: email ≤ 100, password ≤ 128, refresh token ≤ 512
+- Deck: title ≤ 100, description ≤ 2 000, category ≤ 50
+- Card: question ≤ 5 000, explanation ≤ 2 000, `answerJson` ≤ 10 KB (custom validator)
+- Tag: name ≤ 30, hexColor must match `^#[0-9A-Fa-f]{6}$`
+
 ---
 
 ## CI Pipeline

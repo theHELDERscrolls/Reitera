@@ -25,6 +25,7 @@ Access tokens are valid for **15 minutes**. When expired, call `POST /api/v1/aut
 | `400` | Validation error, bad request body, or business rule violation |
 | `401` | Token missing, expired, or invalid — re-authenticate |
 | `404` | Resource not found **or** resource exists but belongs to another user (IDOR prevention — both cases return the same 404) |
+| `429` | Rate limit exceeded on auth endpoints — wait the number of seconds in `Retry-After` before retrying |
 | `500` | Internal server error — details are intentionally hidden |
 
 ---
