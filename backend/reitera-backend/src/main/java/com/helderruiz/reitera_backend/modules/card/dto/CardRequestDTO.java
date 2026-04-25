@@ -53,7 +53,7 @@ public record CardRequestDTO(
     @AssertTrue(message = "Answer JSON cannot exceed 10000 bytes when serialized")
     public boolean isAnswerJsonWithinLimit() {
         if (answerJson == null) {
-            return true; // @NotNull handles the null case separately
+            return true;
         }
         try {
             byte[] bytes = MAPPER.writeValueAsString(answerJson).getBytes(StandardCharsets.UTF_8);
