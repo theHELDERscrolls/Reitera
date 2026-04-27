@@ -4,6 +4,7 @@ import com.helderruiz.reitera_backend.modules.auth.filter.JwtAuthenticationFilte
 import com.helderruiz.reitera_backend.modules.auth.filter.RateLimitFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -25,6 +28,9 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final RateLimitFilter rateLimitFilter;
     private final AuthenticationProvider authenticationProvider;
+
+    @Value("${app.cors.allowed-origins}")
+    private String corsOrigins;
 
     /**
      * Configures the security filter chain: disables CSRF, enables CORS,
@@ -38,6 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -65,17 +72,16 @@ public class SecurityConfig {
 
     /**
      * Defines the CORS policy applied to all endpoints.
-     * Allows the Angular dev server ({@code localhost:4200}) to make cross-origin
-     * requests with {@code Authorization} and {@code Content-Type} headers.
-     * The preflight response is cached for 1 hour to reduce OPTIONS overhead.
-     *
-     * @return a {@link CorsConfigurationSource} registered for all URL patterns.
+     * Allowed origins are read from {@code app.cors.allowed-origins} (comma-separated),
+     * which varies per Spring profile (dev vs prod).
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://localhost:4200");
+        Arrays.stream(corsOrigins.split(","))
+                .map(String::trim)
+                .forEach(configuration::addAllowedOrigin);
         configuration.addAllowedMethod("GET");
         configuration.addAllowedMethod("POST");
         configuration.addAllowedMethod("PUT");

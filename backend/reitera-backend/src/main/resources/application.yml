@@ -4,33 +4,25 @@ server:
 spring:
   application:
     name: reitera-backend
-
-  # PostgreSQL Database Configuration (Local Docker environment)
-  datasource:
-    url: jdbc:postgresql://localhost:5432/reitera_db
-    username: reitera_admin
-    password: reitera_password
-    driver-class-name: org.postgresql.Driver
-
-  # JPA & Hibernate Configuration
+  profiles:
+    active: dev
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      # 'none' ensures Hibernate does not auto-modify the schema. Relies on manual SQL scripts/Flyway.
       ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
 
-# Custom API Security Properties
 api:
   security:
     jwt:
-      # Secret key for HMAC-SHA token signing. Must be injected via env variables in production.
-      secret-key: "ReiteraAppSuperSecretKeyForJWTGenerationDoNotShare2026!"
-      # Access token validity in milliseconds (900000 ms = 15 minutes)
       expiration-time: 900000
     refresh-token:
-      # Refresh token validity in days (7 days)
       expiration-days: 7
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
