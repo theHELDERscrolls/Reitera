@@ -75,10 +75,6 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full breakdown of modul
 - Postman collection: [docs/api/reitera-postman-collection.json](docs/api/reitera-postman-collection.json)
 - Endpoint docs: [docs/api/](docs/api/)
 
-## Roadmap
-
-Future features are tracked as GitHub issues with the `roadmap` label.
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
