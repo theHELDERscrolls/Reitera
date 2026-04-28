@@ -292,3 +292,43 @@ A GitHub Actions workflow (`.github/workflows/ci.yml`) validates every push and 
 Deck author attribution uses the unique `username` field (the user's chosen nickname) rather than `firstName + lastName`. Full names are not unique — multiple users can share the same name. The `username` column has a unique constraint and unambiguously identifies the author.
 
 **Implementation note:** `User` implements Spring Security's `UserDetails`, which forces an override of `getUsername()` to return the email (the authentication principal). Lombok cannot generate a getter for the `username` field because that method name is taken. A dedicated `getNickname()` method exposes the actual nickname value. Any code that needs the display username must call `getNickname()`, not `getUsername()`.
+
+---
+
+## Production Deployment
+
+Reitera is deployed as three independent services connected over HTTPS:
+
+```
+Browser
+  │
+  ├─► Vercel (frontend — Angular SPA, static build, CDN)
+  │
+  └─► Render Web Service (backend — Spring Boot, Docker)
+            │
+            └─► Supabase PostgreSQL (managed PostgreSQL 16, Frankfurt)
+```
+
+| Service | Provider | Notes |
+|---|---|---|
+| Frontend | Vercel | Auto-deploys from `main`; output dir `dist/frontend/browser` |
+| Backend | Render (free tier) | Docker runtime; `spring.profiles.active=prod`; spins down after 15 min inactivity |
+| Database | Supabase (free tier) | Direct connection port 5432; HikariCP pool capped at 5 connections |
+| Keep-alive | UptimeRobot | Pings `/actuator/health` every 5 min to prevent Render cold starts |
+
+### Spring Boot profiles
+
+`application.yml` holds shared defaults. Profile-specific files override per environment:
+
+| File | Activated by | Purpose |
+|---|---|---|
+| `application-dev.yml` | default (`spring.profiles.active: dev` in `application.yml`) | Local Docker DB, dev JWT secret, Swagger on |
+| `application-prod.yml` | `SPRING_PROFILES_ACTIVE=prod` env var on Render | All secrets via env vars, Swagger off, HikariCP tuned |
+
+### CORS
+
+Allowed origins are read from `app.cors.allowed-origins` (comma-separated string), injected via `@Value` in `SecurityConfig`. In dev: `http://localhost:4200`. In prod: the Vercel domain, set via `CORS_ALLOWED_ORIGINS` environment variable in Render.
+
+### Health check
+
+`GET /actuator/health` — public endpoint (no auth required). Returns `{"status":"UP"}` when the application and database connection are healthy. Configured as the Render health check path and the UptimeRobot monitor URL.

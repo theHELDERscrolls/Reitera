@@ -78,10 +78,13 @@ The collection includes:
 
 ## Environment Variables
 
-The backend reads configuration from `application.yml`. For local development, no additional environment variables are needed — defaults work out of the box.
+All local configuration lives in `backend/reitera-backend/src/main/resources/application-dev.yml`, which is loaded automatically because `spring.profiles.active: dev` is set as the default in `application.yml`. No environment variables are needed to run locally.
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `server.port` | `8080` | Backend API port |
-| `spring.datasource.url` | `jdbc:postgresql://localhost:5432/reitera_db` | Database URL |
-| `api.security.jwt.expiration-time` | `900000` (15 min) | JWT token lifetime in ms |
+To verify the backend is running correctly, check the health endpoint:
+
+```bash
+curl http://localhost:8080/actuator/health
+# Expected: {"status":"UP"}
+```
+
+For production environment variables and the deployment setup, see [docs/ARCHITECTURE.md — Production Deployment](../ARCHITECTURE.md#production-deployment).
