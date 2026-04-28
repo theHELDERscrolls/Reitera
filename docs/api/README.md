@@ -4,6 +4,8 @@
 
 **Interactive docs:** `http://localhost:8080/swagger-ui.html`
 
+> **Note:** Swagger UI is only available in the `dev` profile. It is disabled in production (`springdoc.swagger-ui.enabled: false` in `application-prod.yml`).
+
 ---
 
 ## Authentication

@@ -11,6 +11,30 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.25.0] — 2026-04-28 — chore/demo-deployment
+
+### Added
+- `backend/.../resources/application-dev.yml` — new dev profile with local Docker datasource, hardcoded JWT secret (dev-only), CORS to `localhost:4200`, Swagger enabled
+- `backend/.../resources/application-prod.yml` — new prod profile reading all credentials from env vars (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`, `JWT_SECRET_KEY`, `CORS_ALLOWED_ORIGINS`); HikariCP capped at 5 connections; Swagger disabled
+- Spring Boot Actuator (`spring-boot-starter-actuator`) — exposes `GET /actuator/health` with no auth required; used as Render health check path and UptimeRobot keep-alive target
+- `backend/reitera-backend/Dockerfile` — multi-stage build: stage 1 compiles with `eclipse-temurin:21-jdk-alpine`, stage 2 runs the JAR with `eclipse-temurin:21-jre-alpine` and `spring.profiles.active=prod`; required because Render has no native Java runtime
+- `frontend/public/manifest.webmanifest` — defines Reitera as a basic installable PWA: `display: standalone`, `theme_color: #1e1e2e`, 192 and 512 px icons
+- `frontend/public/robots.txt` — allows full search engine indexing
+- `frontend/public/icons/icon-192.png` and `icon-512.png` — generated from `reitera_logo.png` via ImageMagick
+- `frontend/public/favicon.ico` — multi-size (16, 32, 48 px) generated from the logo
+- `LICENSE` — MIT, Copyright 2026 Helder Ruiz
+- `README.md` — written from scratch: tagline, badges, project description, tech stack, 3-step local setup, links to internal docs, author
+- `CONTRIBUTING.md` — branching model, Conventional Commits style, PR flow, test/lint commands, contact email
+
+### Changed
+- `backend/.../resources/application.yml` — reduced to shared defaults only: port, app name, JPA dialect, `ddl-auto: none`, JWT expiration times, Actuator config; `spring.profiles.active: dev` set as default so local dev requires no extra env vars
+- `backend/.../config/SecurityConfig.java` — CORS externalized: `addAllowedOrigin("http://localhost:4200")` replaced by `@Value("${app.cors.allowed-origins}")` + split-by-comma loop; `/actuator/health` added to `permitAll()`
+- `frontend/src/index.html` — full SEO rewrite: proper `<title>`, `<meta name="description">`, Open Graph (`og:title`, `og:description`, `og:type`, `og:url`, `og:image`), Twitter Card, `theme-color: #1e1e2e`, `<link rel="manifest">`
+- `frontend/src/environments/environment.ts` — `apiUrl` set to `https://reitera-backend.onrender.com/api/v1`
+- `CLAUDE.md` — i18n file list updated to `{en,es,fr,pt}.json`
+
+---
+
 ## [0.24.1] — 2026-04-25 — chore/security-update
 
 ### Security
