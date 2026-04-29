@@ -20,5 +20,7 @@ Closes #[Issue Number]
 
 - [ ] The code compiles successfully.
 - [ ] I have self-reviewed my code before opening this PR.
+- [ ] Tests pass (`ng test` / `mvn test`).
+- [ ] Lint passes (`ng lint`).
 - [ ] I have updated/created the necessary documentation.
 - [ ] Local database and endpoints work properly with these changes.

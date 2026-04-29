@@ -1,59 +1,39 @@
-# Frontend
+# Frontend — Reitera
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+Angular 21 SPA for the Reitera spaced repetition flashcard application. Uses standalone components, Angular Signals for state management, Transloco for i18n (EN / ES / FR / PT), and Tailwind CSS v4 with the Catppuccin colour theme.
+
+## Requirements
+
+- Node.js 22 LTS
+- npm 10+
+- Angular CLI 21 (`npm install -g @angular/cli`)
 
 ## Development server
 
-To start a local development server, run:
-
 ```bash
+npm install
 ng serve
+# App available at http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Requires the backend running at `http://localhost:8080`. See [docs/setup/local-environment.md](../docs/setup/local-environment.md) for the full stack setup.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Commands
 
 ```bash
-ng generate component component-name
+ng serve    # dev server on http://localhost:4200
+ng build    # production build → dist/
+ng test     # unit tests (Vitest + jsdom)
+ng lint     # ESLint
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Environments
 
-```bash
-ng generate --help
-```
+| File | Used when | API URL |
+|---|---|---|
+| `src/environments/environment.development.ts` | `ng serve` (default) | `http://localhost:8080/api/v1` |
+| `src/environments/environment.ts` | `ng build` (production) | `https://reitera-backend.onrender.com/api/v1` |
 
-## Building
+## Architecture
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+See [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) for the full frontend folder structure, routing pattern, state management conventions, and design token system.

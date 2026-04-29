@@ -22,4 +22,3 @@ assignees: ""
 ## Time Tracking
 
 - **Estimated Time:** X hours
-- **Real Time:** Y hours

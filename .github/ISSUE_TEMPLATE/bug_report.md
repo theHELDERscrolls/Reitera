@@ -22,9 +22,11 @@ assignees: ""
 
 ## Environment
 
-- OS: [e.g., Linux]
-- Client / Browser: [e.g., Postman]
-- Java/Spring Version: [e.g., 21]
+- OS: [e.g., Linux, macOS, Windows]
+- Browser: [e.g., Chrome 124, Firefox 126]
+- App version: [e.g., 0.25.0]
+- Angular CLI version: [e.g., 21.0.1] *(frontend bugs)*
+- Java version: [e.g., 21] *(backend bugs)*
 
 ## Logs / Screenshots
 

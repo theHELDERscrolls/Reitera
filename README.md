@@ -7,41 +7,38 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-green?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
 
----
-
 ## What is Reitera?
 
-Reitera is a TFG (final degree project) web application for learning with flashcards using spaced repetition. It implements the **FSRS-6** algorithm — the same science behind Anki — to schedule card reviews at the optimal moment before you forget them.
+Reitera is a web application for learning with flashcards using spaced repetition. It implements the **FSRS-6** algorithm — the same science behind Anki — to schedule card reviews at the optimal moment before you forget them.
 
 Cards support three types: basic (front/back), multiple choice, and true/false. Progress is tracked per user per card, so two people studying the same deck each have independent learning curves.
 
 ## Live demo
 
-> **URL:** [https://reitera.vercel.app](https://reitera.vercel.app) *(available after deployment)*
->
-> Demo credentials will be added here after the first production deploy.
+> **URL:** [https://reitera.vercel.app](https://reitera.vercel.app)
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Angular 21 — standalone components, signals, Transloco i18n, Tailwind CSS |
-| Backend | Spring Boot 4.0.3 — stateless JWT auth (15 min access + 7 day refresh), Spring Security, JPA |
-| Database | PostgreSQL 16 — JSONB for card variants, manual schema management |
-| Dev DB | Docker Compose |
-| Deployment | Vercel (frontend) · Render (backend) · Supabase (database) |
+| Layer      | Technology                                                                                   |
+| ---------- | -------------------------------------------------------------------------------------------- |
+| Frontend   | Angular 21 — standalone components, signals, Transloco i18n, Tailwind CSS                    |
+| Backend    | Spring Boot 4.0.3 — stateless JWT auth (15 min access + 7 day refresh), Spring Security, JPA |
+| Database   | PostgreSQL 16 — JSONB for card variants, manual schema management                            |
+| Dev DB     | Docker Compose                                                                               |
+| Deployment | Vercel (frontend) · Render (backend) · Supabase (database)                                   |
 
 ## Local development
 
 ### Prerequisites
 
-- Node.js 20+, Angular CLI 21
+- Node.js 22 LTS, Angular CLI 21
 - Java 21, Maven 3.9+
 - Docker (for the local database)
 
 ### Setup (3 steps)
 
 **1. Start the database**
+
 ```bash
 docker-compose up -d
 # Then connect to psql and run:
@@ -50,6 +47,7 @@ docker-compose up -d
 ```
 
 **2. Start the backend**
+
 ```bash
 cd backend/reitera-backend
 mvn spring-boot:run
@@ -57,6 +55,7 @@ mvn spring-boot:run
 ```
 
 **3. Start the frontend**
+
 ```bash
 cd frontend
 ng serve
@@ -87,4 +86,4 @@ MIT — see [LICENSE](LICENSE).
 
 **Helder Ruiz** — [manuhelderruiz@gmail.com](mailto:manuhelderruiz@gmail.com)
 
-TFG project — Higher Degree in Web Application Development (DAW).
+Started as a Higher Degree final project (DAW), developed into a fully-featured application.

@@ -2,7 +2,7 @@
 
 **Base URL (local):** `http://localhost:8080`
 
-**Interactive docs:** `http://localhost:8080/swagger-ui.html`
+**Interactive docs:** `http://localhost:8080/swagger-ui/index.html`
 
 > **Note:** Swagger UI is only available in the `dev` profile. It is disabled in production (`springdoc.swagger-ui.enabled: false` in `application-prod.yml`).
 

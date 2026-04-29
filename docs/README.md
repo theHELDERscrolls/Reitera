@@ -20,5 +20,5 @@ This directory contains all technical documentation for the Reitera project.
 
 | Document | Description |
 |---|---|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture, module structure, and key design decisions |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture index — backend, frontend, security, and deployment |
 | [CHANGELOG.md](CHANGELOG.md) | Version history and feature log |

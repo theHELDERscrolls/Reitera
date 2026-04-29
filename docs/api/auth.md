@@ -76,7 +76,7 @@ Issues a new access token and a rotated refresh token. The old refresh token is 
 }
 ```
 
-**Errors:** `400` if the token is missing · `500` if the token is invalid, expired, or already revoked.
+**Errors:** `400` if the token is missing · `401` if the token is invalid, expired, or already revoked.
 
 ---
 
@@ -92,4 +92,4 @@ Revokes all active refresh tokens for the user identified by the provided refres
 
 **Response `204 No Content`**
 
-**Errors:** `400` if the token is missing · `500` if the token is invalid or already revoked.
+**Errors:** `400` if the token is missing · `401` if the token is invalid or already revoked.
