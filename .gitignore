@@ -1,0 +1,41 @@
+# ===== Java / Maven =====
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# ===== Spring Boot =====
+# Local secret overrides — never commit
+application-local*.yml
+application-staging*.yml
+application-secret.yml
+application-secrets.yml
+*.env
+.env.*
+!.env.example
+
+# ===== Node / Angular =====
+node_modules/
+dist/
+.angular/
+
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Obsidian (docs viewer) =====
+docs/.obsidian/
+
+# ===== Claude Code =====
+CLAUDE.md

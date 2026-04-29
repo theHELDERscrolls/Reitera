@@ -1,0 +1,20 @@
+<div [class]="containerClass()">
+  <span [class]="badgeBase() + ' bg-accent-1/20 text-accent-1'">
+    {{ newCount() }}
+    @if (newLabel()) {
+      {{ newLabel() }}
+    }
+  </span>
+  <span [class]="badgeBase() + ' bg-accent-5/20 text-accent-5'">
+    {{ dueCount() }}
+    @if (dueLabel()) {
+      {{ dueLabel() }}
+    }
+  </span>
+  <span [class]="badgeBase() + ' bg-error/20 text-error'">
+    {{ relearningCount() }}
+    @if (relearningLabel()) {
+      {{ relearningLabel() }}
+    }
+  </span>
+</div>

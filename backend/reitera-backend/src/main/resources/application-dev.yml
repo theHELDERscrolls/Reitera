@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/reitera_db
+    username: reitera_admin
+    password: reitera_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+api:
+  security:
+    jwt:
+      secret-key: "ReiteraAppSuperSecretKeyForJWTGenerationDoNotShare2026!"
+
+app:
+  cors:
+    allowed-origins: http://localhost:4200
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true

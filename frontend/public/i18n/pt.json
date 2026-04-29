@@ -1,0 +1,361 @@
+{
+  "common": {
+    "loading": "A carregar...",
+    "error": "Ocorreu um erro. Por favor, tente novamente.",
+    "or": "ou",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar"
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo de volta",
+      "subtitle": "Inicia sessão na tua conta",
+      "email": "Email",
+      "email_placeholder": "tu@exemplo.com",
+      "password": "Palavra-passe",
+      "password_placeholder": "A tua palavra-passe",
+      "submit": "Iniciar sessão",
+      "submitting": "A iniciar sessão...",
+      "no_account": "Não tens conta?",
+      "go_register": "Regista-te",
+      "success": "Bem-vindo de volta! Sessão iniciada com sucesso.",
+      "error": {
+        "email_required": "O email é obrigatório.",
+        "email_invalid": "Introduz um endereço de email válido.",
+        "password_required": "A palavra-passe é obrigatória.",
+        "server": "Credenciais inválidas. Por favor, tenta novamente."
+      }
+    },
+    "register": {
+      "title": "Criar conta",
+      "subtitle": "Começa a tua jornada de aprendizagem",
+      "username": "Nome de utilizador",
+      "username_placeholder": "o_teu_nome",
+      "email": "Email",
+      "email_placeholder": "tu@exemplo.com",
+      "first_name": "Nome próprio",
+      "first_name_placeholder": "João",
+      "last_name": "Apelido",
+      "last_name_placeholder": "Silva",
+      "password": "Palavra-passe",
+      "password_placeholder": "Mín. 8 caracteres",
+      "confirm_password": "Confirmar palavra-passe",
+      "confirm_password_placeholder": "Repete a tua palavra-passe",
+      "submit": "Criar conta",
+      "submitting": "A criar conta...",
+      "has_account": "Já tens conta?",
+      "go_login": "Iniciar sessão",
+      "success": "Conta criada! Bem-vindo ao Reitera.",
+      "error": {
+        "username_required": "O nome de utilizador é obrigatório.",
+        "username_min": "O nome de utilizador deve ter pelo menos 3 caracteres.",
+        "username_max": "O nome de utilizador não pode ter mais de 50 caracteres.",
+        "email_required": "O email é obrigatório.",
+        "email_invalid": "Introduz um endereço de email válido.",
+        "first_name_required": "O nome próprio é obrigatório.",
+        "last_name_required": "O apelido é obrigatório.",
+        "password_required": "A palavra-passe é obrigatória.",
+        "password_pattern": "Mín. 8 caracteres com maiúscula, minúscula, número e carácter especial (@#$%^&+=!).",
+        "confirm_password_required": "Por favor, confirma a tua palavra-passe.",
+        "password_mismatch": "As palavras-passe não coincidem.",
+        "server": "O registo falhou. Por favor, tenta novamente.",
+        "email_max": "O email não pode ter mais de 100 caracteres.",
+        "first_name_max": "O nome próprio não pode ter mais de 50 caracteres.",
+        "last_name_max": "O apelido não pode ter mais de 100 caracteres.",
+        "password_max": "A palavra-passe não pode ter mais de 128 caracteres."
+      }
+    }
+  },
+  "decks": {
+    "title": "Os meus baralhos",
+    "subtitle": "Gere e estuda os teus baralhos de cartões",
+    "newDeck": "Novo baralho",
+    "filter": {
+      "all": "Todos"
+    },
+    "pagination": {
+      "prev": "Página anterior",
+      "next": "Página seguinte"
+    },
+    "card": {
+      "public": "Público",
+      "private": "Privado",
+      "options": "Opções do baralho",
+      "edit": "Editar baralho",
+      "delete": "Eliminar baralho"
+    },
+    "empty": {
+      "title": "Ainda não tens baralhos",
+      "subtitle": "Cria o teu primeiro baralho para começar a estudar"
+    },
+    "form": {
+      "createTitle": "Novo baralho",
+      "editTitle": "Editar baralho",
+      "titleLabel": "Título",
+      "titlePlaceholder": "ex. Vocabulário de inglês",
+      "descriptionLabel": "Descrição",
+      "descriptionPlaceholder": "Sobre o que é este baralho?",
+      "categoryLabel": "Categoria",
+      "categoryPlaceholder": "Procura ou cria uma categoria...",
+      "isPublicLabel": "Baralho público",
+      "isPublicHint": "Qualquer utilizador poderá descarregar este baralho",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "A guardar...",
+      "error": {
+        "titleRequired": "O título é obrigatório.",
+        "titleMax": "O título não pode ter mais de 100 caracteres.",
+        "descriptionMax": "A descrição não pode ter mais de 2000 caracteres.",
+        "categoryMax": "O nome da categoria não pode ter mais de 50 caracteres."
+      }
+    },
+    "edit": {
+      "title": "Guardar alterações",
+      "message": "Tens a certeza que queres guardar as alterações em \"{{ title }}\"?"
+    },
+    "delete": {
+      "title": "Eliminar baralho",
+      "message": "Tens a certeza que queres eliminar \"{{ title }}\"? Esta ação não pode ser revertida."
+    },
+    "toast": {
+      "created": "Baralho criado com sucesso",
+      "updated": "Baralho atualizado com sucesso",
+      "deleted": "Baralho eliminado com sucesso"
+    }
+  },
+  "deckDetail": {
+    "createdAt": "Criado",
+    "addCard": "Adicionar cartão",
+    "study": "Estudar",
+    "stats": {
+      "total": "Total",
+      "new": "Novos",
+      "learning": "A aprender",
+      "review": "Revisão",
+      "relearning": "A reaprender",
+      "due": "Pendentes"
+    },
+    "cards": {
+      "title": "Cartões",
+      "editCard": "Editar cartão",
+      "deleteCard": "Eliminar cartão",
+      "table": {
+        "question": "Pergunta",
+        "type": "Tipo",
+        "state": "Estado",
+        "actions": "Ações"
+      },
+      "empty": {
+        "title": "Ainda não há cartões",
+        "subtitle": "Adiciona o teu primeiro cartão para começar a estudar"
+      },
+      "type": {
+        "basic": "Básico",
+        "multiple_choice": "Multi",
+        "true_false": "V / F"
+      },
+      "state": {
+        "new": "Novo",
+        "learning": "A aprender",
+        "review": "Revisão",
+        "relearning": "A reaprender"
+      }
+    },
+    "deleteCard": {
+      "title": "Eliminar cartão",
+      "message": "Tens a certeza que queres eliminar este cartão? Esta ação não pode ser revertida."
+    },
+    "toast": {
+      "cardCreated": "Cartão criado com sucesso",
+      "cardUpdated": "Cartão atualizado com sucesso",
+      "cardDeleted": "Cartão eliminado com sucesso"
+    }
+  },
+  "cardForm": {
+    "createTitle": "Novo cartão",
+    "editTitle": "Editar cartão",
+    "type": {
+      "label": "Tipo de cartão",
+      "basic": "Básico",
+      "multiple_choice": "EM",
+      "true_false": "V/F"
+    },
+    "question": {
+      "label": "Pergunta",
+      "placeholder": "Introduz a pergunta..."
+    },
+    "answer": {
+      "label": "Resposta",
+      "placeholder": "Introduz a resposta..."
+    },
+    "options": {
+      "label": "Opções (clica no círculo para marcar a correta)",
+      "placeholder": "Introduz uma opção...",
+      "markCorrect": "Marcar como correta",
+      "remove": "Remover opção",
+      "add": "Adicionar opção"
+    },
+    "correct": {
+      "label": "Resposta correta"
+    },
+    "trueFalse": {
+      "true": "Verdadeiro",
+      "false": "Falso"
+    },
+    "explanation": {
+      "label": "Explicação (opcional)",
+      "placeholder": "Explica porque é que esta é a resposta correta..."
+    },
+    "tags": {
+      "label": "Etiquetas",
+      "search": "Procura ou adiciona uma etiqueta...",
+      "create": "Criar '{{ name }}'",
+      "remove": "Remover etiqueta"
+    },
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "A guardar...",
+    "delete": "Eliminar cartão",
+    "error": {
+      "questionRequired": "A pergunta é obrigatória.",
+      "questionMax": "A pergunta não pode ter mais de 5000 caracteres.",
+      "explanationMax": "A explicação não pode ter mais de 2000 caracteres."
+    }
+  },
+  "study": {
+    "hub": {
+      "title": "Estudar",
+      "subtitle": "Escolhe o que estudar hoje",
+      "studyDeck": "Estudar baralho",
+      "studyCategory": "Estudar tudo",
+      "uncategorized": "Sem categoria",
+      "empty": {
+        "title": "Não há baralhos para estudar",
+        "subtitle": "Cria o teu primeiro baralho para começar a estudar"
+      },
+      "stats": {
+        "new": "novos",
+        "due": "pendentes",
+        "relearning": "a reaprender"
+      }
+    },
+    "session": {
+      "state": {
+        "new": "Novo",
+        "learning": "A aprender",
+        "review": "Revisão",
+        "relearning": "A reaprender"
+      },
+      "type": {
+        "BASIC": "Básico",
+        "MULTIPLE_CHOICE": "Escolha múltipla",
+        "TRUE_FALSE": "Verdadeiro / Falso"
+      },
+      "showAnswer": "Mostrar resposta",
+      "true": "Verdadeiro",
+      "false": "Falso",
+      "explanation": "Explicação",
+      "rating": {
+        "again": "Outra vez",
+        "hard": "Difícil",
+        "good": "Bom",
+        "easy": "Fácil"
+      },
+      "endSession": "Terminar sessão",
+      "backToHub": "Voltar ao menu",
+      "backDialog": {
+        "title": "Sair da sessão?",
+        "message": "O teu progresso não será guardado se saíres agora.",
+        "confirm": "Sair"
+      },
+      "saving": "A guardar resultados...",
+      "empty": {
+        "title": "Estás em dia!",
+        "subtitle": "Não há cartões pendentes de revisão neste momento.",
+        "back": "Voltar ao menu"
+      },
+      "complete": {
+        "title": "Sessão concluída!",
+        "subtitle": "O teu progresso foi guardado.",
+        "reviewed": "cartões revistos",
+        "back": "Voltar ao menu"
+      }
+    }
+  },
+  "cardList": {
+    "title": "Todos os cartões",
+    "filterQuestion": "Pesquisar por pergunta...",
+    "filterType": "Tipo",
+    "filterState": "Estado",
+    "filterTag": "Etiqueta",
+    "filterClear": "Limpar filtros",
+    "allTypes": "Todos os tipos",
+    "allStates": "Todos os estados",
+    "allTags": "Todas as etiquetas",
+    "stateNew": "Novo",
+    "stateLearning": "A aprender",
+    "stateReview": "Revisão",
+    "stateRelearning": "A reaprender",
+    "empty": {
+      "title": "Nenhum cartão encontrado",
+      "subtitle": "Tenta ajustar os filtros ou adiciona cartões a um baralho"
+    },
+    "deleteCard": {
+      "title": "Eliminar cartão",
+      "message": "Tens a certeza que queres eliminar este cartão? Esta ação não pode ser revertida."
+    },
+    "toast": {
+      "cardUpdated": "Cartão atualizado com sucesso",
+      "cardDeleted": "Cartão eliminado com sucesso"
+    }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Estatísticas",
+      "decks": "Baralhos",
+      "study": "Estudar",
+      "cards": "Cartões"
+    },
+    "sidebar": {
+      "collapse": "Recolher barra lateral",
+      "open": "Abrir menu",
+      "close": "Fechar menu"
+    },
+    "profile": {
+      "open": "Abrir menu do perfil",
+      "viewProfile": "Ver perfil",
+      "lightMode": "Modo claro",
+      "darkMode": "Modo escuro",
+      "language": "Idioma",
+      "logout": "Terminar sessão"
+    }
+  },
+  "profile": {
+    "title": "O meu perfil",
+    "subtitle": "Informações da tua conta",
+    "fullName": "Nome completo",
+    "username": "Nome de utilizador",
+    "email": "Endereço de e-mail",
+    "role": "Função",
+    "memberSince": "Membro desde"
+  },
+  "dashboard": {
+    "title": "Estatísticas",
+    "welcome": "Aqui está o teu resumo de aprendizagem, {{ name }}",
+    "stats": {
+      "dueToday": "Pendentes hoje",
+      "studiedToday": "Estudados hoje",
+      "streak": "Dias seguidos"
+    },
+    "heatmap": {
+      "title": "Atividade de estudo — último ano"
+    },
+    "lastStudied": {
+      "title": "Estudados recentemente",
+      "study": "Estudar",
+      "empty": "Ainda não estudaste nenhum baralho."
+    },
+    "error": "Não foi possível carregar os dados do painel."
+  }
+}

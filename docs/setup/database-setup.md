@@ -38,9 +38,82 @@ Once the container is up, configure your database client to connect to it.
 
 ## 3. Initializing the Database Schema
 
-The database schema, including tables for user management, content (decks/cards), and the FSRS algorithm (study progress and review logs), must be created manually for the initial setup.
+The database schema must be created manually before starting the Spring Boot application. The project uses `ddl-auto: none`, meaning Hibernate will **not** auto-create or modify tables.
+
+The schema script is located at:
+
+```
+backend/reitera-backend/src/main/resources/init.sql
+```
+
+**Steps:**
 
 1. In DBeaver, open an **SQL Editor** for the `reitera_db` connection.
-2. Copy the contents of the initialization script (soon to be located in `backend/src/main/resources/init.sql`).
-3. Execute the script to generate all necessary tables and relationships.
-4. Refresh the `public` schema in DBeaver to verify that the 8 core tables (`users`, `roles`, `decks`, `cards`, `categories`, `tags`, `study_progress`, `review_logs`) and intermediary tables have been successfully created.
+2. Open `init.sql` and execute its contents.
+3. Refresh the `public` schema in DBeaver to verify that the following tables were created:
+
+| Table | Description |
+|---|---|
+| `roles` | RBAC roles (STUDENT, ADMIN) |
+| `users` | User accounts |
+| `categories` | High-level groupings for decks |
+| `tags` | User-scoped labels for cards; unique per `(name, owner_id)` |
+| `decks` | Flashcard collections |
+| `cards` | Individual flashcards (JSONB answers) |
+| `card_tags` | Many-to-many: cards ↔ tags |
+| `study_progress` | FSRS state per (user, card) pair |
+| `review_logs` | Immutable history of every review action |
+| `user_deck_subscriptions` | Community deck subscriptions |
+| `refresh_tokens` | Active user sessions (SHA-256 hashed tokens, expiry, revoked flag) |
+
+> **Note:** `init.sql` enables the `pgcrypto` extension, which is required by `seed.sql` to generate BCrypt password hashes at runtime.
+
+## 4. Loading Demo Seed Data
+
+After initializing the schema, you can populate the database with realistic demo data for local development and TFG demonstrations.
+
+The seed script is located at:
+
+```
+backend/reitera-backend/src/main/resources/seed.sql
+```
+
+**Steps:**
+
+1. In DBeaver, open a new **SQL Editor** for the `reitera_db` connection.
+2. Open `seed.sql` and execute its contents.
+3. The script will populate the database with the following data:
+
+### Demo users
+
+| Email | Password | Role |
+|---|---|---|
+| `alumno@reitera.com` | `reitera2026` | STUDENT |
+| `admin@reitera.com` | `reitera2026` | ADMIN |
+
+> Passwords are hashed at runtime using **pgcrypto's BCrypt** (`gen_salt('bf', 10)`), producing a hash compatible with Spring Security's `BCryptPasswordEncoder`.
+
+### Demo content
+
+| Resource | Count | Details |
+|---|---|---|
+| Categories | 3 | Historia de España · Programación Java · Inglés B2 |
+| Tags | 4 | importante · difícil · repaso · vocabulario |
+| Decks | 4 | Two under "Historia de España" (enables category-scoped study demo), one under "Programación Java", one under "Inglés B2" |
+| Cards | 48 | BASIC(27) · MULTIPLE_CHOICE(12) · TRUE_FALSE(9) — 12 per deck |
+| StudyProgress | 10 | Deck 1: 6 records (Learning, Review, Relearning); Decks 2 & 3: 2 records each |
+| ReviewLogs | 20 | Historical review entries for all 10 progress records |
+
+### FSRS states in the seed
+
+The 10 `study_progress` records are distributed across three decks: Deck 1 (*La Segunda Guerra Mundial*) has 6 records with **5 cards immediately due** and 1 scheduled for the future; Decks 2 and 3 have 2 records each with 1 due card each. New cards (no prior progress) fill the remainder of each session. A call to `GET /study/due?deckId=1` returns the 5 overdue cards plus 6 new cards from that deck.
+
+### Idempotency
+
+The script raises an error if seed data is already present (`alumno@reitera.com` already exists). To reset and re-seed, run `truncate.sql` first:
+
+```
+backend/reitera-backend/src/main/resources/truncate.sql
+```
+
+Then run `seed.sql` again.

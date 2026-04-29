@@ -1,0 +1,10 @@
+<div class="flex flex-col items-center justify-center gap-4 py-20 text-center">
+  <div class="flex items-center justify-center rounded-full size-16 bg-overlay">
+    <ng-content select="[icon]" />
+  </div>
+  <div>
+    <p class="font-semibold text-foreground">{{ title() }}</p>
+    <p class="mt-1 text-sm text-muted">{{ subtitle() }}</p>
+  </div>
+  <ng-content select="[action]" />
+</div>

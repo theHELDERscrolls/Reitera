@@ -1,0 +1,361 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "or": "ou",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer"
+  },
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous à votre compte",
+      "email": "E-mail",
+      "email_placeholder": "vous@exemple.com",
+      "password": "Mot de passe",
+      "password_placeholder": "Votre mot de passe",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "no_account": "Pas encore de compte ?",
+      "go_register": "S'inscrire",
+      "success": "Bon retour ! Vous êtes maintenant connecté.",
+      "error": {
+        "email_required": "L'e-mail est obligatoire.",
+        "email_invalid": "Saisissez une adresse e-mail valide.",
+        "password_required": "Le mot de passe est obligatoire.",
+        "server": "Identifiants invalides. Veuillez réessayer."
+      }
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Commencez votre parcours d'apprentissage",
+      "username": "Nom d'utilisateur",
+      "username_placeholder": "votreenom",
+      "email": "E-mail",
+      "email_placeholder": "vous@exemple.com",
+      "first_name": "Prénom",
+      "first_name_placeholder": "Jean",
+      "last_name": "Nom",
+      "last_name_placeholder": "Dupont",
+      "password": "Mot de passe",
+      "password_placeholder": "Min. 8 caractères",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_password_placeholder": "Répétez votre mot de passe",
+      "submit": "Créer un compte",
+      "submitting": "Création en cours...",
+      "has_account": "Vous avez déjà un compte ?",
+      "go_login": "Se connecter",
+      "success": "Compte créé ! Bienvenue sur Reitera.",
+      "error": {
+        "username_required": "Le nom d'utilisateur est obligatoire.",
+        "username_min": "Le nom d'utilisateur doit contenir au moins 3 caractères.",
+        "username_max": "Le nom d'utilisateur ne peut pas dépasser 50 caractères.",
+        "email_required": "L'e-mail est obligatoire.",
+        "email_invalid": "Saisissez une adresse e-mail valide.",
+        "first_name_required": "Le prénom est obligatoire.",
+        "last_name_required": "Le nom est obligatoire.",
+        "password_required": "Le mot de passe est obligatoire.",
+        "password_pattern": "Min. 8 caractères avec majuscule, minuscule, chiffre et caractère spécial (@#$%^&+=!).",
+        "confirm_password_required": "Veuillez confirmer votre mot de passe.",
+        "password_mismatch": "Les mots de passe ne correspondent pas.",
+        "server": "L'inscription a échoué. Veuillez réessayer.",
+        "email_max": "L'e-mail ne peut pas dépasser 100 caractères.",
+        "first_name_max": "Le prénom ne peut pas dépasser 50 caractères.",
+        "last_name_max": "Le nom ne peut pas dépasser 100 caractères.",
+        "password_max": "Le mot de passe ne peut pas dépasser 128 caractères."
+      }
+    }
+  },
+  "decks": {
+    "title": "Mes paquets",
+    "subtitle": "Gérez et étudiez vos paquets de cartes",
+    "newDeck": "Nouveau paquet",
+    "filter": {
+      "all": "Tous"
+    },
+    "pagination": {
+      "prev": "Page précédente",
+      "next": "Page suivante"
+    },
+    "card": {
+      "public": "Public",
+      "private": "Privé",
+      "options": "Options du paquet",
+      "edit": "Modifier le paquet",
+      "delete": "Supprimer le paquet"
+    },
+    "empty": {
+      "title": "Aucun paquet pour l'instant",
+      "subtitle": "Créez votre premier paquet pour commencer à étudier"
+    },
+    "form": {
+      "createTitle": "Nouveau paquet",
+      "editTitle": "Modifier le paquet",
+      "titleLabel": "Titre",
+      "titlePlaceholder": "ex. Vocabulaire espagnol",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "De quoi parle ce paquet ?",
+      "categoryLabel": "Catégorie",
+      "categoryPlaceholder": "Rechercher ou créer une catégorie...",
+      "isPublicLabel": "Paquet public",
+      "isPublicHint": "N'importe qui pourra télécharger ce paquet",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "error": {
+        "titleRequired": "Le titre est obligatoire.",
+        "titleMax": "Le titre ne peut pas dépasser 100 caractères.",
+        "descriptionMax": "La description ne peut pas dépasser 2000 caractères.",
+        "categoryMax": "Le nom de la catégorie ne peut pas dépasser 50 caractères."
+      }
+    },
+    "edit": {
+      "title": "Enregistrer les modifications",
+      "message": "Êtes-vous sûr de vouloir enregistrer les modifications apportées à « {{ title }} » ?"
+    },
+    "delete": {
+      "title": "Supprimer le paquet",
+      "message": "Êtes-vous sûr de vouloir supprimer « {{ title }} » ? Cette action est irréversible."
+    },
+    "toast": {
+      "created": "Paquet créé avec succès",
+      "updated": "Paquet mis à jour avec succès",
+      "deleted": "Paquet supprimé avec succès"
+    }
+  },
+  "deckDetail": {
+    "createdAt": "Créé le",
+    "addCard": "Ajouter une carte",
+    "study": "Étudier",
+    "stats": {
+      "total": "Total",
+      "new": "Nouvelles",
+      "learning": "En cours",
+      "review": "Révision",
+      "relearning": "Réapprentissage",
+      "due": "À revoir"
+    },
+    "cards": {
+      "title": "Cartes",
+      "editCard": "Modifier la carte",
+      "deleteCard": "Supprimer la carte",
+      "table": {
+        "question": "Question",
+        "type": "Type",
+        "state": "État",
+        "actions": "Actions"
+      },
+      "empty": {
+        "title": "Aucune carte pour l'instant",
+        "subtitle": "Ajoutez votre première carte pour commencer à étudier"
+      },
+      "type": {
+        "basic": "Basique",
+        "multiple_choice": "Multi",
+        "true_false": "Vrai / Faux"
+      },
+      "state": {
+        "new": "Nouvelle",
+        "learning": "En cours",
+        "review": "Révision",
+        "relearning": "Réapprentissage"
+      }
+    },
+    "deleteCard": {
+      "title": "Supprimer la carte",
+      "message": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible."
+    },
+    "toast": {
+      "cardCreated": "Carte créée avec succès",
+      "cardUpdated": "Carte mise à jour avec succès",
+      "cardDeleted": "Carte supprimée avec succès"
+    }
+  },
+  "cardForm": {
+    "createTitle": "Nouvelle carte",
+    "editTitle": "Modifier la carte",
+    "type": {
+      "label": "Type de carte",
+      "basic": "Basique",
+      "multiple_choice": "QCM",
+      "true_false": "V/F"
+    },
+    "question": {
+      "label": "Question",
+      "placeholder": "Saisissez la question..."
+    },
+    "answer": {
+      "label": "Réponse",
+      "placeholder": "Saisissez la réponse..."
+    },
+    "options": {
+      "label": "Options (cliquez sur le cercle pour marquer la bonne réponse)",
+      "placeholder": "Saisir une option...",
+      "markCorrect": "Marquer comme correcte",
+      "remove": "Supprimer l'option",
+      "add": "Ajouter une option"
+    },
+    "correct": {
+      "label": "Bonne réponse"
+    },
+    "trueFalse": {
+      "true": "Vrai",
+      "false": "Faux"
+    },
+    "explanation": {
+      "label": "Explication (facultatif)",
+      "placeholder": "Expliquez pourquoi c'est la bonne réponse..."
+    },
+    "tags": {
+      "label": "Étiquettes",
+      "search": "Rechercher ou ajouter une étiquette...",
+      "create": "Créer '{{ name }}'",
+      "remove": "Supprimer l'étiquette"
+    },
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "delete": "Supprimer la carte",
+    "error": {
+      "questionRequired": "La question est obligatoire.",
+      "questionMax": "La question ne peut pas dépasser 5000 caractères.",
+      "explanationMax": "L'explication ne peut pas dépasser 2000 caractères."
+    }
+  },
+  "study": {
+    "hub": {
+      "title": "Étudier",
+      "subtitle": "Choisissez ce que vous souhaitez étudier aujourd'hui",
+      "studyDeck": "Étudier le paquet",
+      "studyCategory": "Tout étudier",
+      "uncategorized": "Sans catégorie",
+      "empty": {
+        "title": "Aucun paquet à étudier",
+        "subtitle": "Créez votre premier paquet pour commencer à étudier"
+      },
+      "stats": {
+        "new": "nouvelles",
+        "due": "à réviser",
+        "relearning": "en révision"
+      }
+    },
+    "session": {
+      "state": {
+        "new": "Nouvelle",
+        "learning": "Apprentissage",
+        "review": "Révision",
+        "relearning": "Réapprentissage"
+      },
+      "type": {
+        "BASIC": "Basique",
+        "MULTIPLE_CHOICE": "Choix multiple",
+        "TRUE_FALSE": "Vrai / Faux"
+      },
+      "showAnswer": "Afficher la réponse",
+      "true": "Vrai",
+      "false": "Faux",
+      "explanation": "Explication",
+      "rating": {
+        "again": "Encore",
+        "hard": "Difficile",
+        "good": "Bien",
+        "easy": "Facile"
+      },
+      "endSession": "Terminer la session",
+      "backToHub": "Retour au menu",
+      "backDialog": {
+        "title": "Quitter la session ?",
+        "message": "Votre progression ne sera pas sauvegardée si vous revenez en arrière maintenant.",
+        "confirm": "Quitter"
+      },
+      "saving": "Sauvegarde en cours...",
+      "empty": {
+        "title": "Tout est à jour !",
+        "subtitle": "Aucune carte n'est due pour révision pour l'instant.",
+        "back": "Retour au menu"
+      },
+      "complete": {
+        "title": "Session terminée !",
+        "subtitle": "Votre progression a été sauvegardée.",
+        "reviewed": "cartes révisées",
+        "back": "Retour au menu"
+      }
+    }
+  },
+  "cardList": {
+    "title": "Toutes les cartes",
+    "filterQuestion": "Rechercher par question...",
+    "filterType": "Type",
+    "filterState": "État",
+    "filterTag": "Étiquette",
+    "filterClear": "Effacer les filtres",
+    "allTypes": "Tous les types",
+    "allStates": "Tous les états",
+    "allTags": "Toutes les étiquettes",
+    "stateNew": "Nouvelle",
+    "stateLearning": "Apprentissage",
+    "stateReview": "Révision",
+    "stateRelearning": "Réapprentissage",
+    "empty": {
+      "title": "Aucune carte trouvée",
+      "subtitle": "Essayez d'ajuster vos filtres ou ajoutez des cartes à un paquet"
+    },
+    "deleteCard": {
+      "title": "Supprimer la carte",
+      "message": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible."
+    },
+    "toast": {
+      "cardUpdated": "Carte mise à jour avec succès",
+      "cardDeleted": "Carte supprimée avec succès"
+    }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Statistiques",
+      "decks": "Paquets",
+      "study": "Étudier",
+      "cards": "Cartes"
+    },
+    "sidebar": {
+      "collapse": "Réduire la barre latérale",
+      "open": "Ouvrir le menu",
+      "close": "Fermer le menu"
+    },
+    "profile": {
+      "open": "Ouvrir le menu du profil",
+      "viewProfile": "Voir le profil",
+      "lightMode": "Mode clair",
+      "darkMode": "Mode sombre",
+      "language": "Langue",
+      "logout": "Se déconnecter"
+    }
+  },
+  "profile": {
+    "title": "Mon profil",
+    "subtitle": "Informations de votre compte",
+    "fullName": "Nom complet",
+    "username": "Nom d'utilisateur",
+    "email": "Adresse e-mail",
+    "role": "Rôle",
+    "memberSince": "Membre depuis"
+  },
+  "dashboard": {
+    "title": "Statistiques",
+    "welcome": "Voici votre aperçu d'apprentissage, {{ name }}",
+    "stats": {
+      "dueToday": "À réviser aujourd'hui",
+      "studiedToday": "Étudiées aujourd'hui",
+      "streak": "Jours consécutifs"
+    },
+    "heatmap": {
+      "title": "Activité d'étude — année passée"
+    },
+    "lastStudied": {
+      "title": "Récemment étudiés",
+      "study": "Étudier",
+      "empty": "Aucun paquet étudié pour l'instant."
+    },
+    "error": "Impossible de charger les données du tableau de bord."
+  }
+}

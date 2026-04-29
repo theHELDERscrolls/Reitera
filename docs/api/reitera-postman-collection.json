@@ -1,0 +1,1134 @@
+{
+  "info": {
+    "_postman_id": "reitera-api-collection-v1",
+    "name": "Reitera API",
+    "description": "Complete REST API collection for the Reitera spaced repetition application.\n\n**Setup:**\n1. Import this collection into Postman.\n2. Set the `base_url` variable to `http://localhost:8080` (already set by default).\n3. Run **Login (alumno)** — the token is saved automatically to the `token` variable.\n4. All protected endpoints will use that token automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Public endpoints for user registration and login. No token required.",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test01\",\n  \"email\": \"test01@test.com\",\n  \"password\": \"!Test123\",\n  \"confirmPassword\": \"!Test123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"Testez\"\n}"
+            },
+            "description": "Creates a new user account. Returns the created user data (no password). Password must be at least 8 characters with 1 digit, 1 lowercase, 1 uppercase and 1 special character."
+          },
+          "response": []
+        },
+        {
+          "name": "Login (alumno)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonResponse = pm.response.json();",
+                  "if (jsonResponse.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', jsonResponse.refreshToken);",
+                  "    console.log('Access token and refresh token saved.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alumno@reitera.com\",\n  \"password\": \"reitera2026\"\n}"
+            },
+            "description": "Authenticates the seed demo user and saves the JWT to the `token` collection variable. Password: reitera2026."
+          },
+          "response": []
+        },
+        {
+          "name": "Login (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonResponse = pm.response.json();",
+                  "if (jsonResponse.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', jsonResponse.refreshToken);",
+                  "    console.log('Access token and refresh token saved.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@reitera.com\",\n  \"password\": \"reitera2026\"\n}"
+            },
+            "description": "Authenticates the seed admin user. Useful to verify that admin has no decks and returns empty lists."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonResponse = pm.response.json();",
+                  "if (jsonResponse.accessToken) {",
+                  "    pm.collectionVariables.set('token', jsonResponse.accessToken);",
+                  "    pm.collectionVariables.set('refresh_token', jsonResponse.refreshToken);",
+                  "    console.log('Tokens rotated and saved.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "description": "Exchanges the current refresh token for a new access token and a rotated refresh token. The old refresh token is revoked. Both new tokens are saved automatically to collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "description": "Revokes all active refresh tokens for the user. Returns 204 No Content. The access token will continue to work until its 15-minute TTL expires."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User profile endpoints. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            },
+            "description": "Returns the profile of the authenticated user: id, username, email, firstName, lastName, roleName. No password included."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "description": "Category endpoints. Returns only categories used in the authenticated user's own decks.",
+      "item": [
+        {
+          "name": "Get My Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
+            },
+            "description": "Returns the distinct categories used across all decks owned by the authenticated user. With seed data (alumno): Historia de España, Programación Java, Inglés B2."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "description": "Tag endpoints. Tags are user-scoped — unique per (name, owner_id). Created inline during card save via the newTags field. Orphan cleanup automatically deletes tags with no remaining cards.",
+      "item": [
+        {
+          "name": "Get My Tags",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/tags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tags"
+              ]
+            },
+            "description": "Returns all tags owned by the authenticated user. With seed data (alumno): importante, difícil, repaso, vocabulario (all 4 appear because findAllByOwnerId is used, not card-navigation). In practice orphan cleanup keeps this list in sync — tags deleted from all cards are removed automatically."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cards by Tag",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/tags/1/cards?page=0&size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tags",
+                "1",
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Zero-based page number"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Items per page"
+                }
+              ]
+            },
+            "description": "Returns a paginated list of cards owned by the authenticated user that have the specified tag. Replace '1' with the actual tag ID from 'Get My Tags'. Always returns 200 — returns an empty page for unknown tag IDs to prevent enumeration."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Decks",
+      "description": "CRUD operations for study decks. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Create Deck (with categoryId)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Historia de Espa\\u00f1a\",\n  \"description\": \"Repaso de eventos clave del siglo XX\",\n  \"isPublic\": false,\n  \"categoryId\": 1,\n  \"categoryName\": null\n}"
+            },
+            "description": "Creates a new deck owned by the authenticated user. `categoryId` is optional — send `null` or omit it if no category applies."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Deck (with categoryName — find-or-create)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Ingl\\u00e9s B2\",\n  \"description\": \"Vocabulario y gram\\u00e1tica nivel B2\",\n  \"isPublic\": false,\n  \"categoryId\": null,\n  \"categoryName\": \"Idiomas\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks"
+              ]
+            },
+            "description": "Creates a deck and assigns it to category 'Idiomas'. If that category does not exist yet it is created automatically; if it already exists it is reused (case-insensitive match)."
+          }
+        },
+        {
+          "name": "Get My Decks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks?page=0&size=20&sort=createdAt,desc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Zero-based page number"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "sort",
+                  "value": "createdAt,desc",
+                  "description": "Sort field and direction"
+                }
+              ]
+            },
+            "description": "Returns a paginated list of decks owned by the authenticated user. Response is a Page object with 'content', 'totalElements', 'totalPages', 'number', and 'size' fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Deck by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1"
+              ]
+            },
+            "description": "Returns a single deck by its ID. Returns 404 if not found or if the authenticated user is not the owner."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Deck Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "stats"
+              ]
+            },
+            "description": "Returns aggregated card counts for a deck broken down by FSRS state. Fields: totalCards, newCards (no StudyProgress for this user), learningCards (state=1), reviewCards (state=2), relearningCards (state=3), dueCards (nextReview <= now). Returns 404 if not found or not owned by the user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Deck",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Historia de Espa\\u00f1a (Actualizado)\",\n  \"description\": \"Versi\\u00f3n revisada con m\\u00e1s contenido\",\n  \"isPublic\": true,\n  \"categoryId\": null,\n  \"categoryName\": \"Historia\"\n}"
+            },
+            "description": "Updates an existing deck. Only the owner can perform this operation. Replaces all fields (full update)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Deck",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1"
+              ]
+            },
+            "description": "Deletes a deck by ID. Only the owner can perform this operation. Returns HTTP 204 (No Content) on success."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cards (Cross-Deck)",
+      "description": "Endpoints that query cards across ALL decks owned by the authenticated user. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get All Cards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cards?page=0&size=20&sort=question,asc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "question",
+                  "value": "",
+                  "description": "Partial, case-insensitive match on the question text",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "Exact card type: BASIC, MULTIPLE_CHOICE, or TRUE_FALSE",
+                  "disabled": true
+                },
+                {
+                  "key": "state",
+                  "value": "",
+                  "description": "FSRS study state: -1=never studied, 0=New, 1=Learning, 2=Review, 3=Relearning",
+                  "disabled": true
+                },
+                {
+                  "key": "tagId",
+                  "value": "",
+                  "description": "ID of a tag the card must have assigned",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Zero-based page number"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "sort",
+                  "value": "question,asc",
+                  "description": "Sort field and direction"
+                }
+              ]
+            },
+            "description": "Returns a paginated list of all cards owned by the authenticated user, across all their decks. All filter parameters are optional — omitting them returns all cards. Filters: question (partial match), type (BASIC/MULTIPLE_CHOICE/TRUE_FALSE), state (-1=never studied, 0=New, 1=Learning, 2=Review, 3=Relearning), tagId."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cards",
+      "description": "CRUD operations for flashcards. Cards are always nested under a parent deck. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Create Card (BASIC)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"BASIC\",\n  \"question\": \"¿En qué año comenzó la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"answer\": \"1936\"\n  },\n  \"explanation\": \"El conflicto se inició el 17 de julio de 1936 con el alzamiento militar.\",\n  \"tagIds\": [1],\n  \"newTags\": [\n    { \"name\": \"siglo XX\", \"hexColor\": \"#3b82f6\" }\n  ]\n}"
+            },
+            "description": "Creates a BASIC card (question / answer). `answerJson` must contain a single `answer` key. `tagIds` attaches existing tags by ID. `newTags` creates tags inline (find-or-create per user): if the name already exists for this user it is reused, otherwise a new tag row is created. Both fields are optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card (MULTIPLE_CHOICE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"MULTIPLE_CHOICE\",\n  \"question\": \"¿Cuál fue el bando vencedor de la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"options\": [\"Bando Republicano\", \"Bando Nacional\", \"Ninguno\"],\n    \"correctIndex\": 1\n  },\n  \"explanation\": \"El bando Nacional, liderado por Francisco Franco, venció en 1939.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Creates a MULTIPLE_CHOICE card. `answerJson` must contain `options` (array of strings) and `correctIndex` (0-based index of the correct option)."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card (TRUE_FALSE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"TRUE_FALSE\",\n  \"question\": \"La Guerra Civil Española comenzó en 1936.\",\n  \"answerJson\": {\n    \"answer\": true\n  },\n  \"explanation\": \"El alzamiento militar comenzó el 17 de julio de 1936.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Creates a TRUE_FALSE card. `answerJson` must contain a single boolean `answer` key."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cards by Deck",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards?page=0&size=20&sort=question,asc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Zero-based page number"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "sort",
+                  "value": "question,asc",
+                  "description": "Sort field and direction. Sortable fields: question, type. The state column is not sortable (computed in-memory from StudyProgress)."
+                }
+              ]
+            },
+            "description": "Returns a paginated list of cards belonging to the specified deck. Only accessible by the deck owner. Each card includes a 'state' field with the requesting user's FSRS state (null=New, 1=Learning, 2=Review, 3=Relearning). Sortable by 'question' or 'type' via the sort param."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Card by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards",
+                "1"
+              ]
+            },
+            "description": "Returns a single card by its ID within the specified deck. Returns 404 if the card does not exist or does not belong to the deck."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"BASIC\",\n  \"question\": \"¿En qué año terminó la Guerra Civil Española?\",\n  \"answerJson\": {\n    \"answer\": \"1939\"\n  },\n  \"explanation\": \"El conflicto finalizó el 1 de abril de 1939.\",\n  \"tagIds\": []\n}"
+            },
+            "description": "Updates an existing card. Only the deck owner can perform this operation. Replaces all fields (full update)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Card",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/decks/1/cards/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "decks",
+                "1",
+                "cards",
+                "1"
+              ]
+            },
+            "description": "Deletes a card by ID. Only the deck owner can perform this operation. Returns HTTP 204 (No Content) on success."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Study",
+      "description": "FSRS-6 spaced repetition study endpoints. Fetch due cards and submit session ratings. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get Due Cards (by Deck)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/due?deckId=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "study",
+                "due"
+              ],
+              "query": [
+                {
+                  "key": "deckId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Returns all cards due for review in a single deck. Includes overdue cards (nextReview <= now) and new cards (no StudyProgress yet). The 'state' field indicates: 0=New, 1=Learning, 2=Review, 3=Relearning."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Due Cards (by Category)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/due?categoryId=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "study",
+                "due"
+              ],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Returns all due cards across every deck the user owns within a category. With seed data (alumno + categoryId=1 Historia de España): returns cards from both SGMU and GCE decks."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Session (by Deck)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/sessions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "study",
+                "sessions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deckId\": 1,\n  \"categoryId\": null,\n  \"ratings\": [\n    { \"cardId\": 1, \"rating\": 3 },\n    { \"cardId\": 2, \"rating\": 1 },\n    { \"cardId\": 3, \"rating\": 4 }\n  ]\n}"
+            },
+            "description": "Submits all card ratings from a completed session. The FSRS-6 algorithm computes the next review date for each card. Rating scale: 1=Again, 2=Hard, 3=Good, 4=Easy. The entire batch is processed in a single transaction."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Session (by Category)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/study/sessions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "study",
+                "sessions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deckId\": null,\n  \"categoryId\": 1,\n  \"ratings\": [\n    { \"cardId\": 4, \"rating\": 3 },\n    { \"cardId\": 5, \"rating\": 2 }\n  ]\n}"
+            },
+            "description": "Same as 'Submit Session (by Deck)' but for category-scope sessions. Use when the due cards were fetched with categoryId. Validates that all rated cards belong to a deck in the declared category owned by the user."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "description": "Analytics endpoints for the dashboard page. All endpoints require a valid JWT token (Bearer).",
+      "item": [
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "stats"
+              ]
+            },
+            "description": "Returns the three dashboard summary counters: study streak (consecutive days with >= 1 review ending today or yesterday), totalDueToday (overdue + new cards across all user decks), and studiedToday (distinct cards reviewed today from review_logs)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Heatmap",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/heatmap",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "heatmap"
+              ]
+            },
+            "description": "Returns per-day distinct card review counts for the past 365 days. Only days with at least one review are included in the response; absent dates represent zero activity. Each entry: { date: YYYY-MM-DD, count: long }."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Last Studied Decks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/dashboard/last-studied?limit=5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "dashboard",
+                "last-studied"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Max number of decks to return (default 5)"
+                }
+              ]
+            },
+            "description": "Returns the last N decks the user has studied, ordered by most recent review descending. Each entry includes the deck name, category, FSRS state breakdown (newCount, dueCount, relearningCount), and lastStudied timestamp. Used by the dashboard Last Decks Studied panel."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

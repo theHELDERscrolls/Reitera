@@ -1,0 +1,361 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "or": "or",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "password": "Password",
+      "password_placeholder": "Your password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "no_account": "Don't have an account?",
+      "go_register": "Sign up",
+      "success": "Welcome back! You are now signed in.",
+      "error": {
+        "email_required": "Email is required.",
+        "email_invalid": "Enter a valid email address.",
+        "password_required": "Password is required.",
+        "server": "Invalid credentials. Please try again."
+      }
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start your learning journey",
+      "username": "Username",
+      "username_placeholder": "yourname",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "first_name": "First name",
+      "first_name_placeholder": "John",
+      "last_name": "Last name",
+      "last_name_placeholder": "Doe",
+      "password": "Password",
+      "password_placeholder": "Min. 8 characters",
+      "confirm_password": "Confirm password",
+      "confirm_password_placeholder": "Repeat your password",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "has_account": "Already have an account?",
+      "go_login": "Sign in",
+      "success": "Account created! Welcome to Reitera.",
+      "error": {
+        "username_required": "Username is required.",
+        "username_min": "Username must be at least 3 characters.",
+        "username_max": "Username must be at most 50 characters.",
+        "email_required": "Email is required.",
+        "email_invalid": "Enter a valid email address.",
+        "first_name_required": "First name is required.",
+        "last_name_required": "Last name is required.",
+        "password_required": "Password is required.",
+        "password_pattern": "Min. 8 characters with uppercase, lowercase, number and special character (@#$%^&+=!).",
+        "confirm_password_required": "Please confirm your password.",
+        "password_mismatch": "Passwords do not match.",
+        "server": "Registration failed. Please try again.",
+        "email_max": "Email must be at most 100 characters.",
+        "first_name_max": "First name must be at most 50 characters.",
+        "last_name_max": "Last name must be at most 100 characters.",
+        "password_max": "Password must be at most 128 characters."
+      }
+    }
+  },
+  "decks": {
+    "title": "My Decks",
+    "subtitle": "Manage and study your flashcard decks",
+    "newDeck": "New deck",
+    "filter": {
+      "all": "All"
+    },
+    "pagination": {
+      "prev": "Previous page",
+      "next": "Next page"
+    },
+    "card": {
+      "public": "Public",
+      "private": "Private",
+      "options": "Deck options",
+      "edit": "Edit deck",
+      "delete": "Delete deck"
+    },
+    "empty": {
+      "title": "No decks yet",
+      "subtitle": "Create your first deck to start studying"
+    },
+    "form": {
+      "createTitle": "New deck",
+      "editTitle": "Edit deck",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Spanish Vocabulary",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "What is this deck about?",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Search or create a category...",
+      "isPublicLabel": "Public deck",
+      "isPublicHint": "Anyone will be able to download this deck",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "error": {
+        "titleRequired": "Title is required.",
+        "titleMax": "Title must be at most 100 characters.",
+        "descriptionMax": "Description must be at most 2000 characters.",
+        "categoryMax": "Category name must be at most 50 characters."
+      }
+    },
+    "edit": {
+      "title": "Save changes",
+      "message": "Are you sure you want to save your changes to \"{{ title }}\"?"
+    },
+    "delete": {
+      "title": "Delete deck",
+      "message": "Are you sure you want to delete \"{{ title }}\"? This action cannot be undone."
+    },
+    "toast": {
+      "created": "Deck created successfully",
+      "updated": "Deck updated successfully",
+      "deleted": "Deck deleted successfully"
+    }
+  },
+  "deckDetail": {
+    "createdAt": "Created",
+    "addCard": "Add card",
+    "study": "Study",
+    "stats": {
+      "total": "Total",
+      "new": "New",
+      "learning": "Learning",
+      "review": "Review",
+      "relearning": "Relearning",
+      "due": "Due"
+    },
+    "cards": {
+      "title": "Cards",
+      "editCard": "Edit card",
+      "deleteCard": "Delete card",
+      "table": {
+        "question": "Question",
+        "type": "Type",
+        "state": "State",
+        "actions": "Actions"
+      },
+      "empty": {
+        "title": "No cards yet",
+        "subtitle": "Add your first card to start studying"
+      },
+      "type": {
+        "basic": "Basic",
+        "multiple_choice": "Multi",
+        "true_false": "True / False"
+      },
+      "state": {
+        "new": "New",
+        "learning": "Learning",
+        "review": "Review",
+        "relearning": "Relearning"
+      }
+    },
+    "deleteCard": {
+      "title": "Delete card",
+      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    },
+    "toast": {
+      "cardCreated": "Card created successfully",
+      "cardUpdated": "Card updated successfully",
+      "cardDeleted": "Card deleted successfully"
+    }
+  },
+  "cardForm": {
+    "createTitle": "New card",
+    "editTitle": "Edit card",
+    "type": {
+      "label": "Card type",
+      "basic": "Basic",
+      "multiple_choice": "MC",
+      "true_false": "T/F"
+    },
+    "question": {
+      "label": "Question",
+      "placeholder": "Enter the question..."
+    },
+    "answer": {
+      "label": "Answer",
+      "placeholder": "Enter the answer..."
+    },
+    "options": {
+      "label": "Options (click the circle to mark the correct one)",
+      "placeholder": "Enter option...",
+      "markCorrect": "Mark as correct",
+      "remove": "Remove option",
+      "add": "Add option"
+    },
+    "correct": {
+      "label": "Correct answer"
+    },
+    "trueFalse": {
+      "true": "True",
+      "false": "False"
+    },
+    "explanation": {
+      "label": "Explanation (optional)",
+      "placeholder": "Explain why this is the correct answer..."
+    },
+    "tags": {
+      "label": "Tags",
+      "search": "Search or add a tag...",
+      "create": "Create '{{ name }}'",
+      "remove": "Remove tag"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete card",
+    "error": {
+      "questionRequired": "Question is required.",
+      "questionMax": "Question must be at most 5000 characters.",
+      "explanationMax": "Explanation must be at most 2000 characters."
+    }
+  },
+  "study": {
+    "hub": {
+      "title": "Study",
+      "subtitle": "Choose what to study today",
+      "studyDeck": "Study deck",
+      "studyCategory": "Study all",
+      "uncategorized": "Uncategorized",
+      "empty": {
+        "title": "No decks to study",
+        "subtitle": "Create your first deck to start studying"
+      },
+      "stats": {
+        "new": "new",
+        "due": "due",
+        "relearning": "relearning"
+      }
+    },
+    "session": {
+      "state": {
+        "new": "New",
+        "learning": "Learning",
+        "review": "Review",
+        "relearning": "Relearning"
+      },
+      "type": {
+        "BASIC": "Basic",
+        "MULTIPLE_CHOICE": "Multiple choice",
+        "TRUE_FALSE": "True / False"
+      },
+      "showAnswer": "Show answer",
+      "true": "True",
+      "false": "False",
+      "explanation": "Explanation",
+      "rating": {
+        "again": "Again",
+        "hard": "Hard",
+        "good": "Good",
+        "easy": "Easy"
+      },
+      "endSession": "End session",
+      "backToHub": "Back to hub",
+      "backDialog": {
+        "title": "Leave session?",
+        "message": "Your progress won't be saved if you go back now.",
+        "confirm": "Leave"
+      },
+      "saving": "Saving results...",
+      "empty": {
+        "title": "All caught up!",
+        "subtitle": "No cards are due for review right now.",
+        "back": "Back to hub"
+      },
+      "complete": {
+        "title": "Session complete!",
+        "subtitle": "Your progress has been saved.",
+        "reviewed": "cards reviewed",
+        "back": "Back to hub"
+      }
+    }
+  },
+  "cardList": {
+    "title": "All Cards",
+    "filterQuestion": "Search by question...",
+    "filterType": "Type",
+    "filterState": "State",
+    "filterTag": "Tag",
+    "filterClear": "Clear filters",
+    "allTypes": "All types",
+    "allStates": "All states",
+    "allTags": "All tags",
+    "stateNew": "New",
+    "stateLearning": "Learning",
+    "stateReview": "Review",
+    "stateRelearning": "Relearning",
+    "empty": {
+      "title": "No cards found",
+      "subtitle": "Try adjusting your filters or add cards to a deck"
+    },
+    "deleteCard": {
+      "title": "Delete card",
+      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    },
+    "toast": {
+      "cardUpdated": "Card updated successfully",
+      "cardDeleted": "Card deleted successfully"
+    }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Stats",
+      "decks": "Decks",
+      "study": "Study",
+      "cards": "Cards"
+    },
+    "sidebar": {
+      "collapse": "Collapse sidebar",
+      "open": "Open menu",
+      "close": "Close menu"
+    },
+    "profile": {
+      "open": "Open profile menu",
+      "viewProfile": "View profile",
+      "lightMode": "Light mode",
+      "darkMode": "Dark mode",
+      "language": "Language",
+      "logout": "Log out"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Your account information",
+    "fullName": "Full name",
+    "username": "Username",
+    "email": "Email address",
+    "role": "Role",
+    "memberSince": "Member since"
+  },
+  "dashboard": {
+    "title": "Stats",
+    "welcome": "Here's your learning overview, {{ name }}",
+    "stats": {
+      "dueToday": "Due today",
+      "studiedToday": "Studied today",
+      "streak": "Day streak"
+    },
+    "heatmap": {
+      "title": "Study activity — past year"
+    },
+    "lastStudied": {
+      "title": "Recently studied",
+      "study": "Study",
+      "empty": "No decks studied yet."
+    },
+    "error": "Could not load dashboard data."
+  }
+}

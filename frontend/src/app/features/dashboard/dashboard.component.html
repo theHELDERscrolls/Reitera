@@ -1,0 +1,57 @@
+<div class="flex flex-col gap-8">
+  <app-page-header
+    [title]="'dashboard.title' | transloco"
+    [subtitle]="'dashboard.welcome' | transloco: { name: firstName() }"
+  />
+
+  <!-- Stat badges -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    @if (statsLoading()) {
+      @for (_ of [0, 1, 2]; track $index) {
+        <div class="h-18 animate-pulse rounded-xl bg-overlay"></div>
+      }
+    } @else if (statsError()) {
+      <div
+        class="flex items-center col-span-3 gap-3 p-4 text-sm border rounded-xl bg-surface border-border text-muted"
+      >
+        <span>{{ 'dashboard.error' | transloco }}</span>
+      </div>
+    } @else {
+      <app-stat-card
+        [value]="stats()!.totalDueToday"
+        [label]="'dashboard.stats.dueToday' | transloco"
+      >
+        <svg lucideCalendarCheck class="size-5 text-accent-2" />
+      </app-stat-card>
+
+      <app-stat-card
+        [value]="stats()!.studiedToday"
+        [label]="'dashboard.stats.studiedToday' | transloco"
+      >
+        <svg lucideBookOpen class="size-5 text-accent-4" />
+      </app-stat-card>
+
+      <app-stat-card [value]="stats()!.streak" [label]="'dashboard.stats.streak' | transloco">
+        <svg lucideFlame class="size-5 text-accent-1" />
+      </app-stat-card>
+    }
+  </div>
+
+  <!-- Activity heatmap -->
+  <section class="rounded-xl border border-border bg-surface p-4">
+    <h2 class="mb-3 text-sm font-medium text-muted">
+      {{ 'dashboard.heatmap.title' | transloco }}
+    </h2>
+    @if (heatmapLoading()) {
+      <div class="h-40 animate-pulse rounded-lg bg-overlay"></div>
+    } @else if (heatmap()) {
+      <app-study-heatmap [data]="heatmap()!" />
+    }
+  </section>
+
+  <!-- Last studied decks -->
+  <app-last-studied-decks
+    [decks]="lastStudied() ?? []"
+    [loading]="lastStudiedLoading()"
+  />
+</div>

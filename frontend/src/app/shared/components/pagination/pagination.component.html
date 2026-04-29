@@ -1,0 +1,38 @@
+@if (totalPages() > 1) {
+  <div class="flex items-center justify-center gap-1">
+    <button
+      (click)="pageChange.emit(currentPage() - 1)"
+      [disabled]="currentPage() === 0"
+      [attr.aria-label]="'decks.pagination.prev' | transloco"
+      class="p-2 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <svg lucideChevronLeft class="size-4" />
+    </button>
+
+    @for (page of pageRange(); track $index) {
+      @if (page === 'gap') {
+        <span class="px-2 text-sm select-none text-muted">…</span>
+      } @else {
+        <button
+          (click)="pageChange.emit(page)"
+          [class]="
+            page === currentPage()
+              ? 'min-w-8 h-8 rounded-lg text-sm font-medium bg-primary text-background'
+              : 'min-w-8 h-8 rounded-lg text-sm text-muted hover:text-foreground hover:bg-overlay transition-colors'
+          "
+        >
+          {{ page + 1 }}
+        </button>
+      }
+    }
+
+    <button
+      (click)="pageChange.emit(currentPage() + 1)"
+      [disabled]="currentPage() === totalPages() - 1"
+      [attr.aria-label]="'decks.pagination.next' | transloco"
+      class="p-2 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <svg lucideChevronRight class="size-4" />
+    </button>
+  </div>
+}

@@ -1,0 +1,22 @@
+<span
+  class="inline-flex text-xs px-2 py-0.5 rounded-full font-medium"
+  [class]="
+    state() === null || state() === 0
+      ? 'bg-overlay text-muted'
+      : state() === 1
+        ? 'bg-info/10 text-info'
+        : state() === 2
+          ? 'bg-success/10 text-success'
+          : 'bg-warning/10 text-warning'
+  "
+>
+  {{
+    state() === null || state() === 0
+      ? ('deckDetail.cards.state.new' | transloco)
+      : state() === 1
+        ? ('deckDetail.cards.state.learning' | transloco)
+        : state() === 2
+          ? ('deckDetail.cards.state.review' | transloco)
+          : ('deckDetail.cards.state.relearning' | transloco)
+  }}
+</span>
