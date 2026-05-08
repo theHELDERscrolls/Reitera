@@ -2,6 +2,7 @@ package com.helderruiz.reitera_backend.modules.card.repository;
 
 import com.helderruiz.reitera_backend.modules.card.model.Card;
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
+import com.helderruiz.reitera_backend.modules.deck.model.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -77,6 +78,12 @@ public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecifi
             ")")
     List<Card> findNewCardsByCategoryAndUser(@Param("categoryId") Integer categoryId,
                                              @Param("userId") UUID userId);
+
+    /**
+     * Counts how many cards are associated with the given tag.
+     * Used for orphan cleanup: if result is 0, the tag can be safely deleted.
+     */
+    long countByTagsContaining(Tag tag);
 
     /**
      * Returns a paginated list of cards owned by the user that have the specified tag assigned.
