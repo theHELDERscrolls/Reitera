@@ -263,7 +263,7 @@ public class CardService {
         oldTags.stream()
                 .filter(t -> !newTagIds.contains(t.getId()))
                 .forEach(t -> {
-                    if (tagRepository.countCardsByTagId(t.getId()) == 0) {
+                    if (cardRepository.countByTagsContaining(t) == 0) {
                         tagRepository.deleteById(t.getId());
                     }
                 });
