@@ -76,3 +76,64 @@ Study sessions follow a **batch architecture** — the backend is only hit twice
 **Scope modes:** both endpoints accept either `deckId` (single deck) or `categoryId` (all decks in a category), enabling users to study individual topics or full subjects at once.
 
 **Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Again on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
+
+## Testing Strategy
+
+Tests live in `src/test/java/` mirroring the production package structure. Two test types are used — no integration tests exist yet.
+
+### Unit tests (service layer)
+
+```
+@ExtendWith(MockitoExtension.class)
+class XServiceTest {
+    // instance fields (test data)
+    @Mock     XRepository xRepository;
+    @InjectMocks XService xService;
+
+    @BeforeEach void setUp() { ... }
+    @Test void methodName_condition_expectedOutcome() { ... }
+}
+```
+
+- Framework: JUnit 5 + Mockito + AssertJ
+- `@Mock` injects fakes for every repository/service dependency
+- `@InjectMocks` instantiates the class under test with those fakes injected
+- `@Value`-injected fields set via `ReflectionTestUtils.setField()` in `@BeforeEach`
+- Assertions use AssertJ (`assertThat`, `assertThatThrownBy`)
+- Side-effect verification uses `verify(repo).method(...)` / `verify(repo, never()).method(...)`
+
+### Controller slice tests (web layer)
+
+```
+@WebMvcTest(XController.class)
+class XControllerTest {
+    @Autowired MockMvc mockMvc;
+    @MockitoBean XService xService;
+    @MockitoBean JwtService jwtService;   // always required — JwtAuthenticationFilter depends on it
+
+    @Test void endpoint_returns200_whenAuthenticated() throws Exception {
+        mockMvc.perform(get("/api/v1/...").with(user(mockUser)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.field").value(...));
+    }
+}
+```
+
+- Framework: `@WebMvcTest` (Spring MVC slice) + `SecurityMockMvcRequestPostProcessors`
+- `@MockitoBean JwtService` is required in every controller test because `JwtAuthenticationFilter` is a `@Component` filter loaded by the slice and depends on `JwtService`
+- `.with(user(mockUser))` injects authentication directly into the `SecurityContext`, bypassing the JWT filter entirely — used for all protected endpoints
+- POST/PUT/DELETE requests include `.with(csrf())` for CSRF compatibility
+- `AuthControllerTest` is the only exception: it adds `@Import(SecurityConfig.class)` + `@MockitoBean AuthenticationProvider` + `@MockitoBean UserDetailsService` to activate the `permitAll()` rules for public auth endpoints
+
+### Coverage
+
+| Module | Unit tests | Slice tests |
+|--------|-----------|-------------|
+| auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7) | `AuthControllerTest` (7) |
+| user | `UserServiceTest` (8) | `UserControllerTest` (2) |
+| deck | `DeckServiceTest` (15), `TagServiceTest` (3), `CategoryServiceTest` (1) | `DeckControllerTest` (15), `TagControllerTest` (4), `CategoryControllerTest` (2) |
+| card | `CardServiceTest` (8) | `CardControllerTest` (11), `CardListControllerTest` (3) |
+| study | `FsrsServiceTest` (3), `StudyServiceTest` (2) | `StudyControllerTest` (5) |
+| dashboard | `DashboardServiceTest` (4) | `DashboardControllerTest` (4) |
+
+**Total: ~121 tests** across 19 test classes. Run with `mvn test` from `backend/reitera-backend/`.

@@ -34,21 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DeckServiceTest {
+class DeckServiceTest {
     private User user;
     private Deck deck;
     private Category category;
     private Category newCategory;
     private Pageable pageable;
-
-    @BeforeEach
-    void setup() {
-        user = User.builder().id(UUID.randomUUID()).build();
-        category = Category.builder().id(1).build();
-        deck = Deck.builder().id(1).category(category).owner(user).build();
-        newCategory = Category.builder().id(2).build();
-        pageable = PageRequest.of(0, 20);
-    }
 
     @Mock
     private DeckRepository deckRepository;
@@ -64,6 +55,15 @@ public class DeckServiceTest {
 
     @InjectMocks
     private DeckService deckService;
+
+    @BeforeEach
+    void setUp() {
+        user = User.builder().id(UUID.randomUUID()).build();
+        category = Category.builder().id(1).build();
+        deck = Deck.builder().id(1).category(category).owner(user).build();
+        newCategory = Category.builder().id(2).build();
+        pageable = PageRequest.of(0, 20);
+    }
 
     @Test
     void getDeckById_existingDeckWithMatchingOwner_returnsDeckResponseDTO() {

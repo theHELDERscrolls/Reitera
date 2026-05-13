@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CardServiceTest {
+class CardServiceTest {
     private User user;
     private Deck deck;
     private Card card;
@@ -44,8 +44,26 @@ public class CardServiceTest {
     private Card cardWithTag;
     private CardRequestDTO dto;
 
+    @Mock
+    private CardRepository cardRepository;
+
+    @Mock
+    private DeckRepository deckRepository;
+
+    @Mock
+    private TagRepository tagRepository;
+
+    @Mock
+    private TagService tagService;
+
+    @Mock
+    private StudyProgressRepository studyProgressRepository;
+
+    @InjectMocks
+    private CardService cardService;
+
     @BeforeEach
-    void setup() {
+    void setUp() {
         user = User.builder().id(UUID.randomUUID()).build();
         deck = Deck.builder().id(1).owner(user).build();
         card = Card.builder()
@@ -65,24 +83,6 @@ public class CardServiceTest {
                 null,
                 null);
     }
-
-    @Mock
-    private CardRepository cardRepository;
-
-    @Mock
-    private DeckRepository deckRepository;
-
-    @Mock
-    private TagRepository tagRepository;
-
-    @Mock
-    private TagService tagService;
-
-    @Mock
-    private StudyProgressRepository studyProgressRepository;
-
-    @InjectMocks
-    private CardService cardService;
 
     @Test
     void getCardsByDeck_existingDeck_returnsPage() {

@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(DeckController.class)
-public class DeckControllerTest {
+class DeckControllerTest {
     private User mockUser;
     private DeckResponseDTO deckResponse;
     private DeckRequestDTO deckRequest;
@@ -50,7 +50,7 @@ public class DeckControllerTest {
     private JwtService jwtService;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         Role mockRole = Role.builder().id(1).name("STUDENT").build();
         mockUser = User.builder().id(UUID.randomUUID()).email("alumno@reitera.com").role(mockRole).build();
         deckResponse = new DeckResponseDTO(

@@ -32,22 +32,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class StudyServiceTest {
-
+class StudyServiceTest {
     private User user;
     private Deck deck;
     private Card card;
     private StudyProgress updatedProgress;
     private StudySessionRequestDTO dto;
-
-    @BeforeEach
-    void setup() {
-        user = User.builder().id(UUID.randomUUID()).build();
-        deck = Deck.builder().id(1).owner(user).build();
-        card = Card.builder().id(1).deck(deck).tags(new HashSet<>()).build();
-        updatedProgress = StudyProgress.builder().user(user).card(card).build();
-        dto = new StudySessionRequestDTO(deck.getId(), null, List.of(new CardRatingDTO(card.getId(), 3)));
-    }
 
     @Mock
     private DeckRepository deckRepository;
@@ -69,6 +59,15 @@ public class StudyServiceTest {
 
     @InjectMocks
     private StudyService studyService;
+
+    @BeforeEach
+    void setUp() {
+        user = User.builder().id(UUID.randomUUID()).build();
+        deck = Deck.builder().id(1).owner(user).build();
+        card = Card.builder().id(1).deck(deck).tags(new HashSet<>()).build();
+        updatedProgress = StudyProgress.builder().user(user).card(card).build();
+        dto = new StudySessionRequestDTO(deck.getId(), null, List.of(new CardRatingDTO(card.getId(), 3)));
+    }
 
     @Test
     void processSession_withExistingProgress_savesUpdatedProgressAndLog() {

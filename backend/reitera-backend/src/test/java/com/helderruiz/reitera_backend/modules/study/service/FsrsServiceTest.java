@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FsrsServiceTest {
+class FsrsServiceTest {
     private final FsrsService fsrsService = new FsrsService();
 
     private User user;
@@ -20,7 +20,7 @@ public class FsrsServiceTest {
     private LocalDateTime now;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         user = User.builder().id(UUID.randomUUID()).build();
         card = Card.builder().id(1).build();
         now = LocalDateTime.of(2026, 5, 1, 12, 30);
@@ -34,7 +34,6 @@ public class FsrsServiceTest {
         assertThat(result.getReps()).isEqualTo(1);
         assertThat(result.getLastReview()).isEqualTo(now);
         assertThat(result.getNextReview()).isAfter(now);
-
     }
 
     @Test
