@@ -6,8 +6,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
-### Planned
-- Deck import / export (JSON format) — deferred, tracked in issue #16
+### Added
+- Backend test suite — issue #49: 19 test classes (~121 tests) covering all modules with unit tests (Mockito) and controller slice tests (`@WebMvcTest`); see `architecture/backend.md` for the full strategy and coverage table
 
 ---
 
