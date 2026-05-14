@@ -112,7 +112,7 @@ class UserServiceTest {
 
         assertThatThrownBy(() -> userService.registerUser(validRegisterDto))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("email");
+                .hasMessageContaining("The provided data is invalid or already in use");
     }
 
     @Test
@@ -122,7 +122,7 @@ class UserServiceTest {
 
         assertThatThrownBy(() -> userService.registerUser(validRegisterDto))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("username");
+                .hasMessageContaining("The provided data is invalid or already in use");
     }
 
     @Test
