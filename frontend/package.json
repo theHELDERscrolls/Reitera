@@ -47,7 +47,7 @@
     "eslint": "^10.3.0",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.14",
-    "tailwindcss": "^4.2.4",
+    "tailwindcss": "^4.3.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "8.59.4",
     "vitest": "^4.1.6"
