@@ -37,11 +37,11 @@ public class UserService {
         }
 
         if (userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new IllegalArgumentException("The email is already registered");
+            throw new IllegalArgumentException("The provided data is invalid or already in use");
         }
 
         if (userRepository.findByUsername(dto.username()).isPresent()) {
-            throw new IllegalArgumentException("The username is already in use");
+            throw new IllegalArgumentException("The provided data is invalid or already in use");
         }
 
         Role studentRole = roleRepository.findByName("STUDENT")
