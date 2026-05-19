@@ -11,6 +11,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.25.1] — 2026-05-14 — fix/memory-leak
+
+### Security
+- Registration conflict responses now return a single generic message (`"The provided data is invalid or already in use"`) regardless of whether the email or the username was already taken — prevents user enumeration by observing distinct error messages; issue #100
+- `RateLimitFilter` bucket store migrated from `ConcurrentHashMap` to a Caffeine `LoadingCache` with 10-minute expiration after last access — inactive IPs are evicted automatically, eliminating unbounded memory growth under sustained unique-IP traffic; issue #100
+
+### Changed
+- `backend/reitera-backend/pom.xml` version bumped to `0.25.1`; `caffeine` added as dependency
+
+---
+
 ## [0.25.0] — 2026-04-28 — chore/demo-deployment
 
 ### Added
