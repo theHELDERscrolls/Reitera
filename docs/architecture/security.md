@@ -50,7 +50,15 @@ Deck author attribution uses the unique `username` field (the user's chosen nick
 
 Login and register endpoints are rate-limited to **5 requests per minute per client IP** using Bucket4j's token-bucket algorithm (`RateLimitFilter`, runs before the JWT filter). When the bucket is empty the server returns `429 Too Many Requests` with a `Retry-After: 60` header so clients know when to retry.
 
-The real IP is read from the `X-Forwarded-For` header first (needed for the Render reverse-proxy), falling back to `request.getRemoteAddr()`. Buckets are kept in a `ConcurrentHashMap` — one bucket per IP string. This is adequate for a single-instance deployment; a Redis-backed bucket would be needed for horizontal scaling.
+The real IP is read from the `X-Forwarded-For` header first (needed for the Render reverse-proxy), falling back to `request.getRemoteAddr()`. Buckets are stored in a Caffeine `LoadingCache` — one bucket per IP string — with a 10-minute expiration after last access. Inactive IPs are evicted automatically, preventing unbounded memory growth on single-instance deployments. A Redis-backed bucket would be needed for horizontal scaling.
+
+### Generic error message on registration conflicts (anti-enumeration)
+
+When registration fails because the email or username is already taken, the API returns the same generic message (`"The provided data is invalid or already in use"`) regardless of which field caused the conflict.
+
+Returning distinct messages ("email already registered" vs. "username already in use") would allow an attacker to probe which emails or usernames exist in the system by observing the different responses. This is the same enumeration principle applied to IDOR prevention — the response must be indistinguishable across all conflict cases.
+
+Applied in: `UserService.registerUser()`.
 
 ### HTTP security headers
 
