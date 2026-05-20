@@ -1,5 +1,6 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
@@ -26,6 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final EmailVerificationService emailVerificationService;
 
     /**
      * Registers a new user in the system.
@@ -54,7 +56,10 @@ public class UserService {
                 .firstName(dto.firstName())
                 .lastName(dto.lastName())
                 .role(studentRole)
+                .emailVerified(false)
                 .build());
+
+        emailVerificationService.sendToken(savedUser);
 
         return new UserResponseDTO(
                 savedUser.getId(),
@@ -92,6 +97,10 @@ public class UserService {
 
         if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
+        }
+
+        if (!user.isEnabled()) {
+            throw new RuntimeException("Invalid credentials");
         }
 
         String accessToken = jwtService.generateToken(user.getUsername(), user.getRole().getName());

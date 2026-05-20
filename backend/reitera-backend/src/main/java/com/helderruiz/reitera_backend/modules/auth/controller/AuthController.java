@@ -1,13 +1,10 @@
 package com.helderruiz.reitera_backend.modules.auth.controller;
 
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
 import com.helderruiz.reitera_backend.modules.auth.model.RefreshToken;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
-import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
-import com.helderruiz.reitera_backend.modules.user.dto.RefreshRequestDTO;
-import com.helderruiz.reitera_backend.modules.user.dto.UserLoginDTO;
-import com.helderruiz.reitera_backend.modules.user.dto.UserRegisterDTO;
-import com.helderruiz.reitera_backend.modules.user.dto.UserResponseDTO;
+import com.helderruiz.reitera_backend.modules.user.dto.*;
 import com.helderruiz.reitera_backend.modules.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ public class AuthController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
     private final JwtService jwtService;
+    private final EmailVerificationService emailVerificationService;
 
     /**
      * Handles user registration.
@@ -76,5 +74,19 @@ public class AuthController {
         refreshTokenService.revokeAllTokens(token.getUser());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/verify")
+    public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
+        emailVerificationService.verifyToken(token);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<Void> resendVerification(@RequestBody ResendVerificationDTO dto) {
+        emailVerificationService.resendToken(dto.email());
+
+        return ResponseEntity.ok().build();
     }
 }

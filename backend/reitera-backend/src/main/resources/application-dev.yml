@@ -14,6 +14,8 @@ api:
   security:
     jwt:
       secret-key: "ReiteraAppSuperSecretKeyForJWTGenerationDoNotShare2026!"
+    resend:
+      api-key: "${RESEND_API_KEY}"
 
 app:
   cors:

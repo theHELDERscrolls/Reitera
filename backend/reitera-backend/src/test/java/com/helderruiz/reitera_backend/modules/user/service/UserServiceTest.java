@@ -1,5 +1,6 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +52,9 @@ class UserServiceTest {
     @Mock
     private RefreshTokenService refreshTokenService;
 
+    @Mock
+    private EmailVerificationService emailVerificationService;
+
     @InjectMocks
     private UserService userService;
 
@@ -65,6 +70,7 @@ class UserServiceTest {
                 .lastName("Testez")
                 .role(studentRole)
                 .createdAt(LocalDateTime.now())
+                .emailVerified(true)
                 .build();
         validRegisterDto = new UserRegisterDTO(
                 "reitera",
@@ -83,6 +89,7 @@ class UserServiceTest {
         when(roleRepository.findByName("STUDENT")).thenReturn(Optional.of(studentRole));
         when(passwordEncoder.encode(any())).thenReturn("encoded-password");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        doNothing().when(emailVerificationService).sendToken(any());
 
         UserResponseDTO result = userService.registerUser(validRegisterDto);
 

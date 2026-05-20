@@ -10,6 +10,7 @@ import com.helderruiz.reitera_backend.modules.user.model.Role;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import com.helderruiz.reitera_backend.modules.user.service.UserService;
 import com.helderruiz.reitera_backend.config.SecurityConfig;
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private EmailVerificationService emailVerificationService;
 
     @BeforeEach
     void setUp() {
