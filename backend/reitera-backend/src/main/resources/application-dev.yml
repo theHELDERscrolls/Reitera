@@ -20,6 +20,7 @@ api:
 app:
   cors:
     allowed-origins: http://localhost:4200
+  base-url: http://localhost:4200
 
 springdoc:
   swagger-ui:

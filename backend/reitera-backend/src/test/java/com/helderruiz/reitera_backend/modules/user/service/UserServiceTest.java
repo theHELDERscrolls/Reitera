@@ -174,4 +174,21 @@ class UserServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid credentials");
     }
+
+    @Test
+    void loginUser_throws_whenUserNotVerified() {
+        User unverifiedUser = User.builder()
+                .id(UUID.randomUUID())
+                .email("reitera@test.com")
+                .password("encoded-password")
+                .role(studentRole)
+                .emailVerified(false)
+                .build();
+        when(userRepository.findByEmail(validLoginDto.email())).thenReturn(Optional.of(unverifiedUser));
+        when(passwordEncoder.matches(validLoginDto.password(), unverifiedUser.getPassword())).thenReturn(true);
+
+        assertThatThrownBy(() -> userService.loginUser(validLoginDto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid credentials");
+    }
 }

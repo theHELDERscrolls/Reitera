@@ -53,7 +53,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         }
 
         String clientIp = resolveClientIp(request);
-        Bucket bucket = buckets.get(clientIp);
+        Bucket bucket = buckets.get(clientIp + ":" + request.getRequestURI());
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
         if (probe.isConsumed()) {

@@ -84,7 +84,7 @@ public class AuthController {
     }
 
     @PostMapping("/resend-verification")
-    public ResponseEntity<Void> resendVerification(@RequestBody ResendVerificationDTO dto) {
+    public ResponseEntity<Void> resendVerification(@Valid @RequestBody ResendVerificationDTO dto) {
         emailVerificationService.resendToken(dto.email());
 
         return ResponseEntity.ok().build();

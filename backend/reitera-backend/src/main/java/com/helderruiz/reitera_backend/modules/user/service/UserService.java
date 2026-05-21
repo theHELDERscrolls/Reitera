@@ -100,7 +100,7 @@ public class UserService {
         }
 
         if (!user.isEnabled()) {
-            throw new RuntimeException("Invalid credentials");
+            throw new IllegalArgumentException("Invalid credentials");
         }
 
         String accessToken = jwtService.generateToken(user.getUsername(), user.getRole().getName());
