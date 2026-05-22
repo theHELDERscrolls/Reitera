@@ -19,7 +19,7 @@ Authentication uses a **two-token stateless strategy**:
 6. If the refresh token is also expired or revoked, `AuthService.logout()` is called and the user is redirected to the login page
 7. `POST /auth/logout` → server revokes all active refresh tokens for the user
 
-Public endpoints (no token required): `/register`, `/login`, `/refresh`, `/logout`
+Public endpoints (no token required): `/register`, `/login`, `/refresh`, `/logout`, `/verify`, `/resend-verification`
 All other endpoints are protected.
 
 **Refresh token rotation:** each refresh token is single-use. After being exchanged for a new pair, it is immediately marked `revoked = true`. This limits the damage window if a token is stolen — once used, the old token is worthless.
@@ -52,13 +52,29 @@ Login and register endpoints are rate-limited to **5 requests per minute per cli
 
 The real IP is read from the `X-Forwarded-For` header first (needed for the Render reverse-proxy), falling back to `request.getRemoteAddr()`. Buckets are stored in a Caffeine `LoadingCache` — one bucket per IP string — with a 10-minute expiration after last access. Inactive IPs are evicted automatically, preventing unbounded memory growth on single-instance deployments. A Redis-backed bucket would be needed for horizontal scaling.
 
-### Generic error message on registration conflicts (anti-enumeration)
+### 409 Conflict on registration duplicates
 
-When registration fails because the email or username is already taken, the API returns the same generic message (`"The provided data is invalid or already in use"`) regardless of which field caused the conflict.
+When registration fails because the email or username is already taken, the API returns `409 Conflict` with the generic message `"The provided data is invalid or already in use"` — the same message regardless of which field caused the conflict.
 
-Returning distinct messages ("email already registered" vs. "username already in use") would allow an attacker to probe which emails or usernames exist in the system by observing the different responses. This is the same enumeration principle applied to IDOR prevention — the response must be indistinguishable across all conflict cases.
+The 409 status (vs. the previous 400) lets the frontend distinguish a data conflict from a validation error and show a user-friendly warning toast. The message stays generic so an attacker cannot tell whether the email or the username was the duplicate. Enumeration risk at registration is accepted given that a forgot-password flow (once implemented) would expose the same information.
 
-Applied in: `UserService.registerUser()`.
+Applied in: `UserService.registerUser()` via `DataConflictException` → `GlobalExceptionHandler.handleDataConflict()` → 409.
+
+### Email verification requirement
+
+Newly registered users cannot log in until they verify their email address. The verification flow:
+
+1. `POST /auth/register` → account created, verification email sent asynchronously via Resend SDK
+2. Email contains a signed link: `{app.base-url}/verify?token={rawToken}`
+3. The raw token is SHA-256 hashed before storage — the DB never holds the plaintext token
+4. `GET /auth/verify?token=` → token hashed, matched against DB, expiry checked (24h TTL), account activated
+5. `POST /auth/resend-verification` → always returns 200 regardless of whether the email exists (anti-enumeration); re-sends only if the account is not yet verified
+
+`verifyToken` is `@Transactional` to prevent a race condition where two concurrent verification requests could both pass the expiry check before either marks the account as verified.
+
+### Rate limiting scope
+
+The rate limiter (Bucket4j, 5 req/min per IP) keys buckets on `ip:path` rather than `ip` alone. This prevents a sustained attack on `/login` from exhausting the budget for `/register` or `/resend-verification` and vice versa.
 
 ### HTTP security headers
 

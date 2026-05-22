@@ -58,18 +58,6 @@ INSERT INTO users (
         true,
         null,
         null
-    ),
-    (
-        'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-        'admin',
-        'manuhelderruiz@gmail.com',
-        crypt('reitera2026', gen_salt('bf', 10)),
-        'Admin',
-        'Reitera',
-        (SELECT id FROM roles WHERE name = 'ADMIN'),
-        false,
-        null,
-        null
     );
 
 

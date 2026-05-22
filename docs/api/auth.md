@@ -33,6 +33,33 @@ Password rules: min 8 characters, at least 1 digit, 1 lowercase, 1 uppercase, 1 
 }
 ```
 
+A verification email is sent automatically after registration. The user cannot log in until the email is verified.
+
+**Errors:** `400` if passwords don't match or validation fails · `409 Conflict` if the email or username is already registered.
+
+---
+
+### GET `/api/v1/auth/verify?token=<token>`
+Verifies the user's email address using the token from the verification email. Marks the account as active.
+
+**Response `200 OK`** (no body)
+
+**Errors:** `400` if the token is invalid or has expired (24-hour TTL).
+
+---
+
+### POST `/api/v1/auth/resend-verification`
+Resends the verification email. Always returns 200 regardless of whether the email exists — prevents user enumeration.
+
+**Request body:**
+```json
+{ "email": "test01@test.com" }
+```
+
+**Response `200 OK`** (no body)
+
+**Errors:** `400` if the email field is blank or not a valid email format · `429` if rate limit exceeded (5 req/min per IP per endpoint).
+
 ---
 
 ### POST `/api/v1/auth/login`

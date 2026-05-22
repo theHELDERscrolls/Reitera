@@ -21,3 +21,7 @@ export interface AuthResponse {
 export interface RefreshRequest {
   refreshToken: string;
 }
+
+export interface ResendVerificationRequest {
+  email: string;
+}

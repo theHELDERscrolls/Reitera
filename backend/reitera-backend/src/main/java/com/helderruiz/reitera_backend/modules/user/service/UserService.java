@@ -1,6 +1,7 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
 import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
+import com.helderruiz.reitera_backend.core.exception.DataConflictException;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
@@ -39,11 +40,11 @@ public class UserService {
         }
 
         if (userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new IllegalArgumentException("The provided data is invalid or already in use");
+            throw new DataConflictException("The provided data is invalid or already in use");
         }
 
         if (userRepository.findByUsername(dto.username()).isPresent()) {
-            throw new IllegalArgumentException("The provided data is invalid or already in use");
+            throw new DataConflictException("The provided data is invalid or already in use");
         }
 
         Role studentRole = roleRepository.findByName("STUDENT")
