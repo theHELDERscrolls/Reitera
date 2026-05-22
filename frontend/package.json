@@ -42,7 +42,7 @@
     "@angular/cli": "^21.2.11",
     "@angular/compiler-cli": "^21.2.13",
     "@eslint/js": "^10.0.1",
-    "@tailwindcss/postcss": "^4.2.4",
+    "@tailwindcss/postcss": "^4.3.0",
     "angular-eslint": "21.4.0",
     "eslint": "^10.3.0",
     "jsdom": "^29.1.1",
