@@ -1,6 +1,7 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
 import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
+import com.helderruiz.reitera_backend.core.exception.DataConflictException;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
@@ -118,7 +119,7 @@ class UserServiceTest {
         when(userRepository.findByEmail(validRegisterDto.email())).thenReturn(Optional.of(savedUser));
 
         assertThatThrownBy(() -> userService.registerUser(validRegisterDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DataConflictException.class)
                 .hasMessageContaining("The provided data is invalid or already in use");
     }
 
@@ -128,7 +129,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(validRegisterDto.username())).thenReturn(Optional.of(savedUser));
 
         assertThatThrownBy(() -> userService.registerUser(validRegisterDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DataConflictException.class)
                 .hasMessageContaining("The provided data is invalid or already in use");
     }
 
