@@ -1,0 +1,92 @@
+<div class="flex items-center justify-center min-h-screen p-4 bg-background">
+  <div class="w-full max-w-md">
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl font-semibold text-foreground">
+        {{ 'auth.verify.title' | transloco }}
+      </h1>
+      <p class="mt-1 text-sm text-muted-foreground">
+        @if (isLoading()) {
+          {{ 'auth.verify.loading' | transloco }}
+        } @else if (hasError()) {
+          {{ 'auth.verify.error_subtitle' | transloco }}
+        }
+      </p>
+    </div>
+
+    <div class="relative p-8 border bg-surface rounded-xl border-border">
+      <app-language-switcher />
+
+      @if (isLoading()) {
+        <div class="flex flex-col items-center gap-4 text-center">
+          <svg
+            class="animate-spin h-10 w-10 text-primary"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
+          </svg>
+          <p class="text-sm text-muted-foreground">{{ 'auth.verify.loading' | transloco }}</p>
+        </div>
+      } @else if (hasError()) {
+        <div class="flex flex-col gap-5">
+          <p class="text-sm text-muted-foreground text-center">
+            {{ 'auth.verify.error_description' | transloco }}
+          </p>
+
+          <div class="min-h-22.5 flex flex-col gap-1.5">
+            <label for="email" class="text-sm font-medium text-foreground">
+              {{ 'auth.verify.email' | transloco }}
+            </label>
+            <input
+              id="email"
+              type="email"
+              [formControl]="emailControl"
+              [placeholder]="'auth.verify.email_placeholder' | transloco"
+              autocomplete="email"
+              class="w-full rounded-lg border border-border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              [class.border-error]="emailControl.invalid && emailControl.touched"
+            />
+            @if (emailControl.invalid && emailControl.touched) {
+              @if (emailControl.hasError('required')) {
+                <span class="text-xs text-error">{{
+                  'auth.verify.email_required' | transloco
+                }}</span>
+              } @else if (emailControl.hasError('email')) {
+                <span class="text-xs text-error">{{
+                  'auth.verify.email_invalid' | transloco
+                }}</span>
+              }
+            }
+          </div>
+
+          <button
+            type="button"
+            (click)="resend()"
+            class="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 active:opacity-80"
+          >
+            {{ 'auth.verify.resend' | transloco }}
+          </button>
+
+          <p class="text-sm text-center text-muted-foreground">
+            <a routerLink="/auth/login" class="font-medium text-primary hover:underline">
+              {{ 'auth.verify.go_login' | transloco }}
+            </a>
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

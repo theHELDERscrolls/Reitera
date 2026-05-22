@@ -64,13 +64,16 @@ export default class RegisterComponent {
 
     this.authService.register(this.form.value as RegisterRequest).subscribe({
       next: () => {
-        this.toast.success(this.transloco.translate('auth.register.success'));
-        void this.router.navigate(['/dashboard']);
+        void this.router.navigate(['/auth/check-email'], {
+          state: { email: this.form.value.email },
+        });
       },
       error: (err) => {
-        this.toast.error(
-          err.error?.message ?? this.transloco.translate('auth.register.error.server'),
-        );
+        if (err.status === 409) {
+          this.toast.warning(this.transloco.translate('auth.register.error.email_taken'));
+        } else {
+          this.toast.error(this.transloco.translate('auth.register.error.server'));
+        }
         this.loading.set(false);
       },
     });

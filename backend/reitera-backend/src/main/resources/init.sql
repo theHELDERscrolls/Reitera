@@ -35,15 +35,18 @@ CREATE TABLE IF NOT EXISTS roles (
 
 -- 2. USERS
 CREATE TABLE IF NOT EXISTS users (
-    id         UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-    username   VARCHAR(50)  NOT NULL UNIQUE,
-    email      VARCHAR(100) NOT NULL UNIQUE,
-    password   VARCHAR      NOT NULL,
-    first_name VARCHAR(50)  NOT NULL,
-    last_name  VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP    DEFAULT NOW(),
-    updated_at TIMESTAMP    DEFAULT NOW(),
-    role_id    INTEGER      NOT NULL REFERENCES roles(id)
+    id                            UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    username                      VARCHAR(50)  NOT NULL UNIQUE,
+    email                         VARCHAR(100) NOT NULL UNIQUE,
+    password                      VARCHAR      NOT NULL,
+    first_name                    VARCHAR(50)  NOT NULL,
+    last_name                     VARCHAR(100) NOT NULL,
+    created_at                    TIMESTAMP    DEFAULT NOW(),
+    updated_at                    TIMESTAMP    DEFAULT NOW(),
+    role_id                       INTEGER      NOT NULL REFERENCES roles(id),
+    email_verified                BOOLEAN      NOT NULL DEFAULT FALSE,
+    verification_token            VARCHAR(64)  UNIQUE,
+    verification_token_expires_at TIMESTAMP
 );
 
 

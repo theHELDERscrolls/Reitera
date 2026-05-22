@@ -10,6 +10,7 @@ import com.helderruiz.reitera_backend.modules.user.model.Role;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import com.helderruiz.reitera_backend.modules.user.service.UserService;
 import com.helderruiz.reitera_backend.config.SecurityConfig;
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,10 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,6 +61,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private EmailVerificationService emailVerificationService;
 
     @BeforeEach
     void setUp() {
@@ -156,5 +162,49 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"refreshToken\":\"some-valid-token\"}"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void verifyEmail_returns200_whenTokenValid() throws Exception {
+        doNothing().when(emailVerificationService).verifyToken(anyString());
+
+        mockMvc.perform(get("/api/v1/auth/verify").param("token", "valid-token"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void verifyEmail_returns400_whenTokenInvalid() throws Exception {
+        doThrow(new IllegalArgumentException("Invalid token"))
+                .when(emailVerificationService).verifyToken(anyString());
+
+        mockMvc.perform(get("/api/v1/auth/verify").param("token", "bad-token"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void verifyEmail_returns400_whenTokenExpired() throws Exception {
+        doThrow(new IllegalArgumentException("Expired token"))
+                .when(emailVerificationService).verifyToken(anyString());
+
+        mockMvc.perform(get("/api/v1/auth/verify").param("token", "expired-token"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void resendVerification_returns200_always() throws Exception {
+        doNothing().when(emailVerificationService).resendToken(anyString());
+
+        mockMvc.perform(post("/api/v1/auth/resend-verification").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"reitera@test.com\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void resendVerification_returns400_whenEmailInvalid() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/resend-verification").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"not-an-email\"}"))
+                .andExpect(status().isBadRequest());
     }
 }

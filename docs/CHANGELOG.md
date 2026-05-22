@@ -6,8 +6,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ---
 
 ## [Unreleased]
+
+---
+
+## [0.26.0] — 2026-05-22 — feat/50-mail-verification
+
 ### Added
-- Backend test suite — issue #49: 19 test classes (~121 tests) covering all modules with unit tests (Mockito) and controller slice tests (`@WebMvcTest`); see `architecture/backend.md` for the full strategy and coverage table
+- Email verification flow: users must verify their email before logging in
+- `core/email/EmailVerificationService` — generates UUID token, SHA-256 hashes it before storage, saves hash + 24h expiry; `verifyToken` is `@Transactional` to prevent race conditions on concurrent requests
+- `GET /api/v1/auth/verify?token=` — verifies the token and activates the account; 400 for invalid or expired token
+- `POST /api/v1/auth/resend-verification` — resends the verification email; always 200 (anti-enumeration); rate-limited per `ip:path`
+- `DataConflictException` — new exception returning 409 Conflict for duplicate email/username on registration; replaces the former generic 400
+- HTML email template for verification: Catppuccin Latte palette (`#8839ef` mauve), centered CTA button, fallback text link, sent via Resend SDK
+- `app.base-url` config property drives the verification link; `http://localhost:4200/auth` in dev, `https://reitera.vercel.app/auth` in prod
+- Frontend `EmailVerificationService` — `verifyEmail(token)` and `resendEmail(email)` wrapping the two new endpoints
+- `CheckEmailComponent` at `/auth/check-email` — post-registration screen with destination email, spam hint, resend button, and fallback state for direct navigation
+- `VerifyComponent` at `/auth/verify` — auto-triggers verification on load; spinner while in-flight; error state with email input and resend form for invalid/expired tokens
+- `auth.check_email.*` and `auth.verify.*` i18n keys added to `en.json`, `es.json`, `fr.json`, `pt.json`
+- `ResendVerificationRequest` interface added to `auth.model.ts`
+
+### Fixed
+- `AuthService.register()` was auto-logging in via `switchMap` after registration — now fails because unverified users cannot log in; simplified to return `Observable<void>`
+- Verification link pointed to `/verify` instead of `/auth/verify` — corrected by appending `/auth` to `app.base-url`
+- `RateLimitFilter` bucket key was `ip` only — now `ip:path`, preventing a `/login` attack from exhausting the `/register` rate limit
+
+### Changed
+- Registration conflict returns **409 Conflict** (was 400) — frontend detects `err.status === 409` and shows a warning toast instead of a generic error
+- `seed.sql` — admin user removed; only `alumno@reitera.com` demo account remains
+- `application-prod.yml` — `app.base-url` set to `https://reitera.vercel.app/auth`
+- `frontend/package.json` version bumped to `0.26.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.26.0`
 
 ---
 

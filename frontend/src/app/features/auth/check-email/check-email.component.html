@@ -1,0 +1,78 @@
+<div class="flex items-center justify-center min-h-screen p-4 bg-background">
+  <div class="w-full max-w-md">
+    <div class="mb-8 text-center">
+      <h1 class="text-2xl font-semibold text-foreground">
+        {{ 'auth.check_email.title' | transloco }}
+      </h1>
+      <p class="mt-1 text-sm text-muted-foreground">
+        {{ 'auth.check_email.subtitle' | transloco }}
+      </p>
+    </div>
+
+    <div class="relative p-8 border bg-surface rounded-xl border-border">
+      <app-language-switcher />
+
+      @if (email()) {
+        <div class="flex flex-col items-center gap-5 text-center">
+          <div class="flex items-center justify-center w-14 h-14 rounded-full bg-primary/10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7 text-primary"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect width="20" height="16" x="2" y="4" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+          </div>
+
+          <p class="text-sm text-muted-foreground">
+            {{ 'auth.check_email.description' | transloco }}
+          </p>
+          <p class="font-medium text-primary">{{ email() }}</p>
+
+          <p class="text-xs text-muted-foreground">
+            {{ 'auth.check_email.check_spam' | transloco }}
+          </p>
+
+          <button
+            type="button"
+            (click)="resend()"
+            class="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 active:opacity-80"
+          >
+            {{ 'auth.check_email.resend' | transloco }}
+          </button>
+        </div>
+      } @else {
+        <div class="flex flex-col items-center gap-4 text-center">
+          <div class="flex items-center justify-center w-14 h-14 rounded-full bg-surface-alt">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7 text-muted-foreground"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4M12 16h.01" />
+            </svg>
+          </div>
+
+          <p class="text-sm text-muted-foreground">
+            {{ 'auth.check_email.no_email' | transloco }}
+            <a routerLink="/auth/register" class="font-medium text-primary hover:underline">
+              {{ 'auth.check_email.go_register' | transloco }}
+            </a>
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

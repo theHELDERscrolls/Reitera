@@ -27,6 +27,33 @@
         "server": "Credenciales incorrectas. Por favor, inténtalo de nuevo."
       }
     },
+    "check_email": {
+      "title": "Revisa tu correo",
+      "subtitle": "Te hemos enviado un enlace de verificación",
+      "description": "Haz clic en el enlace que enviamos a:",
+      "check_spam": "¿No lo encuentras? Revisa tu carpeta de spam.",
+      "resend": "Reenviar correo",
+      "resend_success": "Correo de verificación enviado. Revisa tu bandeja de entrada.",
+      "resend_error": "No se pudo enviar el correo. Por favor, inténtalo de nuevo.",
+      "no_email": "Parece que llegaste aquí por error.",
+      "go_register": "Regístrate aquí"
+    },
+    "verify": {
+      "title": "Verificación de email",
+      "loading": "Verificando tu correo, por favor espera...",
+      "success": "¡Correo verificado! Ya puedes iniciar sesión.",
+      "error": "No hemos podido verificar tu correo.",
+      "error_subtitle": "Algo ha salido mal",
+      "error_description": "Tu enlace de verificación puede haber expirado o no ser válido. Introduce tu email para recibir uno nuevo.",
+      "email": "Email",
+      "email_placeholder": "tu@ejemplo.com",
+      "email_required": "El email es obligatorio.",
+      "email_invalid": "Introduce una dirección de email válida.",
+      "resend": "Reenviar correo de verificación",
+      "resend_success": "Correo de verificación enviado. Revisa tu bandeja de entrada.",
+      "resend_error": "No se pudo enviar el correo. Por favor, inténtalo de nuevo.",
+      "go_login": "Volver al inicio de sesión"
+    },
     "register": {
       "title": "Crea tu cuenta",
       "subtitle": "Empieza tu viaje de aprendizaje",
@@ -60,6 +87,7 @@
         "confirm_password_required": "Por favor, confirma tu contraseña.",
         "password_mismatch": "Las contraseñas no coinciden.",
         "server": "El registro ha fallado. Por favor, inténtalo de nuevo.",
+        "email_taken": "Este email o nombre de usuario ya está registrado.",
         "email_max": "El email no puede superar los 100 caracteres.",
         "first_name_max": "El nombre no puede superar los 50 caracteres.",
         "last_name_max": "Los apellidos no pueden superar los 100 caracteres.",

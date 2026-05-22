@@ -1,5 +1,7 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
+import com.helderruiz.reitera_backend.core.exception.DataConflictException;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +53,9 @@ class UserServiceTest {
     @Mock
     private RefreshTokenService refreshTokenService;
 
+    @Mock
+    private EmailVerificationService emailVerificationService;
+
     @InjectMocks
     private UserService userService;
 
@@ -65,6 +71,7 @@ class UserServiceTest {
                 .lastName("Testez")
                 .role(studentRole)
                 .createdAt(LocalDateTime.now())
+                .emailVerified(true)
                 .build();
         validRegisterDto = new UserRegisterDTO(
                 "reitera",
@@ -83,6 +90,7 @@ class UserServiceTest {
         when(roleRepository.findByName("STUDENT")).thenReturn(Optional.of(studentRole));
         when(passwordEncoder.encode(any())).thenReturn("encoded-password");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        doNothing().when(emailVerificationService).sendToken(any());
 
         UserResponseDTO result = userService.registerUser(validRegisterDto);
 
@@ -111,7 +119,7 @@ class UserServiceTest {
         when(userRepository.findByEmail(validRegisterDto.email())).thenReturn(Optional.of(savedUser));
 
         assertThatThrownBy(() -> userService.registerUser(validRegisterDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DataConflictException.class)
                 .hasMessageContaining("The provided data is invalid or already in use");
     }
 
@@ -121,7 +129,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(validRegisterDto.username())).thenReturn(Optional.of(savedUser));
 
         assertThatThrownBy(() -> userService.registerUser(validRegisterDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DataConflictException.class)
                 .hasMessageContaining("The provided data is invalid or already in use");
     }
 
@@ -164,6 +172,23 @@ class UserServiceTest {
         when(passwordEncoder.matches(dto.password(), savedUser.getPassword())).thenReturn(false);
 
         assertThatThrownBy(() -> userService.loginUser(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid credentials");
+    }
+
+    @Test
+    void loginUser_throws_whenUserNotVerified() {
+        User unverifiedUser = User.builder()
+                .id(UUID.randomUUID())
+                .email("reitera@test.com")
+                .password("encoded-password")
+                .role(studentRole)
+                .emailVerified(false)
+                .build();
+        when(userRepository.findByEmail(validLoginDto.email())).thenReturn(Optional.of(unverifiedUser));
+        when(passwordEncoder.matches(validLoginDto.password(), unverifiedUser.getPassword())).thenReturn(true);
+
+        assertThatThrownBy(() -> userService.loginUser(validLoginDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid credentials");
     }

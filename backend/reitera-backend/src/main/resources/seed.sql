@@ -35,7 +35,18 @@ ON CONFLICT (name) DO NOTHING;
 -- 2. USERS
 -- Fixed UUIDs allow study_progress and review_logs to reference
 -- users by a known value without relying on auto-generated IDs.
-INSERT INTO users (id, username, email, password, first_name, last_name, role_id) VALUES
+INSERT INTO users (
+        id,
+        username,
+        email,
+        password,
+        first_name,
+        last_name,
+        role_id,
+        email_verified,
+        verification_token,
+        verification_token_expires_at
+        ) VALUES
     (
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         'alumno',
@@ -43,16 +54,10 @@ INSERT INTO users (id, username, email, password, first_name, last_name, role_id
         crypt('reitera2026', gen_salt('bf', 10)),
         'Alumno',
         'Demo',
-        (SELECT id FROM roles WHERE name = 'STUDENT')
-    ),
-    (
-        'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-        'admin',
-        'admin@reitera.com',
-        crypt('reitera2026', gen_salt('bf', 10)),
-        'Admin',
-        'Reitera',
-        (SELECT id FROM roles WHERE name = 'ADMIN')
+        (SELECT id FROM roles WHERE name = 'STUDENT'),
+        true,
+        null,
+        null
     );
 
 

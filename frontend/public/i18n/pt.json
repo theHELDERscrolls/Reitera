@@ -27,6 +27,33 @@
         "server": "Credenciais inválidas. Por favor, tenta novamente."
       }
     },
+    "check_email": {
+      "title": "Verifica o teu email",
+      "subtitle": "Enviámos-te um link de verificação",
+      "description": "Clica no link que enviámos para:",
+      "check_spam": "Não encontras? Verifica a pasta de spam.",
+      "resend": "Reenviar email",
+      "resend_success": "Email de verificação enviado. Verifica a tua caixa de entrada.",
+      "resend_error": "Não foi possível enviar o email. Por favor, tenta novamente.",
+      "no_email": "Parece que chegaste aqui por engano.",
+      "go_register": "Regista-te aqui"
+    },
+    "verify": {
+      "title": "Verificação de email",
+      "loading": "A verificar o teu email, aguarda por favor...",
+      "success": "Email verificado! Já podes iniciar sessão.",
+      "error": "Não foi possível verificar o teu email.",
+      "error_subtitle": "Algo correu mal",
+      "error_description": "O teu link de verificação pode ter expirado ou ser inválido. Introduz o teu email para receber um novo.",
+      "email": "Email",
+      "email_placeholder": "tu@exemplo.com",
+      "email_required": "O email é obrigatório.",
+      "email_invalid": "Introduz um endereço de email válido.",
+      "resend": "Reenviar email de verificação",
+      "resend_success": "Email de verificação enviado. Verifica a tua caixa de entrada.",
+      "resend_error": "Não foi possível enviar o email. Por favor, tenta novamente.",
+      "go_login": "Voltar ao início de sessão"
+    },
     "register": {
       "title": "Criar conta",
       "subtitle": "Começa a tua jornada de aprendizagem",
@@ -60,6 +87,7 @@
         "confirm_password_required": "Por favor, confirma a tua palavra-passe.",
         "password_mismatch": "As palavras-passe não coincidem.",
         "server": "O registo falhou. Por favor, tenta novamente.",
+        "email_taken": "Este email ou nome de utilizador já está registado.",
         "email_max": "O email não pode ter mais de 100 caracteres.",
         "first_name_max": "O nome próprio não pode ter mais de 50 caracteres.",
         "last_name_max": "O apelido não pode ter mais de 100 caracteres.",

@@ -27,6 +27,33 @@
         "server": "Identifiants invalides. Veuillez réessayer."
       }
     },
+    "check_email": {
+      "title": "Vérifiez votre e-mail",
+      "subtitle": "Nous vous avons envoyé un lien de vérification",
+      "description": "Cliquez sur le lien envoyé à :",
+      "check_spam": "Vous ne le trouvez pas ? Vérifiez vos spams.",
+      "resend": "Renvoyer l'e-mail",
+      "resend_success": "E-mail de vérification envoyé. Vérifiez votre boîte de réception.",
+      "resend_error": "Impossible d'envoyer l'e-mail. Veuillez réessayer.",
+      "no_email": "Il semble que vous soyez arrivé ici par erreur.",
+      "go_register": "Inscrivez-vous ici"
+    },
+    "verify": {
+      "title": "Vérification de l'e-mail",
+      "loading": "Vérification de votre e-mail, veuillez patienter...",
+      "success": "E-mail vérifié ! Vous pouvez maintenant vous connecter.",
+      "error": "Impossible de vérifier votre e-mail.",
+      "error_subtitle": "Une erreur s'est produite",
+      "error_description": "Votre lien de vérification a peut-être expiré ou n'est pas valide. Saisissez votre e-mail pour en recevoir un nouveau.",
+      "email": "E-mail",
+      "email_placeholder": "vous@exemple.com",
+      "email_required": "L'e-mail est obligatoire.",
+      "email_invalid": "Saisissez une adresse e-mail valide.",
+      "resend": "Renvoyer l'e-mail de vérification",
+      "resend_success": "E-mail de vérification envoyé. Vérifiez votre boîte de réception.",
+      "resend_error": "Impossible d'envoyer l'e-mail. Veuillez réessayer.",
+      "go_login": "Retour à la connexion"
+    },
     "register": {
       "title": "Créer un compte",
       "subtitle": "Commencez votre parcours d'apprentissage",
@@ -60,6 +87,7 @@
         "confirm_password_required": "Veuillez confirmer votre mot de passe.",
         "password_mismatch": "Les mots de passe ne correspondent pas.",
         "server": "L'inscription a échoué. Veuillez réessayer.",
+        "email_taken": "Cet e-mail ou nom d'utilisateur est déjà enregistré.",
         "email_max": "L'e-mail ne peut pas dépasser 100 caractères.",
         "first_name_max": "Le prénom ne peut pas dépasser 50 caractères.",
         "last_name_max": "Le nom ne peut pas dépasser 100 caractères.",

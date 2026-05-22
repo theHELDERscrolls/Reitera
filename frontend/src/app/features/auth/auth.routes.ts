@@ -10,6 +10,14 @@ const authRoutes: Routes = [
     loadComponent: () => import('./register/register.component'),
   },
   {
+    path: 'verify',
+    loadComponent: () => import('./verify/verify.component'),
+  },
+  {
+    path: 'check-email',
+    loadComponent: () => import('./check-email/check-email.component'),
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
