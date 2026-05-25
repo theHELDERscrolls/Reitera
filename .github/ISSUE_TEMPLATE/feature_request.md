@@ -10,10 +10,6 @@ assignees: ""
 
 [Clear description of what needs to be done and why]
 
-## Associated Requirement (RFTP)
-
-- Requirement ID: [e.g., R01F01T01]
-
 ## Acceptance Criteria (DoD)
 
 - [ ] Criteria 1
