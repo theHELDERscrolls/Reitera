@@ -39,3 +39,10 @@ docs/.obsidian/
 
 # ===== Claude Code =====
 CLAUDE.md
+.claude/settings.json
+.claude/scripts/
+.claude/checklists/
+.claude/commands/orient.md
+.claude/commands/check.md
+.claude/commands/doc-audit.md
+.claude/commands/brief.md
