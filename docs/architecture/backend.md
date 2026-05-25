@@ -37,7 +37,7 @@ The backend is organized by **feature module**, not by technical layer:
 ```
 modules/
 ├── auth/
-│   ├── controller/ → AuthController: /register, /login, /refresh, /logout, /verify, /resend-verification
+│   ├── controller/ → AuthController: /register, /login, /refresh, /logout, /verify, /resend-verification, /forgot-password, /reset-password
 │   ├── filter/     → JwtAuthenticationFilter (intercepts every request)
 │   ├── model/      → RefreshToken entity
 │   ├── repository/ → RefreshTokenRepository
@@ -49,8 +49,8 @@ modules/
 └── dashboard/      → DashboardController, DashboardService — stats, heatmap and last-studied endpoints
 
 core/
-├── email/          → EmailService (Resend SDK wrapper), EmailVerificationService (token generation, SHA-256 hashing, expiry, verification)
-└── exception/      → GlobalExceptionHandler, ResourceNotFoundException, DataConflictException, InvalidRefreshTokenException
+├── email/          → EmailService (Resend SDK wrapper), EmailVerificationService (token generation, SHA-256 hashing, expiry, verification), PasswordResetService (forgot-password token generation + reset)
+└── exception/      → GlobalExceptionHandler, ResourceNotFoundException, DataConflictException, InvalidRefreshTokenException, TokenExpiredException (→ 410 Gone)
 ```
 
 **Tag lifecycle:** Tags are user-scoped — the uniqueness constraint is `UNIQUE(name, owner_id)`, not global. Tags are created inline during card save via `TagService.findOrCreateTag()` (same find-or-create pattern as categories). Tags with no remaining cards are automatically deleted by `CardService.cleanupOrphanTags()` after every update or delete, inside the same `@Transactional` block.
@@ -130,11 +130,11 @@ class XControllerTest {
 
 | Module | Unit tests | Slice tests |
 |--------|-----------|-------------|
-| auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7) | `AuthControllerTest` (7) |
+| auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7), `PasswordResetServiceTest` (5) | `AuthControllerTest` (12) |
 | user | `UserServiceTest` (8) | `UserControllerTest` (2) |
 | deck | `DeckServiceTest` (15), `TagServiceTest` (3), `CategoryServiceTest` (1) | `DeckControllerTest` (15), `TagControllerTest` (4), `CategoryControllerTest` (2) |
 | card | `CardServiceTest` (8) | `CardControllerTest` (11), `CardListControllerTest` (3) |
 | study | `FsrsServiceTest` (3), `StudyServiceTest` (2) | `StudyControllerTest` (5) |
 | dashboard | `DashboardServiceTest` (4) | `DashboardControllerTest` (4) |
 
-**Total: ~121 tests** across 19 test classes. Run with `mvn test` from `backend/reitera-backend/`.
+**Total: ~137 tests** across 20 test classes. Run with `mvn test` from `backend/reitera-backend/`.

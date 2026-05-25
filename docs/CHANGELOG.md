@@ -9,6 +9,34 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.27.0] — 2026-05-25 — feat/51-forgot-reset-password-flow
+
+### Added
+- Forgot password / reset password flow (issue #113)
+- `core/email/PasswordResetService` — generates UUID token, SHA-256 hashes it before storage, saves hash + 1h expiry; `sendResetToken` uses `ifPresent` to silently ignore unknown emails (anti-enumeration); `resetPassword` nullifies token fields after use (single-use guarantee)
+- `TokenExpiredException` — new exception mapped to `410 Gone` by `GlobalExceptionHandler`; distinct from 400 so the frontend can show a targeted "link expired" message
+- `POST /api/v1/auth/forgot-password` — always returns 200 regardless of whether the email exists; rate-limited (5 req/min per IP)
+- `POST /api/v1/auth/reset-password` — validates token (400 invalid/used, 410 expired), encodes new password, nullifies token; rate-limited
+- `ForgotPasswordDTO` and `ResetPasswordDTO` records with Bean Validation constraints; `ResetPasswordDTO.newPassword` enforces the same strength regex as registration
+- `UserRepository.findByPasswordResetToken(String)` — Spring Data query for hash-based token lookup
+- `password_reset_token VARCHAR(64) UNIQUE` and `password_reset_token_expires_at TIMESTAMP` columns added to `users` table in `init.sql`
+- HTML reset email: Catppuccin Latte palette, "Reset password" CTA button, "This link expires in 1 hour" copy, fallback text link; sent via Resend SDK (`@Async`)
+- Frontend `PasswordResetService` — `forgotPassword(data)` and `resetPassword(data)` wrapping the two new endpoints
+- `ForgotPasswordComponent` at `/auth/forgot-password` — email form; after submit shows a deliberately vague static message regardless of whether the email was found
+- `ResetPasswordComponent` at `/auth/reset-password?token=X` — reads token from query params on `ngOnInit`; handles 4 states via `@switch (tokenState())`: `valid` (form), `missing` (no token param), `expired` (410), `invalid` (400)
+- "Forgot your password?" link added to `LoginComponent` between the password field and submit button
+- `ForgotPasswordRequest` and `ResetPasswordRequest` interfaces added to `auth.model.ts`
+- `auth.login.forgot_password`, `auth.forgot_password.*` and `auth.reset_password.*` i18n keys added to `en.json`, `es.json`, `fr.json`, `pt.json`
+- `PasswordResetServiceTest` — 5 unit tests covering: silent ignore on unknown email, token save + email send on known email, 400 on invalid token, 410 on expired token, happy path (encode + nullify)
+- `AuthControllerTest` — 5 new slice tests for both endpoints and all error cases
+
+### Changed
+- `RateLimitFilter` — `/forgot-password` and `/reset-password` added to `RATE_LIMITED_PATHS`
+- `frontend/package.json` version bumped to `0.27.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.27.0`
+
+---
+
 ## [0.26.0] — 2026-05-22 — feat/50-mail-verification
 
 ### Added

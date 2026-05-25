@@ -120,3 +120,38 @@ Revokes all active refresh tokens for the user identified by the provided refres
 **Response `204 No Content`**
 
 **Errors:** `400` if the token is missing · `401` if the token is invalid or already revoked.
+
+---
+
+### POST `/api/v1/auth/forgot-password`
+Initiates the password reset flow. Sends a reset email with a one-time link (1-hour expiry) if the address is registered.
+
+Always returns `200` regardless of whether the email exists — prevents user enumeration.
+
+**Request body:**
+```json
+{ "email": "test01@test.com" }
+```
+
+**Response `200 OK`** (no body)
+
+**Errors:** `400` if the email field is blank or not a valid email format · `429` if rate limit exceeded (5 req/min per IP per endpoint).
+
+---
+
+### POST `/api/v1/auth/reset-password`
+Validates the reset token and sets a new password. The token is single-use — it is nullified immediately after a successful reset.
+
+**Request body:**
+```json
+{
+  "token": "<raw-uuid-token-from-email>",
+  "newPassword": "NewPass@1234"
+}
+```
+
+Password rules: min 8 characters, at least 1 digit, 1 lowercase, 1 uppercase, 1 special character (`@#$%^&+=!`). Max 128 characters.
+
+**Response `200 OK`** (no body)
+
+**Errors:** `400` if the token is invalid or has already been used · `410 Gone` if the token has expired (1-hour TTL) · `429` if rate limit exceeded.

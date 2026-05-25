@@ -64,6 +64,12 @@ public class User implements UserDetails {
     @Column(name = "verification_token_expires_at")
     private LocalDateTime verificationTokenExpiresAt;
 
+    @Column(name = "password_reset_token", unique = true, length = 64)
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expires_at")
+    private LocalDateTime passwordResetTokenExpiresAt;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));

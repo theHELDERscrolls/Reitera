@@ -25,7 +25,8 @@
         "email_invalid": "Introduce una dirección de email válida.",
         "password_required": "La contraseña es obligatoria.",
         "server": "Credenciales incorrectas. Por favor, inténtalo de nuevo."
-      }
+      },
+      "forgot_password": "¿Olvidaste tu contraseña?"
     },
     "check_email": {
       "title": "Revisa tu correo",
@@ -92,6 +93,42 @@
         "first_name_max": "El nombre no puede superar los 50 caracteres.",
         "last_name_max": "Los apellidos no pueden superar los 100 caracteres.",
         "password_max": "La contraseña no puede superar los 128 caracteres."
+      }
+    },
+    "forgot_password": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Introduce tu email y te enviaremos un enlace para restablecerla",
+      "email": "Email",
+      "email_placeholder": "tu@ejemplo.com",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando...",
+      "sent_message": "Si ese email está registrado, recibirás un enlace en breve. Revisa tu bandeja de entrada y carpeta de spam.",
+      "go_login": "Volver al inicio de sesión",
+      "error": {
+        "email_required": "El email es obligatorio.",
+        "email_invalid": "Introduce una dirección de email válida."
+      }
+    },
+    "reset_password": {
+      "title": "Nueva contraseña",
+      "subtitle": "Elige una contraseña segura para tu cuenta",
+      "new_password": "Nueva contraseña",
+      "new_password_placeholder": "Mín. 8 caracteres",
+      "confirm_password": "Confirmar contraseña",
+      "confirm_password_placeholder": "Repite tu contraseña",
+      "submit": "Restablecer contraseña",
+      "submitting": "Restableciendo...",
+      "success": "¡Contraseña restablecida! Ya puedes iniciar sesión.",
+      "go_forgot_password": "Solicitar un nuevo enlace",
+      "error": {
+        "missing_token": "No se encontró ningún token de restablecimiento. Solicita un nuevo enlace.",
+        "expired": "Este enlace ha expirado. Por favor, solicita uno nuevo.",
+        "invalid": "Este enlace no es válido o ya ha sido utilizado. Solicita uno nuevo.",
+        "password_required": "La contraseña es obligatoria.",
+        "password_pattern": "Mín. 8 caracteres con mayúscula, minúscula, número y carácter especial (@#$%^&+=!).",
+        "confirm_required": "Por favor, confirma tu contraseña.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "server": "Algo ha ido mal. Por favor, inténtalo de nuevo."
       }
     }
   },

@@ -1,6 +1,7 @@
 package com.helderruiz.reitera_backend.modules.auth.controller;
 
 import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
+import com.helderruiz.reitera_backend.core.email.PasswordResetService;
 import com.helderruiz.reitera_backend.modules.auth.model.RefreshToken;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
@@ -24,6 +25,7 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
     private final JwtService jwtService;
     private final EmailVerificationService emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     /**
      * Handles user registration.
@@ -86,6 +88,20 @@ public class AuthController {
     @PostMapping("/resend-verification")
     public ResponseEntity<Void> resendVerification(@Valid @RequestBody ResendVerificationDTO dto) {
         emailVerificationService.resendToken(dto.email());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordDTO dto) {
+        passwordResetService.sendResetToken(dto.email());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordDTO dto) {
+        passwordResetService.resetPassword(dto.token(), dto.newPassword());
 
         return ResponseEntity.ok().build();
     }

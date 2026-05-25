@@ -18,6 +18,14 @@ const authRoutes: Routes = [
     loadComponent: () => import('./check-email/check-email.component'),
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./forgot-password/forgot-password.component'),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./reset-password/reset-password.component'),
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
