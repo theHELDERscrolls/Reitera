@@ -59,15 +59,18 @@ export default class ResetPasswordComponent implements OnInit {
   }
 
   submit(): void {
+    if (!this.token) return;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      
       return;
     }
 
     this.loading.set(true);
 
     this.passwordResetService
-      .resetPassword({ token: this.token!, newPassword: this.form.value.newPassword! })
+      .resetPassword({ token: this.token, newPassword: this.form.value.newPassword! })
       .subscribe({
         complete: () => {
           this.toast.success(this.transloco.translate('auth.reset_password.success'));
