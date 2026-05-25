@@ -9,6 +9,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.28.0] — 2026-05-25 — chore/tag-roles-and-public-decks-update
+
+### Removed
+- Tag system — `Tag` entity, `tags` and `card_tags` tables, `TagService`, `TagController`, `TagRepository`, `NewTagDTO`, `TagResponseDTO` deleted; removes `GET /api/v1/tags` and `GET /api/v1/tags/{tagId}/cards` endpoints
+- `tagIds` and `newTags` fields removed from `CardRequestDTO`; `tags` field removed from `CardResponseDTO`; inline tag find-or-create and orphan cleanup logic removed from `CardService`
+- `tagId` filter param removed from `GET /api/v1/cards`; `CardSpecification.hasTag()` removed
+- Public deck visibility — `is_public` column removed from `decks` table; `isPublic` field removed from `DeckRequestDTO` and `DeckResponseDTO`; `VisibilityBadgeComponent` deleted
+- `user_deck_subscriptions` table and associated `UserDeckSubscription`, `UserDeckSubscriptionId`, `UserDeckSubscriptionRepository` deleted (planned public deck download feature abandoned)
+- Frontend `tag.model.ts`, `TagPillComponent`, tag combobox from `CardFormComponent`, tag filter from `CardListComponent`, `getTags()` from `CardsService` and `DeckDetailService`
+
+### Changed
+- `seed.sql` — `is_public` column removed from all deck inserts; demo tag and card_tag inserts removed
+- `truncate.sql` — `tags`, `card_tags`, `user_deck_subscriptions` entries removed
+- `TagServiceTest` and `TagControllerTest` deleted; `CardServiceTest`, `StudyServiceTest` updated to remove tag-related assertions — total test count reduced from ~137 to ~126
+- `frontend/package.json` version bumped to `0.28.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.28.0`
+
+---
+
 ## [0.27.0] — 2026-05-25 — feat/51-forgot-reset-password-flow
 
 ### Added

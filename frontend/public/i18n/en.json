@@ -144,8 +144,6 @@
       "next": "Next page"
     },
     "card": {
-      "public": "Public",
-      "private": "Private",
       "options": "Deck options",
       "edit": "Edit deck",
       "delete": "Delete deck"
@@ -163,8 +161,6 @@
       "descriptionPlaceholder": "What is this deck about?",
       "categoryLabel": "Category",
       "categoryPlaceholder": "Search or create a category...",
-      "isPublicLabel": "Public deck",
-      "isPublicHint": "Anyone will be able to download this deck",
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving...",
@@ -272,12 +268,6 @@
       "label": "Explanation (optional)",
       "placeholder": "Explain why this is the correct answer..."
     },
-    "tags": {
-      "label": "Tags",
-      "search": "Search or add a tag...",
-      "create": "Create '{{ name }}'",
-      "remove": "Remove tag"
-    },
     "cancel": "Cancel",
     "save": "Save",
     "saving": "Saving...",
@@ -353,11 +343,9 @@
     "filterQuestion": "Search by question...",
     "filterType": "Type",
     "filterState": "State",
-    "filterTag": "Tag",
     "filterClear": "Clear filters",
     "allTypes": "All types",
     "allStates": "All states",
-    "allTags": "All tags",
     "stateNew": "New",
     "stateLearning": "Learning",
     "stateReview": "Review",

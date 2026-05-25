@@ -147,7 +147,7 @@ class DeckServiceTest {
 
     @Test
     void createDeck_withExistingCategoryId_returnsDeckResponseDTO() {
-        DeckRequestDTO dto = new DeckRequestDTO("Test Deck", "Description", false, category.getId(), null);
+        DeckRequestDTO dto = new DeckRequestDTO("Test Deck", "Description", category.getId(), null);
 
         when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
         when(deckRepository.save(any(Deck.class))).thenReturn(deck);
@@ -159,7 +159,7 @@ class DeckServiceTest {
 
     @Test
     void createDeck_withNewCategoryName_createsAndReturnsDeckResponseDTO() {
-        DeckRequestDTO dto = new DeckRequestDTO("Test Deck", "Description", false, null, "New Category");
+        DeckRequestDTO dto = new DeckRequestDTO("Test Deck", "Description", null, "New Category");
 
         when(categoryRepository.findByNameIgnoreCase("New Category")).thenReturn(Optional.empty());
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
@@ -173,7 +173,7 @@ class DeckServiceTest {
 
     @Test
     void createDeck_categoryIdNotFound_throwsResourceNotFoundException() {
-        DeckRequestDTO dto = new DeckRequestDTO("Test Deck", "Description", false, 99, null);
+        DeckRequestDTO dto = new DeckRequestDTO("Test Deck", "Description", 99, null);
 
         when(categoryRepository.findById(99)).thenReturn(Optional.empty());
 
@@ -183,7 +183,7 @@ class DeckServiceTest {
 
     @Test
     void updateDeck_categoryChangedToOrphan_deletesOldCategory() {
-        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", false, newCategory.getId(), null);
+        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", newCategory.getId(), null);
 
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
         when(categoryRepository.findById(newCategory.getId())).thenReturn(Optional.of(newCategory));
@@ -197,7 +197,7 @@ class DeckServiceTest {
 
     @Test
     void updateDeck_categoryChangedToShared_keepsOldCategory() {
-        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", false, newCategory.getId(), null);
+        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", newCategory.getId(), null);
 
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
         when(categoryRepository.findById(newCategory.getId())).thenReturn(Optional.of(newCategory));
@@ -211,7 +211,7 @@ class DeckServiceTest {
 
     @Test
     void updateDeck_sameCategoryId_doesNotCheckOrphan() {
-        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", false, category.getId(), null);
+        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", category.getId(), null);
 
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
         when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
@@ -225,7 +225,7 @@ class DeckServiceTest {
 
     @Test
     void updateDeck_nonExistentDeck_throwsResourceNotFoundException() {
-        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", false, null, null);
+        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", null, null);
 
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.empty());
 
@@ -236,7 +236,7 @@ class DeckServiceTest {
     @Test
     void updateDeck_deckBelongingToOtherUser_throwsResourceNotFoundException() {
         User otherUser = User.builder().id(UUID.randomUUID()).build();
-        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", false, null, null);
+        DeckRequestDTO dto = new DeckRequestDTO("Updated", "Desc", null, null);
 
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
 

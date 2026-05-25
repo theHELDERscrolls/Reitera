@@ -51,19 +51,6 @@ public class CardSpecification {
     }
 
     /**
-     * Filters cards that have a specific tag assigned.
-     * Uses EXISTS with a subquery rather than a JOIN to avoid duplicate rows
-     * when a card has multiple tags.
-     */
-    public static Specification<Card> hasTag(Integer tagId) {
-        return (root, query, builder) -> {
-            var tagJoin = root.join("tags");
-
-            return builder.equal(tagJoin.get("id"), tagId);
-        };
-    }
-
-    /**
      * Filters cards that the user has NEVER studied.
      * A card is "not studied" when no StudyProgress row exists for this user+card pair.
      * SQL equivalent: NOT EXISTS (SELECT 1 FROM study_progress sp WHERE sp.card_id = card.id AND sp.user_id = userId)

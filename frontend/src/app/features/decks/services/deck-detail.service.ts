@@ -6,13 +6,11 @@ import { CardRequest, CardResponse } from '@core/models/card.model';
 import { DeckResponse, DeckStats } from '@core/models/deck.model';
 import { environment } from '@environments/environment';
 import { Page } from '@core/models/page.model';
-import { Tag } from '@core/models/tag.model';
 
 @Injectable({ providedIn: 'root' })
 export class DeckDetailService {
   private readonly http = inject(HttpClient);
   private readonly decksUrl = `${environment.apiUrl}/decks`;
-  private readonly tagsUrl = `${environment.apiUrl}/tags`;
 
   getDeck(id: number): Observable<DeckResponse> {
     return this.http.get<DeckResponse>(`${this.decksUrl}/${id}`);
@@ -32,10 +30,6 @@ export class DeckDetailService {
     return this.http.get<Page<CardResponse>>(`${this.decksUrl}/${deckId}/cards`, {
       params: { page, size, sort: `${sort},${direction}` },
     });
-  }
-
-  getTags(): Observable<Tag[]> {
-    return this.http.get<Tag[]>(this.tagsUrl);
   }
 
   createCard(deckId: number, dto: CardRequest): Observable<CardResponse> {

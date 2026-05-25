@@ -11,10 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-/**
- * Entity representing a collection of flashcards.
- * Aligned with the 'decks' table in the ERD.
- */
 @Entity
 @Table(name = "decks")
 @Data
@@ -33,10 +29,6 @@ public class Deck {
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Builder.Default
-    @Column(name = "is_public", nullable = false)
-    private boolean isPublic = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)

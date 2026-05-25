@@ -12,7 +12,6 @@ Creates a new deck for the authenticated user.
 {
   "title": "Historia de España",
   "description": "Repaso de eventos clave del siglo XX",
-  "isPublic": false,
   "categoryId": null,
   "categoryName": null
 }
@@ -104,7 +103,6 @@ Deletes a deck by ID. If the deck had a category and no other deck references it
   "id": 1,
   "title": "Historia de España",
   "description": "...",
-  "isPublic": false,
   "authorName": "alumno",
   "categoryId": 1,
   "categoryName": "Historia de España",

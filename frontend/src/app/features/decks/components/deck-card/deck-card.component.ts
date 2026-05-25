@@ -10,7 +10,6 @@ import {
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { DeckResponse } from '@core/models/deck.model';
-import { VisibilityBadgeComponent } from '../visibility-badge/visibility-badge.component';
 
 const ACCENT_COLORS = [
   'var(--color-accent-1)',
@@ -31,7 +30,6 @@ const ACCENT_COLORS = [
     LucideTrash2,
     RouterLink,
     TranslocoPipe,
-    VisibilityBadgeComponent,
   ],
   templateUrl: './deck-card.component.html',
 })

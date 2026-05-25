@@ -11,7 +11,6 @@ Returns a paginated list of **all cards** owned by the current user, across all 
 | `question`  | String  | —              | Partial case-insensitive match on the question text                                               |
 | `type`      | String  | —              | Exact card type: `BASIC`, `MULTIPLE_CHOICE`, or `TRUE_FALSE`                                      |
 | `state`     | Integer | —              | FSRS study state: `-1` = never studied, `0` = New, `1` = Learning, `2` = Review, `3` = Relearning |
-| `tagId`     | Integer | —              | ID of a tag the card must have assigned                                                           |
 | `page`      | Integer | `0`            | Zero-based page number                                                                            |
 | `size`      | Integer | `20`           | Items per page                                                                                    |
 | `sort`      | String  | `question,asc` | Field and direction (`question,asc` \| `type,desc` \| …)                                          |
@@ -35,9 +34,7 @@ The `answerJson` structure varies by card type:
   "type": "BASIC",
   "question": "¿En qué año comenzó la Guerra Civil Española?",
   "answerJson": { "answer": "1936" },
-  "explanation": "El conflicto se inició el 17 de julio de 1936.",
-  "tagIds": [1],
-  "newTags": [{ "name": "siglo XX", "hexColor": "#3b82f6" }]
+  "explanation": "El conflicto se inició el 17 de julio de 1936."
 }
 ```
 
@@ -51,8 +48,7 @@ The `answerJson` structure varies by card type:
     "options": ["Bando Republicano", "Bando Nacional", "Ninguno"],
     "correctIndex": 1
   },
-  "explanation": "El bando Nacional venció en 1939.",
-  "tagIds": []
+  "explanation": "El bando Nacional venció en 1939."
 }
 ```
 
@@ -63,15 +59,9 @@ The `answerJson` structure varies by card type:
   "type": "TRUE_FALSE",
   "question": "La Guerra Civil Española comenzó en 1936.",
   "answerJson": { "correct": true },
-  "explanation": "El conflicto se inició el 17 de julio de 1936.",
-  "tagIds": []
+  "explanation": "El conflicto se inició el 17 de julio de 1936."
 }
 ```
-
-Tags can be attached in two ways (both optional):
-
-- `tagIds` — IDs of existing tags the user owns.
-- `newTags` — name + hexColor pairs for inline tag creation; if a tag with that name already exists for the user it is reused (find-or-create); otherwise a new tag row is created and attached.
 
 **Response `201 Created`:** `CardResponseDTO`
 
@@ -117,7 +107,7 @@ Updates an existing card (full replacement of all fields).
 
 ### DELETE `/api/v1/decks/{deckId}/cards/{cardId}`
 
-Deletes a card by ID. Tags that were assigned exclusively to this card are automatically deleted (orphan cleanup).
+Deletes a card by ID.
 
 **Response `204 No Content`**
 
@@ -131,7 +121,6 @@ Deletes a card by ID. Tags that were assigned exclusively to this card are autom
   "question": "¿En qué año comenzó la Guerra Civil Española?",
   "answerJson": { "answer": "1936" },
   "explanation": "El conflicto se inició el 17 de julio de 1936.",
-  "tags": [{ "id": 1, "name": "historia", "hexColor": "#FF5733" }],
   "state": null
 }
 ```

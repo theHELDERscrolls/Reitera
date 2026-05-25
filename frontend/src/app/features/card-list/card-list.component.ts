@@ -12,7 +12,6 @@ import {
   FilterDropdownComponent,
   FilterOption,
 } from '@shared/components/filter-dropdown/filter-dropdown.component';
-import { Tag } from '@core/models/tag.model';
 import { ToastService } from '@core/toast/toast.service';
 import PaginationComponent from '@shared/components/pagination/pagination.component';
 
@@ -48,13 +47,11 @@ export default class CardListComponent implements OnInit {
   readonly isLoading = signal(true);
   readonly sortDir = signal<'asc' | 'desc'>('asc');
   readonly sortField = signal<'question' | 'type'>('question');
-  readonly tags = signal<Tag[]>([]);
   readonly totalPages = signal(0);
 
   readonly filterQuestion = signal('');
   readonly filterType = signal<string | null>(null);
   readonly filterState = signal<number | null>(null);
-  readonly filterTagId = signal<number | null>(null);
 
   readonly typeOptions: FilterOption[] = [
     { value: null, labelKey: 'cardList.allTypes' },
@@ -71,27 +68,18 @@ export default class CardListComponent implements OnInit {
     { value: 3, labelKey: 'cardList.stateRelearning' },
   ];
 
-  readonly tagOptions = computed<FilterOption[]>(() => [
-    { value: null, labelKey: 'cardList.allTags' },
-    ...this.tags().map((t) => ({ value: t.id, label: t.name, colorHex: t.hexColor })),
-  ]);
-
   readonly hasActiveFilters = computed(
     () =>
       !!(
         this.filterQuestion() ||
         this.filterType() ||
-        this.filterState() !== null ||
-        this.filterTagId() !== null
+        this.filterState() !== null
       ),
   );
 
   ngOnInit(): void {
-    this.loadTags();
     this.loadCards();
   }
-
-  // Card form actions
 
   openEditCardForm(card: CardResponse): void {
     this.cardToEdit.set(card);
@@ -109,8 +97,6 @@ export default class CardListComponent implements OnInit {
     this.cards.update((current) => current.map((c) => (c.id === card.id ? card : c)));
     this.toastService.success(this.transloco.translate('cardList.toast.cardUpdated'));
   }
-
-  // Delete actions
 
   requestDeleteCard(card: CardResponse): void {
     this.cardToDelete.set(card);
@@ -131,8 +117,6 @@ export default class CardListComponent implements OnInit {
     });
   }
 
-  // Sorting & pagination
-
   toggleSort(field: 'question' | 'type'): void {
     if (this.sortField() === field) {
       this.sortDir.update((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -150,8 +134,6 @@ export default class CardListComponent implements OnInit {
     this.loadCards();
   }
 
-  // Filter actions
-
   selectType(value: FilterSelectValue): void {
     this.filterType.set(value as string | null);
     this.applyFilters();
@@ -159,11 +141,6 @@ export default class CardListComponent implements OnInit {
 
   selectState(value: FilterSelectValue): void {
     this.filterState.set(value as number | null);
-    this.applyFilters();
-  }
-
-  selectTag(value: FilterSelectValue): void {
-    this.filterTagId.set(value as number | null);
     this.applyFilters();
   }
 
@@ -176,12 +153,9 @@ export default class CardListComponent implements OnInit {
     this.filterQuestion.set('');
     this.filterType.set(null);
     this.filterState.set(null);
-    this.filterTagId.set(null);
     this.currentPage.set(0);
     this.loadCards();
   }
-
-  // Private helpers
 
   private loadCards(): void {
     this.isLoading.set(true);
@@ -190,7 +164,6 @@ export default class CardListComponent implements OnInit {
       question: this.filterQuestion() || undefined,
       type: this.filterType(),
       state: this.filterState(),
-      tagId: this.filterTagId(),
     };
 
     this.service
@@ -206,11 +179,5 @@ export default class CardListComponent implements OnInit {
           this.toastService.error(this.transloco.translate('common.error'));
         },
       });
-  }
-
-  private loadTags(): void {
-    this.service.getTags().subscribe({
-      next: (tags) => this.tags.set(tags),
-    });
   }
 }

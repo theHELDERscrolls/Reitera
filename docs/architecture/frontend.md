@@ -22,19 +22,18 @@ src/app/
 │   ├── dashboard/      → DashboardComponent — stat badges, activity heatmap, last studied decks
 │   ├── decks/          → DecksComponent — paginated deck list with category filter and CRUD dialogs
 │   │   ├── components/
-│   │   │   ├── card-form/         → CardFormComponent (create/edit card dialog; tag combobox; dynamic MC options)
+│   │   │   ├── card-form/         → CardFormComponent (create/edit card dialog; dynamic MC options)
 │   │   │   ├── cards-table/       → CardsTableComponent (sortable table; loading skeleton; empty state; reusable)
 │   │   │   ├── category-filter/   → CategoryFilterComponent (collapsible dropdown, click-outside aware)
 │   │   │   ├── deck-card/         → DeckCardComponent (accent color, options menu, edit/delete outputs)
 │   │   │   ├── deck-detail/       → DeckDetailComponent (breadcrumb, header, stats chips, cards table, pagination)
-│   │   │   ├── deck-form/         → DeckFormComponent (create/edit dialog, reactive form, save confirm)
-│   │   │   └── visibility-badge/  → VisibilityBadgeComponent (public/private pill; used in deck-card and deck-detail)
+│   │   │   └── deck-form/         → DeckFormComponent (create/edit dialog, reactive form, save confirm)
 │   │   └── services/
-│   │       ├── deck-detail.service.ts → DeckDetailService (deck, stats, cards, tags, card CRUD)
+│   │       ├── deck-detail.service.ts → DeckDetailService (deck, stats, cards, card CRUD)
 │   │       └── decks.service.ts       → DecksService (CRUD + pagination + categories)
-│   ├── card-list/  → CardListComponent — cross-deck card list at /cards; filter bar (question, type, state, tag); edit/delete inline
+│   ├── card-list/  → CardListComponent — cross-deck card list at /cards; filter bar (question, type, state); edit/delete inline
 │   │   └── services/
-│   │       └── cards.service.ts → CardsService (getCards w/ filters, getTags, updateCard, deleteCard)
+│   │       └── cards.service.ts → CardsService (getCards w/ filters, updateCard, deleteCard)
 │   ├── profile/        → ProfileComponent — user info display, avatar, joined date, account details
 │   ├── shell/          → AppShellComponent + all layout sub-components
 │   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
@@ -60,8 +59,7 @@ src/app/
         ├── language-switcher/ → LanguageSwitcherComponent
         ├── page-header/       → PageHeaderComponent (page title + subtitle)
         ├── pagination/        → PaginationComponent (page strip with gap logic; input: currentPage, totalPages)
-        ├── filter-dropdown/   → FilterDropdownComponent (click-outside-aware dropdown; labelKey i18n or raw label; colorHex for tag pills)
-        ├── tag-pill/          → TagPillComponent (colored pill; inputs: name, hexColor, removable; output: remove)
+        ├── filter-dropdown/   → FilterDropdownComponent (click-outside-aware dropdown; labelKey i18n or raw label)
         └── toast/             → ToastComponent
 ```
 

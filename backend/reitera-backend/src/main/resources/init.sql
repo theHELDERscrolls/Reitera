@@ -16,11 +16,8 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP TABLE IF EXISTS refresh_tokens         CASCADE;
 DROP TABLE IF EXISTS review_logs            CASCADE;
 DROP TABLE IF EXISTS study_progress         CASCADE;
-DROP TABLE IF EXISTS card_tags              CASCADE;
-DROP TABLE IF EXISTS user_deck_subscriptions CASCADE;
 DROP TABLE IF EXISTS cards                  CASCADE;
 DROP TABLE IF EXISTS decks                  CASCADE;
-DROP TABLE IF EXISTS tags                   CASCADE;
 DROP TABLE IF EXISTS categories             CASCADE;
 DROP TABLE IF EXISTS users                  CASCADE;
 DROP TABLE IF EXISTS roles                  CASCADE;
@@ -61,24 +58,11 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 
--- 4. TAGS
--- owner_id scopes tags to a user — two users can have the same tag name independently.
--- The unique constraint is (name, owner_id), not just name.
-CREATE TABLE IF NOT EXISTS tags (
-    id        SERIAL      PRIMARY KEY,
-    name      VARCHAR(30) NOT NULL,
-    hex_color VARCHAR(7),
-    owner_id  UUID        NOT NULL REFERENCES users(id),
-    UNIQUE (name, owner_id)
-);
-
-
--- 5. DECKS
+-- 4. DECKS
 CREATE TABLE IF NOT EXISTS decks (
     id          SERIAL       PRIMARY KEY,
     title       VARCHAR(100) NOT NULL,
     description TEXT,
-    is_public   BOOLEAN      NOT NULL DEFAULT FALSE,
     owner_id    UUID         NOT NULL REFERENCES users(id),
     author_name VARCHAR(150),
     category_id INTEGER      REFERENCES categories(id),
@@ -87,7 +71,7 @@ CREATE TABLE IF NOT EXISTS decks (
 );
 
 
--- 6. CARDS
+-- 5. CARDS
 -- answer_json uses JSONB to support multiple card types with different answer structures.
 -- See docs/api/endpoints.md for the format per type (BASIC, MULTIPLE_CHOICE, TRUE_FALSE).
 CREATE TABLE IF NOT EXISTS cards (
@@ -100,15 +84,7 @@ CREATE TABLE IF NOT EXISTS cards (
 );
 
 
--- 7. CARD_TAGS (many-to-many: cards ↔ tags)
-CREATE TABLE IF NOT EXISTS card_tags (
-    card_id INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
-    tag_id  INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
-    PRIMARY KEY (card_id, tag_id)
-);
-
-
--- 8. STUDY_PROGRESS
+-- 6. STUDY_PROGRESS
 -- One row per (user, card) pair. Stores FSRS state variables.
 -- States: 0=New, 1=Learning, 2=Review, 3=Relearning.
 CREATE TABLE IF NOT EXISTS study_progress (
@@ -127,7 +103,7 @@ CREATE TABLE IF NOT EXISTS study_progress (
 );
 
 
--- 9. REVIEW_LOGS
+-- 7. REVIEW_LOGS
 -- Immutable audit ledger. One row per review action. Never updated, only appended.
 CREATE TABLE IF NOT EXISTS review_logs (
     id             SERIAL  PRIMARY KEY,
@@ -140,16 +116,7 @@ CREATE TABLE IF NOT EXISTS review_logs (
 );
 
 
--- 10. USER_DECK_SUBSCRIPTIONS
-CREATE TABLE IF NOT EXISTS user_deck_subscriptions (
-    user_id       UUID    NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    deck_id       INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
-    subscribed_at TIMESTAMP DEFAULT NOW(),
-    PRIMARY KEY (user_id, deck_id)
-);
-
-
--- 11. REFRESH_TOKENS
+-- 8. REFRESH_TOKENS
 -- One row per active session. Stores a SHA-256 hash of the raw token (never the token itself).
 -- The revoked flag allows explicit logout without deleting the row, preserving the audit trail.
 CREATE TABLE IF NOT EXISTS refresh_tokens (

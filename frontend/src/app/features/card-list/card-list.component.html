@@ -3,7 +3,6 @@
   <app-card-form
     [deckId]="cardToEdit()!.deckId"
     [cardToEdit]="cardToEdit()"
-    [tags]="tags()"
     (saved)="onCardSaved($event)"
     (closed)="closeCardForm()"
     (deleted)="requestDeleteCard(cardToEdit()!); closeCardForm()"
@@ -59,15 +58,6 @@
       [selected]="filterState()"
       (selectOption)="selectState($event)"
     />
-
-    <!-- Tag dropdown -->
-    @if (tags().length > 0) {
-      <app-filter-dropdown
-        [options]="tagOptions()"
-        [selected]="filterTagId()"
-        (selectOption)="selectTag($event)"
-      />
-    }
 
     <!-- Clear filters -->
     <button

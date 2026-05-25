@@ -6,10 +6,7 @@ import com.helderruiz.reitera_backend.modules.card.dto.CardResponseDTO;
 import com.helderruiz.reitera_backend.modules.card.model.Card;
 import com.helderruiz.reitera_backend.modules.card.repository.CardRepository;
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
-import com.helderruiz.reitera_backend.modules.deck.model.Tag;
 import com.helderruiz.reitera_backend.modules.deck.repository.DeckRepository;
-import com.helderruiz.reitera_backend.modules.deck.repository.TagRepository;
-import com.helderruiz.reitera_backend.modules.deck.service.TagService;
 import com.helderruiz.reitera_backend.modules.study.repository.StudyProgressRepository;
 import com.helderruiz.reitera_backend.modules.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,11 +21,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +35,6 @@ class CardServiceTest {
     private User user;
     private Deck deck;
     private Card card;
-    private Tag tag;
-    private Card cardWithTag;
     private CardRequestDTO dto;
 
     @Mock
@@ -49,12 +42,6 @@ class CardServiceTest {
 
     @Mock
     private DeckRepository deckRepository;
-
-    @Mock
-    private TagRepository tagRepository;
-
-    @Mock
-    private TagService tagService;
 
     @Mock
     private StudyProgressRepository studyProgressRepository;
@@ -71,16 +58,11 @@ class CardServiceTest {
                 .deck(deck)
                 .type("BASIC")
                 .question("What is Java?")
-                .tags(new HashSet<>())
                 .build();
-        tag = Tag.builder().id(1).build();
-        cardWithTag = Card.builder().id(1).deck(deck).tags(new HashSet<>(Set.of(tag))).build();
         dto = new CardRequestDTO(
                 "BASIC",
                 "What is Java?",
                 Map.of("answer", "A language"),
-                null,
-                null,
                 null);
     }
 
@@ -109,54 +91,6 @@ class CardServiceTest {
     }
 
     @Test
-    void updateCard_tagRemovedAndOrphaned_deletesOldTag() {
-        when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
-        when(cardRepository.findById(cardWithTag.getId())).thenReturn(Optional.of(cardWithTag));
-        when(cardRepository.save(any(Card.class))).thenReturn(cardWithTag);
-        when(cardRepository.countByTagsContaining(tag)).thenReturn(0L);
-
-        cardService.updateCard(deck.getId(), cardWithTag.getId(), dto, user);
-
-        verify(tagRepository).deleteById(tag.getId());
-    }
-
-    @Test
-    void updateCard_tagRemovedButShared_keepsOldTag() {
-        when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
-        when(cardRepository.findById(cardWithTag.getId())).thenReturn(Optional.of(cardWithTag));
-        when(cardRepository.save(any(Card.class))).thenReturn(cardWithTag);
-        when(cardRepository.countByTagsContaining(tag)).thenReturn(1L);
-
-        cardService.updateCard(deck.getId(), cardWithTag.getId(), dto, user);
-
-        verify(tagRepository, never()).deleteById(any());
-    }
-
-    @Test
-    void deleteCard_cardWithOrphanedTag_deletesCardAndTag() {
-        when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
-        when(cardRepository.findById(cardWithTag.getId())).thenReturn(Optional.of(cardWithTag));
-        when(cardRepository.countByTagsContaining(tag)).thenReturn(0L);
-
-        cardService.deleteCard(deck.getId(), cardWithTag.getId(), user);
-
-        verify(cardRepository).delete(cardWithTag);
-        verify(tagRepository).deleteById(tag.getId());
-    }
-
-    @Test
-    void deleteCard_cardWithSharedTag_deletesCardButNotTag() {
-        when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
-        when(cardRepository.findById(cardWithTag.getId())).thenReturn(Optional.of(cardWithTag));
-        when(cardRepository.countByTagsContaining(tag)).thenReturn(1L);
-
-        cardService.deleteCard(deck.getId(), cardWithTag.getId(), user);
-
-        verify(cardRepository).delete(cardWithTag);
-        verify(tagRepository, never()).deleteById(any());
-    }
-
-    @Test
     void getCardById_existingCard_returnsCardResponseDTO() {
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
         when(cardRepository.findById(card.getId())).thenReturn(Optional.of(card));
@@ -177,7 +111,7 @@ class CardServiceTest {
     }
 
     @Test
-    void createCard_withNoTags_returnsCardResponseDTO() {
+    void createCard_returnsCardResponseDTO() {
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
         when(cardRepository.save(any(Card.class))).thenReturn(card);
 
@@ -197,7 +131,7 @@ class CardServiceTest {
     @Test
     void getCardById_cardBelongingToOtherDeck_throwsResourceNotFoundException() {
         Deck otherDeck = Deck.builder().id(2).owner(user).build();
-        Card cardInOtherDeck = Card.builder().id(1).deck(otherDeck).tags(new HashSet<>()).build();
+        Card cardInOtherDeck = Card.builder().id(1).deck(otherDeck).build();
 
         when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
         when(cardRepository.findById(cardInOtherDeck.getId())).thenReturn(Optional.of(cardInOtherDeck));
