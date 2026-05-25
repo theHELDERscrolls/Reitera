@@ -1,6 +1,8 @@
 package com.helderruiz.reitera_backend.modules.auth.controller;
 
+import com.helderruiz.reitera_backend.core.email.PasswordResetService;
 import com.helderruiz.reitera_backend.core.exception.InvalidRefreshTokenException;
+import com.helderruiz.reitera_backend.core.exception.TokenExpiredException;
 import com.helderruiz.reitera_backend.modules.auth.model.RefreshToken;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
@@ -64,6 +66,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private EmailVerificationService emailVerificationService;
+
+    @MockitoBean
+    private PasswordResetService passwordResetService;
 
     @BeforeEach
     void setUp() {
@@ -206,5 +211,57 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"not-an-email\"}"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void forgotPassword_returns200_whenEmailKnown() throws Exception {
+        doNothing().when(passwordResetService).sendResetToken(anyString());
+
+        mockMvc.perform(post("/api/v1/auth/forgot-password").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"reitera@test.com\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void forgotPassword_returns200_whenEmailUnknown() throws Exception {
+        doNothing().when(passwordResetService).sendResetToken(anyString());
+
+        mockMvc.perform(post("/api/v1/auth/forgot-password").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"unknown@test.com\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void resetPassword_returns200_whenTokenValid() throws Exception {
+        doNothing().when(passwordResetService).resetPassword(anyString(), anyString());
+
+        mockMvc.perform(post("/api/v1/auth/reset-password").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"token\":\"valid-token\",\"newPassword\":\"NewPass@1234\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void resetPassword_returns400_whenTokenInvalid() throws Exception {
+        doThrow(new IllegalArgumentException("Invalid or already used reset token"))
+                .when(passwordResetService).resetPassword(anyString(), anyString());
+
+        mockMvc.perform(post("/api/v1/auth/reset-password").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"token\":\"bad-token\",\"newPassword\":\"NewPass@1234\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void resetPassword_returns410_whenTokenExpired() throws Exception {
+        doThrow(new TokenExpiredException("Password reset link has expired"))
+                .when(passwordResetService).resetPassword(anyString(), anyString());
+
+        mockMvc.perform(post("/api/v1/auth/reset-password").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"token\":\"expired-token\",\"newPassword\":\"NewPass@1234\"}"))
+                .andExpect(status().isGone());
     }
 }

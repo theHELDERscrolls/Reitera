@@ -25,7 +25,8 @@
         "email_invalid": "Saisissez une adresse e-mail valide.",
         "password_required": "Le mot de passe est obligatoire.",
         "server": "Identifiants invalides. Veuillez réessayer."
-      }
+      },
+      "forgot_password": "Mot de passe oublié ?"
     },
     "check_email": {
       "title": "Vérifiez votre e-mail",
@@ -92,6 +93,42 @@
         "first_name_max": "Le prénom ne peut pas dépasser 50 caractères.",
         "last_name_max": "Le nom ne peut pas dépasser 100 caractères.",
         "password_max": "Le mot de passe ne peut pas dépasser 128 caractères."
+      }
+    },
+    "forgot_password": {
+      "title": "Mot de passe oublié ?",
+      "subtitle": "Entrez votre email et nous vous enverrons un lien de réinitialisation",
+      "email": "Email",
+      "email_placeholder": "vous@exemple.com",
+      "submit": "Envoyer le lien",
+      "submitting": "Envoi en cours...",
+      "sent_message": "Si cet email est enregistré, vous recevrez un lien sous peu. Vérifiez votre boîte de réception et vos spams.",
+      "go_login": "Retour à la connexion",
+      "error": {
+        "email_required": "L'email est obligatoire.",
+        "email_invalid": "Entrez une adresse email valide."
+      }
+    },
+    "reset_password": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisissez un mot de passe sécurisé pour votre compte",
+      "new_password": "Nouveau mot de passe",
+      "new_password_placeholder": "Min. 8 caractères",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_password_placeholder": "Répétez votre mot de passe",
+      "submit": "Réinitialiser le mot de passe",
+      "submitting": "Réinitialisation...",
+      "success": "Mot de passe réinitialisé ! Vous pouvez maintenant vous connecter.",
+      "go_forgot_password": "Demander un nouveau lien",
+      "error": {
+        "missing_token": "Aucun jeton de réinitialisation trouvé. Demandez un nouveau lien.",
+        "expired": "Ce lien a expiré. Veuillez en demander un nouveau.",
+        "invalid": "Ce lien est invalide ou a déjà été utilisé. Demandez-en un nouveau.",
+        "password_required": "Le mot de passe est obligatoire.",
+        "password_pattern": "Min. 8 caractères avec majuscule, minuscule, chiffre et caractère spécial (@#$%^&+=!).",
+        "confirm_required": "Veuillez confirmer votre mot de passe.",
+        "password_mismatch": "Les mots de passe ne correspondent pas.",
+        "server": "Une erreur s'est produite. Veuillez réessayer."
       }
     }
   },

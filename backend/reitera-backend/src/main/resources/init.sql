@@ -46,7 +46,9 @@ CREATE TABLE IF NOT EXISTS users (
     role_id                       INTEGER      NOT NULL REFERENCES roles(id),
     email_verified                BOOLEAN      NOT NULL DEFAULT FALSE,
     verification_token            VARCHAR(64)  UNIQUE,
-    verification_token_expires_at TIMESTAMP
+    verification_token_expires_at TIMESTAMP,
+    password_reset_token            VARCHAR(64)  UNIQUE,
+    password_reset_token_expires_at TIMESTAMP
 );
 
 

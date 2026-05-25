@@ -19,7 +19,7 @@ Authentication uses a **two-token stateless strategy**:
 6. If the refresh token is also expired or revoked, `AuthService.logout()` is called and the user is redirected to the login page
 7. `POST /auth/logout` → server revokes all active refresh tokens for the user
 
-Public endpoints (no token required): `/register`, `/login`, `/refresh`, `/logout`, `/verify`, `/resend-verification`
+Public endpoints (no token required): `/register`, `/login`, `/refresh`, `/logout`, `/verify`, `/resend-verification`, `/forgot-password`, `/reset-password`
 All other endpoints are protected.
 
 **Refresh token rotation:** each refresh token is single-use. After being exchanged for a new pair, it is immediately marked `revoked = true`. This limits the damage window if a token is stolen — once used, the old token is worthless.
@@ -48,7 +48,7 @@ Deck author attribution uses the unique `username` field (the user's chosen nick
 
 ### Rate limiting on authentication endpoints
 
-Login and register endpoints are rate-limited to **5 requests per minute per client IP** using Bucket4j's token-bucket algorithm (`RateLimitFilter`, runs before the JWT filter). When the bucket is empty the server returns `429 Too Many Requests` with a `Retry-After: 60` header so clients know when to retry.
+Auth endpoints are rate-limited to **5 requests per minute per client IP** using Bucket4j's token-bucket algorithm (`RateLimitFilter`, runs before the JWT filter). When the bucket is empty the server returns `429 Too Many Requests` with a `Retry-After: 60` header so clients know when to retry. Protected paths: `/login`, `/register`, `/resend-verification`, `/forgot-password`, `/reset-password`.
 
 The real IP is read from the `X-Forwarded-For` header first (needed for the Render reverse-proxy), falling back to `request.getRemoteAddr()`. Buckets are stored in a Caffeine `LoadingCache` — one bucket per IP string — with a 10-minute expiration after last access. Inactive IPs are evicted automatically, preventing unbounded memory growth on single-instance deployments. A Redis-backed bucket would be needed for horizontal scaling.
 
@@ -74,7 +74,7 @@ Newly registered users cannot log in until they verify their email address. The 
 
 ### Rate limiting scope
 
-The rate limiter (Bucket4j, 5 req/min per IP) keys buckets on `ip:path` rather than `ip` alone. This prevents a sustained attack on `/login` from exhausting the budget for `/register` or `/resend-verification` and vice versa.
+The rate limiter (Bucket4j, 5 req/min per IP) keys buckets on `ip:path` rather than `ip` alone. This prevents a sustained attack on `/login` from exhausting the budget for `/register`, `/resend-verification`, `/forgot-password`, or `/reset-password` and vice versa.
 
 ### HTTP security headers
 

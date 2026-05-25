@@ -25,7 +25,8 @@
         "email_invalid": "Enter a valid email address.",
         "password_required": "Password is required.",
         "server": "Invalid credentials. Please try again."
-      }
+      },
+      "forgot_password": "Forgot your password?"
     },
     "check_email": {
       "title": "Check your email",
@@ -92,6 +93,42 @@
         "first_name_max": "First name must be at most 50 characters.",
         "last_name_max": "Last name must be at most 100 characters.",
         "password_max": "Password must be at most 128 characters."
+      }
+    },
+    "forgot_password": {
+      "title": "Forgot password?",
+      "subtitle": "Enter your email and we'll send you a reset link",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
+      "sent_message": "If that email is registered, you'll receive a reset link shortly. Check your inbox and spam folder.",
+      "go_login": "Back to sign in",
+      "error": {
+        "email_required": "Email is required.",
+        "email_invalid": "Enter a valid email address."
+      }
+    },
+    "reset_password": {
+      "title": "Set new password",
+      "subtitle": "Choose a strong password for your account",
+      "new_password": "New password",
+      "new_password_placeholder": "Min. 8 characters",
+      "confirm_password": "Confirm password",
+      "confirm_password_placeholder": "Repeat your password",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "success": "Password reset successfully! You can now sign in.",
+      "go_forgot_password": "Request a new link",
+      "error": {
+        "missing_token": "No reset token found. Please request a new password reset link.",
+        "expired": "This reset link has expired. Please request a new one.",
+        "invalid": "This reset link is invalid or has already been used. Please request a new one.",
+        "password_required": "Password is required.",
+        "password_pattern": "Min. 8 characters with uppercase, lowercase, number and special character (@#$%^&+=!).",
+        "confirm_required": "Please confirm your password.",
+        "password_mismatch": "Passwords do not match.",
+        "server": "Something went wrong. Please try again."
       }
     }
   },
