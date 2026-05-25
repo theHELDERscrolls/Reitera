@@ -54,7 +54,6 @@ class StudyControllerTest {
                 "What is 2+2?",
                 null,
                 null,
-                null,
                 0);
         sessionResponse = new StudySessionResponseDTO(1, null, 1);
     }

@@ -20,7 +20,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,7 +63,7 @@ class StudyServiceTest {
     void setUp() {
         user = User.builder().id(UUID.randomUUID()).build();
         deck = Deck.builder().id(1).owner(user).build();
-        card = Card.builder().id(1).deck(deck).tags(new HashSet<>()).build();
+        card = Card.builder().id(1).deck(deck).build();
         updatedProgress = StudyProgress.builder().user(user).card(card).build();
         dto = new StudySessionRequestDTO(deck.getId(), null, List.of(new CardRatingDTO(card.getId(), 3)));
     }

@@ -68,23 +68,13 @@ INSERT INTO categories (name, description) VALUES
     ('Inglés B2',           'Vocabulario avanzado, phrasal verbs y gramática inglesa nivel B2');
 
 
--- 4. TAGS
-INSERT INTO tags (name, hex_color, owner_id) VALUES
-    ('importante', '#E74C3C', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
-    ('difícil',    '#E67E22', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
-    ('repaso',     '#3498DB', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
-    ('vocabulario','#27AE60', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11')
-ON CONFLICT (name, owner_id) DO NOTHING;
-
-
--- 5. DECKS
+-- 4. DECKS
 -- Two decks share "Historia de España" to demonstrate category-scoped study:
 --   GET /study/due?categoryId=X returns cards from both SGMU and GCE decks.
-INSERT INTO decks (title, description, is_public, owner_id, author_name, category_id) VALUES
+INSERT INTO decks (title, description, owner_id, author_name, category_id) VALUES
     (
         'La Segunda Guerra Mundial',
         'Repaso de los principales eventos, fechas y personajes de la SGMU',
-        false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         'alumno',
         (SELECT id FROM categories WHERE name = 'Historia de España')
@@ -92,7 +82,6 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
     (
         'Patrones de Diseño GoF',
         'Los 23 patrones clásicos del libro Gang of Four aplicados a Java',
-        false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         'alumno',
         (SELECT id FROM categories WHERE name = 'Programación Java')
@@ -100,7 +89,6 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
     (
         'Phrasal Verbs Esenciales',
         'Los 60 phrasal verbs más usados en inglés cotidiano y profesional',
-        false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         'alumno',
         (SELECT id FROM categories WHERE name = 'Inglés B2')
@@ -108,14 +96,13 @@ INSERT INTO decks (title, description, is_public, owner_id, author_name, categor
     (
         'La Guerra Civil Española',
         'Causas, desarrollo y consecuencias del conflicto civil español (1936-1939)',
-        false,
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         'alumno',
         (SELECT id FROM categories WHERE name = 'Historia de España')
     );
 
 
--- 6. CARDS (21 total — BASIC, MULTIPLE_CHOICE, TRUE_FALSE)
+-- 5. CARDS (21 total — BASIC, MULTIPLE_CHOICE, TRUE_FALSE)
 
 -- ---- Deck 1: La Segunda Guerra Mundial (6 cards) ----
 
@@ -573,38 +560,7 @@ INSERT INTO cards (deck_id, type, question, answer_json, explanation) VALUES (
 );
 
 
--- 7. CARD TAGS
-INSERT INTO card_tags (card_id, tag_id)
-SELECT c.id, t.id FROM cards c CROSS JOIN tags t
-WHERE c.deck_id = (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial')
-  AND t.name = 'importante'
-ON CONFLICT (card_id, tag_id) DO NOTHING;
-
-INSERT INTO card_tags (card_id, tag_id)
-SELECT c.id, t.id FROM cards c CROSS JOIN tags t
-WHERE c.deck_id = (SELECT id FROM decks WHERE title = 'La Segunda Guerra Mundial')
-  AND c.type = 'MULTIPLE_CHOICE' AND t.name = 'difícil'
-ON CONFLICT (card_id, tag_id) DO NOTHING;
-
-INSERT INTO card_tags (card_id, tag_id)
-SELECT c.id, t.id FROM cards c CROSS JOIN tags t
-WHERE c.deck_id = (SELECT id FROM decks WHERE title = 'Phrasal Verbs Esenciales')
-  AND t.name = 'vocabulario'
-ON CONFLICT (card_id, tag_id) DO NOTHING;
-
-INSERT INTO card_tags (card_id, tag_id)
-SELECT c.id, t.id FROM cards c CROSS JOIN tags t
-WHERE c.deck_id = (SELECT id FROM decks WHERE title = 'La Guerra Civil Española')
-  AND t.name = 'importante'
-ON CONFLICT (card_id, tag_id) DO NOTHING;
-
-INSERT INTO card_tags (card_id, tag_id)
-SELECT c.id, t.id FROM cards c CROSS JOIN tags t
-WHERE c.question LIKE '%Guernica%' AND t.name = 'difícil'
-ON CONFLICT (card_id, tag_id) DO NOTHING;
-
-
--- 8. STUDY PROGRESS
+-- 6. STUDY PROGRESS
 -- 6 cards from Deck 1 (SGMU). States: Review(2), Learning(1), Relearning(3).
 -- Cards with next_review in the past appear immediately in GET /study/due.
 
@@ -662,7 +618,7 @@ VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1.2, 5.3, 0, 0, 1, 0, 1, NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '15 minutes');  -- Learning, DUE
 
 
--- 9. REVIEW LOGS (ratings: 1=Again, 2=Hard, 3=Good, 4=Easy)
+-- 7. REVIEW LOGS (ratings: 1=Again, 2=Hard, 3=Good, 4=Easy)
 
 INSERT INTO review_logs (user_id, card_id, rating, elapsed_days, scheduled_days) VALUES
     ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 3, 0, 0),

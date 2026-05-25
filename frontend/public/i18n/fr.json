@@ -144,8 +144,6 @@
       "next": "Page suivante"
     },
     "card": {
-      "public": "Public",
-      "private": "Privé",
       "options": "Options du paquet",
       "edit": "Modifier le paquet",
       "delete": "Supprimer le paquet"
@@ -163,8 +161,6 @@
       "descriptionPlaceholder": "De quoi parle ce paquet ?",
       "categoryLabel": "Catégorie",
       "categoryPlaceholder": "Rechercher ou créer une catégorie...",
-      "isPublicLabel": "Paquet public",
-      "isPublicHint": "N'importe qui pourra télécharger ce paquet",
       "cancel": "Annuler",
       "save": "Enregistrer",
       "saving": "Enregistrement...",
@@ -272,12 +268,6 @@
       "label": "Explication (facultatif)",
       "placeholder": "Expliquez pourquoi c'est la bonne réponse..."
     },
-    "tags": {
-      "label": "Étiquettes",
-      "search": "Rechercher ou ajouter une étiquette...",
-      "create": "Créer '{{ name }}'",
-      "remove": "Supprimer l'étiquette"
-    },
     "cancel": "Annuler",
     "save": "Enregistrer",
     "saving": "Enregistrement...",
@@ -353,11 +343,9 @@
     "filterQuestion": "Rechercher par question...",
     "filterType": "Type",
     "filterState": "État",
-    "filterTag": "Étiquette",
     "filterClear": "Effacer les filtres",
     "allTypes": "Tous les types",
     "allStates": "Tous les états",
-    "allTags": "Toutes les étiquettes",
     "stateNew": "Nouvelle",
     "stateLearning": "Apprentissage",
     "stateReview": "Révision",

@@ -59,7 +59,6 @@ class CardControllerTest {
                 "What is Java?",
                 Map.of("answer", "A language"),
                 null,
-                Set.of(),
                 null);
     }
 

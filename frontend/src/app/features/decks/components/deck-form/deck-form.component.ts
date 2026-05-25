@@ -32,7 +32,6 @@ export class DeckFormComponent {
   readonly form = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', Validators.maxLength(2000)],
-    isPublic: [false],
     categoryName: ['', Validators.maxLength(50)],
   });
 
@@ -43,11 +42,10 @@ export class DeckFormComponent {
         this.form.patchValue({
           title: deck.title,
           description: deck.description ?? '',
-          isPublic: deck.isPublic,
           categoryName: deck.categoryName ?? '',
         });
       } else {
-        this.form.reset({ title: '', description: '', isPublic: false, categoryName: '' });
+        this.form.reset({ title: '', description: '', categoryName: '' });
       }
     });
   }
@@ -75,7 +73,7 @@ export class DeckFormComponent {
   }
 
   private doSave(): void {
-    const { title, description, isPublic, categoryName } = this.form.getRawValue();
+    const { title, description, categoryName } = this.form.getRawValue();
     const trimmedName = categoryName?.trim() ?? '';
     const matchedCat = this.categories().find(
       (c) => c.name.toLowerCase() === trimmedName.toLowerCase(),
@@ -84,7 +82,6 @@ export class DeckFormComponent {
     const request: DeckRequest = {
       title: title!,
       description: description ?? '',
-      isPublic: isPublic!,
       categoryId: matchedCat?.id ?? null,
       categoryName: !matchedCat && trimmedName ? trimmedName : null,
     };

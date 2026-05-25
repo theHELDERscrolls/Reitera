@@ -144,8 +144,6 @@
       "next": "Página siguiente"
     },
     "card": {
-      "public": "Público",
-      "private": "Privado",
       "options": "Opciones del mazo",
       "edit": "Editar mazo",
       "delete": "Eliminar mazo"
@@ -163,8 +161,6 @@
       "descriptionPlaceholder": "¿De qué trata este mazo?",
       "categoryLabel": "Categoría",
       "categoryPlaceholder": "Busca o crea una categoría...",
-      "isPublicLabel": "Mazo público",
-      "isPublicHint": "Cualquier usuario podrá descargar este mazo",
       "cancel": "Cancelar",
       "save": "Guardar",
       "saving": "Guardando...",
@@ -272,12 +268,6 @@
       "label": "Explicación (opcional)",
       "placeholder": "Explica por qué esta es la respuesta correcta..."
     },
-    "tags": {
-      "label": "Etiquetas",
-      "search": "Buscar o añadir una etiqueta...",
-      "create": "Crear '{{ name }}'",
-      "remove": "Eliminar etiqueta"
-    },
     "cancel": "Cancelar",
     "save": "Guardar",
     "saving": "Guardando...",
@@ -353,11 +343,9 @@
     "filterQuestion": "Buscar por pregunta...",
     "filterType": "Tipo",
     "filterState": "Estado",
-    "filterTag": "Etiqueta",
     "filterClear": "Limpiar filtros",
     "allTypes": "Todos los tipos",
     "allStates": "Todos los estados",
-    "allTags": "Todas las etiquetas",
     "stateNew": "Nueva",
     "stateLearning": "Aprendiendo",
     "stateReview": "Repaso",

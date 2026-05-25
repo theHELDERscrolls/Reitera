@@ -144,8 +144,6 @@
       "next": "Página seguinte"
     },
     "card": {
-      "public": "Público",
-      "private": "Privado",
       "options": "Opções do baralho",
       "edit": "Editar baralho",
       "delete": "Eliminar baralho"
@@ -163,8 +161,6 @@
       "descriptionPlaceholder": "Sobre o que é este baralho?",
       "categoryLabel": "Categoria",
       "categoryPlaceholder": "Procura ou cria uma categoria...",
-      "isPublicLabel": "Baralho público",
-      "isPublicHint": "Qualquer utilizador poderá descarregar este baralho",
       "cancel": "Cancelar",
       "save": "Guardar",
       "saving": "A guardar...",
@@ -272,12 +268,6 @@
       "label": "Explicação (opcional)",
       "placeholder": "Explica porque é que esta é a resposta correta..."
     },
-    "tags": {
-      "label": "Etiquetas",
-      "search": "Procura ou adiciona uma etiqueta...",
-      "create": "Criar '{{ name }}'",
-      "remove": "Remover etiqueta"
-    },
     "cancel": "Cancelar",
     "save": "Guardar",
     "saving": "A guardar...",
@@ -353,11 +343,9 @@
     "filterQuestion": "Pesquisar por pergunta...",
     "filterType": "Tipo",
     "filterState": "Estado",
-    "filterTag": "Etiqueta",
     "filterClear": "Limpar filtros",
     "allTypes": "Todos os tipos",
     "allStates": "Todos os estados",
-    "allTags": "Todas as etiquetas",
     "stateNew": "Novo",
     "stateLearning": "A aprender",
     "stateReview": "Revisão",

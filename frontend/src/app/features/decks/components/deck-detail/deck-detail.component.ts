@@ -11,9 +11,7 @@ import { CardsTableComponent } from '../cards-table/cards-table.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { DeckDetailService } from '../../services/deck-detail.service';
 import { DeckResponse, DeckStats } from '@core/models/deck.model';
-import { Tag } from '@core/models/tag.model';
 import { ToastService } from '@core/toast/toast.service';
-import { VisibilityBadgeComponent } from '../visibility-badge/visibility-badge.component';
 
 const PAGE_SIZE = 20;
 
@@ -30,7 +28,6 @@ const PAGE_SIZE = 20;
     PaginationComponent,
     RouterLink,
     TranslocoPipe,
-    VisibilityBadgeComponent,
   ],
   templateUrl: './deck-detail.component.html',
 })
@@ -46,7 +43,6 @@ export default class DeckDetailComponent implements OnInit {
   readonly deck = signal<DeckResponse | null>(null);
   readonly stats = signal<DeckStats | null>(null);
   readonly cards = signal<CardResponse[]>([]);
-  readonly tags = signal<Tag[]>([]);
   readonly currentPage = signal(0);
   readonly totalPages = signal(0);
   readonly isLoading = signal(true);
@@ -86,7 +82,6 @@ export default class DeckDetailComponent implements OnInit {
       this.loadCards();
     }
     this.loadStats();
-    this.loadTags(); // refresh tag list so newly created tags appear in the dropdown
   }
 
   requestDeleteCard(card: CardResponse): void {
@@ -104,7 +99,6 @@ export default class DeckDetailComponent implements OnInit {
         this.toastService.success(this.transloco.translate('deckDetail.toast.cardDeleted'));
         this.loadCards();
         this.loadStats();
-        this.loadTags(); // orphaned tags were deleted on the backend, keep dropdown in sync
       },
       error: () => this.toastService.error(this.transloco.translate('common.error')),
     });
@@ -130,7 +124,6 @@ export default class DeckDetailComponent implements OnInit {
     this.loadDeck();
     this.loadStats();
     this.loadCards();
-    this.loadTags();
   }
 
   private loadDeck(): void {
@@ -161,11 +154,5 @@ export default class DeckDetailComponent implements OnInit {
           this.toastService.error(this.transloco.translate('common.error'));
         },
       });
-  }
-
-  private loadTags(): void {
-    this.service.getTags().subscribe({
-      next: (tags) => this.tags.set(tags),
-    });
   }
 }

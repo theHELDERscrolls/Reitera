@@ -1,11 +1,11 @@
 package com.helderruiz.reitera_backend.modules.card.dto;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
- * DTO representing the output data for a Card.
- * Flattens the Tag relationship into a lightweight nested summary for easier frontend consumption.
+ * Projection returned by card CRUD endpoints.
+ * state reflects the FSRS learning state (1=learning, 2=review, 3=relearning),
+ * or null when the authenticated user has no StudyProgress for this card yet.
  */
 public record CardResponseDTO(
         Integer id,
@@ -14,14 +14,6 @@ public record CardResponseDTO(
         String question,
         Map<String, Object> answerJson,
         String explanation,
-        Set<TagSummary> tags,
         Integer state
 ) {
-
-    /**
-     * Lightweight tag representation embedded in the card response.
-     * Avoids creating a separate file for a simple projection.
-     */
-    public record TagSummary(Integer id, String name, String hexColor) {
-    }
 }

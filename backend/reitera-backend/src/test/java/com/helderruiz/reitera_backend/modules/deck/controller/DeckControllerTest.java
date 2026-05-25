@@ -57,7 +57,6 @@ class DeckControllerTest {
                 1,
                 "My test deck",
                 "Description",
-                false,
                 "Reitera Test",
                 null,
                 null,
@@ -71,7 +70,6 @@ class DeckControllerTest {
         deckRequest = new DeckRequestDTO(
                 "New deck test",
                 "New deck description",
-                false,
                 1,
                 "Test Category"
         );

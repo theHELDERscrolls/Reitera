@@ -3,14 +3,14 @@ package com.helderruiz.reitera_backend.modules.deck.dto;
 import java.time.LocalDateTime;
 
 /**
- * DTO representing the output data for a Deck.
- * Flattens relationships (like Category and User) into simple strings for easier frontend consumption.
+ * Projection returned by deck list and detail endpoints.
+ * newCount, dueCount, and relearningCount are FSRS-based per-user study counters
+ * computed at query time; they are 0 in single-deck GET /decks/{id} responses.
  */
 public record DeckResponseDTO(
         Integer id,
         String title,
         String description,
-        boolean isPublic,
         String authorName,
         Integer categoryId,
         String categoryName,

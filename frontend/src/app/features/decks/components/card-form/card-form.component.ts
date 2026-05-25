@@ -11,8 +11,6 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { CardRequest, CardResponse, CardType } from '@core/models/card.model';
 import { DeckDetailService } from '../../services/deck-detail.service';
-import { Tag } from '@core/models/tag.model';
-import { TagPillComponent } from '@shared/components/tag-pill/tag-pill.component';
 import { ToastService } from '@core/toast/toast.service';
 
 @Component({
@@ -22,7 +20,6 @@ import { ToastService } from '@core/toast/toast.service';
     LucidePlus,
     LucideTrash2,
     ReactiveFormsModule,
-    TagPillComponent,
     TranslocoPipe,
   ],
   templateUrl: './card-form.component.html',
@@ -35,60 +32,12 @@ export class CardFormComponent {
 
   readonly deckId = input.required<number>();
   readonly cardToEdit = input<CardResponse | null>(null);
-  readonly tags = input.required<Tag[]>();
 
   readonly saved = output<CardResponse>();
   readonly closed = output<void>();
   readonly deleted = output<void>();
 
-  readonly TAG_PALETTE = [
-    '#3b82f6',
-    '#22c55e',
-    '#ef4444',
-    '#a855f7',
-    '#ec4899',
-    '#f97316',
-    '#14b8a6',
-    '#06b6d4',
-    '#6366f1',
-    '#f59e0b',
-  ];
-
   readonly isSaving = signal(false);
-
-  readonly selectedTagIds = signal<number[]>([]);
-  readonly pendingNewTags = signal<{ name: string; hexColor: string }[]>([]);
-  readonly tagInput = signal('');
-  readonly isTagDropdownOpen = signal(false);
-  readonly pendingColor = signal('#3b82f6');
-
-  readonly selectedTags = computed(() =>
-    this.selectedTagIds()
-      .map((id) => this.tags().find((t) => t.id === id))
-      .filter((t): t is Tag => t !== undefined),
-  );
-
-  readonly filteredTags = computed(() => {
-    const q = this.tagInput().toLowerCase().trim();
-    const selectedIds = this.selectedTagIds();
-
-    return this.tags().filter(
-      (t) => !selectedIds.includes(t.id) && (q === '' || t.name.toLowerCase().includes(q)),
-    );
-  });
-
-  readonly canCreateNew = computed(() => {
-    const q = this.tagInput().trim();
-
-    if (!q) return false;
-
-    const alreadyExists = this.tags().some((t) => t.name.toLowerCase() === q.toLowerCase());
-    const alreadyPending = this.pendingNewTags().some(
-      (t) => t.name.toLowerCase() === q.toLowerCase(),
-    );
-
-    return !alreadyExists && !alreadyPending;
-  });
 
   readonly form = this.fb.group({
     type: ['BASIC' as CardType, Validators.required],
@@ -153,52 +102,17 @@ export class CardFormComponent {
     this.optionsArray.removeAt(index);
   }
 
-  openTagDropdown(): void {
-    this.isTagDropdownOpen.set(true);
-  }
-
-  closeTagDropdown(): void {
-    setTimeout(() => this.isTagDropdownOpen.set(false), 150);
-  }
-
-  selectExistingTag(tag: Tag): void {
-    this.selectedTagIds.update((ids) => [...ids, tag.id]);
-    this.tagInput.set('');
-    this.isTagDropdownOpen.set(false);
-  }
-
-  removeSelectedTag(tagId: number): void {
-    this.selectedTagIds.update((ids) => ids.filter((id) => id !== tagId));
-  }
-
-  addNewTag(): void {
-    const name = this.tagInput().trim();
-
-    if (!name || !this.canCreateNew()) return;
-
-    this.pendingNewTags.update((tags) => [...tags, { name, hexColor: this.pendingColor() }]);
-    this.tagInput.set('');
-    this.isTagDropdownOpen.set(false);
-  }
-
-  removeNewTag(index: number): void {
-    this.pendingNewTags.update((tags) => tags.filter((_, i) => i !== index));
-  }
-
   submit(): void {
     if (this.form.invalid || this.isSaving()) return;
 
     const answerJson = this.buildAnswerJson();
     const { type, question, explanation } = this.form.getRawValue();
 
-    const pending = this.pendingNewTags();
     const dto: CardRequest = {
       type: type as CardType,
       question: question ?? '',
       answerJson,
       explanation: explanation?.trim() || null,
-      tagIds: this.selectedTagIds(),
-      newTags: pending.length > 0 ? pending : undefined,
     };
 
     this.isSaving.set(true);
@@ -261,10 +175,6 @@ export class CardFormComponent {
     } else if (card.type === 'TRUE_FALSE') {
       this.form.patchValue({ trueFalseCorrect: (card.answerJson['correct'] as boolean) ?? true });
     }
-
-    this.selectedTagIds.set(card.tags.map((t) => t.id));
-    this.pendingNewTags.set([]);
-    this.tagInput.set('');
   }
 
   private resetForm(): void {
@@ -279,8 +189,5 @@ export class CardFormComponent {
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();
-    this.selectedTagIds.set([]);
-    this.pendingNewTags.set([]);
-    this.tagInput.set('');
   }
 }

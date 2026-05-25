@@ -2,8 +2,6 @@ package com.helderruiz.reitera_backend.modules.card.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.helderruiz.reitera_backend.modules.deck.dto.NewTagDTO;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,16 +9,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-/**
- * DTO for creating or updating a Card.
- * Tags can be attached in two ways:
- * - tagIds: IDs of tags the user selected from their existing tag list.
- * - newTags: name+color pairs for tags the user typed that don't exist yet (find-or-create).
- */
 public record CardRequestDTO(
 
         @NotBlank(message = "Type is mandatory")
@@ -35,12 +25,7 @@ public record CardRequestDTO(
         Map<String, Object> answerJson,
 
         @Size(max = 2000, message = "Explanation cannot exceed 2000 characters")
-        String explanation,
-
-        Set<Integer> tagIds,
-
-        @Valid
-        List<NewTagDTO> newTags
+        String explanation
 ) {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();

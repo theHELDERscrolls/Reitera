@@ -1,5 +1,4 @@
 import { CardType } from './card.model';
-import { Tag } from './tag.model';
 
 export type CardState = 0 | 1 | 2 | 3;
 
@@ -10,7 +9,6 @@ export interface DueCard {
   question: string;
   answerJson: Record<string, unknown>;
   explanation: string | null;
-  tags: Tag[];
   state: CardState;
 }
 

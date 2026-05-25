@@ -1,7 +1,6 @@
 package com.helderruiz.reitera_backend.modules.card.model;
 
 import com.helderruiz.reitera_backend.modules.deck.model.Deck;
-import com.helderruiz.reitera_backend.modules.deck.model.Tag;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.Map;
-import java.util.Set;
 
 @Entity
 @Table(name = "cards")
@@ -46,17 +44,4 @@ public class Card {
 
     @Column(columnDefinition = "TEXT")
     private String explanation;
-
-    /**
-     * Many-to-Many relationship with Tags.
-     * Allows cross-deck studying by grouping cards through shared tags.
-     * Hibernate will automatically manage the intermediate 'card_tags' table.
-     */
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "card_tags",
-            joinColumns = @JoinColumn(name = "card_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new java.util.HashSet<>();
 }

@@ -48,13 +48,12 @@ class CardListControllerTest {
                 "What is JVM?",
                 null,
                 null,
-                null,
                 0);
     }
 
     @Test
     void getCards_returns200_withDefaultPagination() throws Exception {
-        when(cardService.getAllCards(any(), any(), any(), any(), any(), any()))
+        when(cardService.getAllCards(any(), any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(List.of(card)));
 
         mockMvc.perform(get("/api/v1/cards").with(user(mockUser)))
@@ -65,7 +64,7 @@ class CardListControllerTest {
 
     @Test
     void getCards_returns200_withTypeFilter() throws Exception {
-        when(cardService.getAllCards(any(), any(), any(), any(), any(), any()))
+        when(cardService.getAllCards(any(), any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(List.of(card)));
 
         mockMvc.perform(get("/api/v1/cards").param("type", "BASIC").with(user(mockUser)))

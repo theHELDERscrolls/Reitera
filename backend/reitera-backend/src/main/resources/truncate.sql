@@ -18,11 +18,8 @@ TRUNCATE TABLE
     refresh_tokens,
     review_logs,
     study_progress,
-    card_tags,
-    user_deck_subscriptions,
     cards,
     decks,
-    tags,
     categories,
     users,
     roles

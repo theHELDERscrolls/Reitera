@@ -24,8 +24,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Core business logic for Deck management.
- * Enforces ownership rules: only the deck owner can modify or delete it.
+ * Handles deck lifecycle: CRUD with IDOR protection, category find-or-create,
+ * and orphan category cleanup on update/delete.
+ * <p>
+ * Every operation that reads or writes a deck calls findOwnedDeck(), which returns
+ * 404 for both missing decks and decks owned by another user — preventing resource
+ * enumeration by unauthorized clients.
  */
 @Service
 @RequiredArgsConstructor
@@ -46,7 +50,6 @@ public class DeckService {
         Deck deck = Deck.builder()
                 .title(dto.title())
                 .description(dto.description())
-                .isPublic(dto.isPublic())
                 .owner(owner)
                 .authorName(owner.getNickname())
                 .category(category)
@@ -145,7 +148,6 @@ public class DeckService {
 
         deck.setTitle(dto.title());
         deck.setDescription(dto.description());
-        deck.setPublic(dto.isPublic());
         deck.setCategory(newCategory);
 
         DeckResponseDTO response = toResponseDTO(deckRepository.save(deck));
@@ -235,24 +237,15 @@ public class DeckService {
         return a.getId().equals(b.getId());
     }
 
-    /**
-     * Maps a Deck entity to its response DTO with zero card counts.
-     * Used for single-deck operations (create, update, getById) where counts are not needed.
-     */
     private DeckResponseDTO toResponseDTO(Deck deck) {
         return toResponseDTO(deck, 0L, 0L, 0L);
     }
 
-    /**
-     * Maps a Deck entity to its response DTO with pre-computed card counts.
-     * Used by getUserDecks where counts come from batch queries.
-     */
     private DeckResponseDTO toResponseDTO(Deck deck, long newCount, long dueCount, long relearningCount) {
         return new DeckResponseDTO(
                 deck.getId(),
                 deck.getTitle(),
                 deck.getDescription(),
-                deck.isPublic(),
                 deck.getAuthorName(),
                 deck.getCategory() != null ? deck.getCategory().getId() : null,
                 deck.getCategory() != null ? deck.getCategory().getName() : null,

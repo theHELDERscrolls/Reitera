@@ -3,7 +3,6 @@
   <app-card-form
     [deckId]="deckId"
     [cardToEdit]="cardToEdit()"
-    [tags]="tags()"
     (saved)="onCardSaved($event)"
     (closed)="isCardFormOpen.set(false); cardToEdit.set(null)"
     (deleted)="requestDeleteCard(cardToEdit()!)"
@@ -39,15 +38,13 @@
       <div class="flex flex-wrap items-start justify-between gap-4">
         <!-- Deck info -->
         <div class="flex flex-col gap-2">
-          <!-- Visibility + category badges -->
-          <div class="flex flex-wrap items-center gap-2">
-            <app-visibility-badge [isPublic]="deck()!.isPublic" />
-            @if (deck()!.categoryName) {
+          @if (deck()!.categoryName) {
+            <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs px-2 py-0.5 rounded-full bg-overlay text-muted font-medium">
                 {{ deck()!.categoryName }}
               </span>
-            }
-          </div>
+            </div>
+          }
 
           <h1 class="text-2xl font-bold text-foreground">{{ deck()!.title }}</h1>
 

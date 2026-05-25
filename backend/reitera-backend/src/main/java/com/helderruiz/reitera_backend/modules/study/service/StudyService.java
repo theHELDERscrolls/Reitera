@@ -23,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Orchestrates the study session flow: fetching due cards and processing ratings.
@@ -210,16 +208,7 @@ public class StudyService {
         return deck;
     }
 
-    /**
-     * Maps a Card entity and its FSRS state to a DueCardDTO.
-     * The state is passed in rather than read from the card to handle
-     * both new cards (state=0, no progress record) and existing cards.
-     */
     private DueCardDTO toDueCardDTO(Card card, Integer state) {
-        Set<DueCardDTO.TagSummary> tags = card.getTags().stream()
-                .map(tag -> new DueCardDTO.TagSummary(tag.getId(), tag.getName(), tag.getHexColor()))
-                .collect(Collectors.toSet());
-
         return new DueCardDTO(
                 card.getId(),
                 card.getDeck().getId(),
@@ -227,7 +216,6 @@ public class StudyService {
                 card.getQuestion(),
                 card.getAnswerJson(),
                 card.getExplanation(),
-                tags,
                 state
         );
     }
