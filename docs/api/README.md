@@ -36,7 +36,7 @@ Access tokens are valid for **15 minutes**. When expired, call `POST /api/v1/aut
 
 | File | Endpoints |
 |------|-----------|
-| [auth.md](auth.md) | Register · Login · Refresh token · Logout |
+| [auth.md](auth.md) | Register · Login · Refresh token · Logout · Email verify · Resend verification |
 | [decks.md](decks.md) | Deck CRUD · Deck stats |
 | [cards.md](cards.md) | Card CRUD · All four card types |
 | [users.md](users.md) | Authenticated user profile |

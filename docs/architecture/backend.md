@@ -37,7 +37,7 @@ The backend is organized by **feature module**, not by technical layer:
 ```
 modules/
 ├── auth/
-│   ├── controller/ → AuthController: /register, /login, /refresh, /logout
+│   ├── controller/ → AuthController: /register, /login, /refresh, /logout, /verify, /resend-verification
 │   ├── filter/     → JwtAuthenticationFilter (intercepts every request)
 │   ├── model/      → RefreshToken entity
 │   ├── repository/ → RefreshTokenRepository
@@ -49,7 +49,8 @@ modules/
 └── dashboard/      → DashboardController, DashboardService — stats, heatmap and last-studied endpoints
 
 core/
-└── exception/      → GlobalExceptionHandler, ResourceNotFoundException
+├── email/          → EmailService (Resend SDK wrapper), EmailVerificationService (token generation, SHA-256 hashing, expiry, verification)
+└── exception/      → GlobalExceptionHandler, ResourceNotFoundException, DataConflictException, InvalidRefreshTokenException
 ```
 
 **Tag lifecycle:** Tags are user-scoped — the uniqueness constraint is `UNIQUE(name, owner_id)`, not global. Tags are created inline during card save via `TagService.findOrCreateTag()` (same find-or-create pattern as categories). Tags with no remaining cards are automatically deleted by `CardService.cleanupOrphanTags()` after every update or delete, inside the same `@Transactional` block.

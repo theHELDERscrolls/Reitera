@@ -15,7 +15,9 @@ src/app/
 │   ├── theme/          → ThemeService (dark/light, localStorage persistence, data-theme on <html>)
 │   └── toast/          → ToastService
 ├── features/           → One folder per feature; each has its own routes file and components
-│   ├── auth/           → auth.routes.ts, LoginComponent, RegisterComponent
+│   ├── auth/           → auth.routes.ts, LoginComponent, RegisterComponent, CheckEmailComponent (/auth/check-email), VerifyComponent (/auth/verify)
+│   │   └── services/
+│   │       └── email-verification.service.ts → EmailVerificationService (verifyEmail, resendEmail)
 │   ├── dashboard/      → DashboardComponent — stat badges, activity heatmap, last studied decks
 │   ├── decks/          → DecksComponent — paginated deck list with category filter and CRUD dialogs
 │   │   ├── components/
