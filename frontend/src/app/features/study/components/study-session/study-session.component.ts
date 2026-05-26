@@ -54,8 +54,7 @@ export class StudySessionComponent implements OnInit {
 
   readonly queue = signal<DueCard[]>([]);
   readonly originalTotal = signal(0);
-  readonly ratings = signal<Map<number, number>>(new Map());
-  readonly againCount = signal<Map<number, number>>(new Map());
+  readonly ratings = signal<Map<number, 1 | 3>>(new Map());
   readonly revealed = signal(false);
 
   readonly currentCard = computed(() => this.queue()[0] ?? null);
@@ -72,12 +71,12 @@ export class StudySessionComponent implements OnInit {
 
   readonly progress = computed(() => {
     const total = this.originalTotal();
-    const reviewed = this.ratings().size;
+    const remembered = [...this.ratings().values()].filter(rating => rating === 3).length;
 
     return {
-      reviewed,
+      reviewed: remembered,
       total,
-      percent: total > 0 ? Math.round((reviewed / total) * 100) : 0,
+      percent: total > 0 ? Math.round((remembered / total) * 100) : 0,
     };
   });
 
@@ -113,31 +112,21 @@ export class StudySessionComponent implements OnInit {
     this.revealed.set(true);
   }
 
-  rate(rating: 1 | 2 | 3 | 4): void {
+  rate(rating: 1 | 3): void {
     const card = this.currentCard();
 
     if (!card) return;
 
-    this.ratings.update((m) => new Map(m).set(card.id, rating));
+    this.ratings.update((currentRatings) => new Map(currentRatings).set(card.id, rating));
 
     if (rating === 1) {
-      const count = (this.againCount().get(card.id) ?? 0) + 1;
-
-      this.againCount.update((m) => new Map(m).set(card.id, count));
-
-      this.queue.update((q) => {
-        const [, ...rest] = q;
-
-        if (count < 3) {
-          const pos = Math.min(10, rest.length);
-
-          rest.splice(pos, 0, card);
-        }
-
-        return rest;
+      this.queue.update((currentQueue) => {
+        const [_head, ...remainingCards] = currentQueue;
+        remainingCards.push(card);
+        return remainingCards;
       });
     } else {
-      this.queue.update(([, ...rest]) => rest);
+      this.queue.update(([_head, ...remainingCards]) => remainingCards);
     }
 
     this.revealed.set(false);
@@ -171,7 +160,7 @@ export class StudySessionComponent implements OnInit {
 
     const ratings: CardRating[] = Array.from(ratingsMap.entries()).map(([cardId, rating]) => ({
       cardId,
-      rating: rating as 1 | 2 | 3 | 4,
+      rating,
     }));
 
     const request: StudySessionRequest = {

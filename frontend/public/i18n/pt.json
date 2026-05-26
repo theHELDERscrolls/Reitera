@@ -312,10 +312,8 @@
       "false": "Falso",
       "explanation": "Explicação",
       "rating": {
-        "again": "Outra vez",
-        "hard": "Difícil",
-        "good": "Bom",
-        "easy": "Fácil"
+        "forgotten": "Esquecido",
+        "remembered": "Lembrado"
       },
       "endSession": "Terminar sessão",
       "backToHub": "Voltar ao menu",

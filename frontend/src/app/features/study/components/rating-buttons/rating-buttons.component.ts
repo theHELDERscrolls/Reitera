@@ -7,5 +7,5 @@ import { TranslocoPipe } from '@jsverse/transloco';
   templateUrl: './rating-buttons.component.html',
 })
 export class RatingButtonsComponent {
-  readonly rate = output<1 | 2 | 3 | 4>();
+  readonly rate = output<1 | 3>();
 }

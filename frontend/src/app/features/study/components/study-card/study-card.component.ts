@@ -15,7 +15,7 @@ export class StudyCardComponent {
   readonly revealed = input.required<boolean>();
 
   readonly reveal = output<void>();
-  readonly rate = output<1 | 2 | 3 | 4>();
+  readonly rate = output<1 | 3>();
 
   readonly selectedMcIndex = signal<number | null>(null);
   readonly selectedTf = signal<boolean | null>(null);

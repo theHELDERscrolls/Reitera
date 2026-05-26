@@ -85,6 +85,11 @@ public class StudyService {
         LocalDateTime now = LocalDateTime.now();
 
         for (CardRatingDTO ratingDTO : dto.ratings()) {
+            if (ratingDTO.rating() == 2) {
+                throw new IllegalArgumentException(
+                        "Rating 2 is not a valid rating. Use 1 (Forgotten) or 3 (Remembered).");
+            }
+
             Card card = cardRepository.findById(ratingDTO.cardId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Card not found with id: " + ratingDTO.cardId()));
