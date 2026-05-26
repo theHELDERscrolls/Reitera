@@ -74,7 +74,7 @@ Study sessions follow a **batch architecture** — the backend is only hit twice
 
 **Scope modes:** both endpoints accept either `deckId` (single deck) or `categoryId` (all decks in a category), enabling users to study individual topics or full subjects at once.
 
-**Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Again on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
+**Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Forgotten on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
 
 ## Testing Strategy
 
