@@ -121,12 +121,12 @@ export class StudySessionComponent implements OnInit {
 
     if (rating === 1) {
       this.queue.update((currentQueue) => {
-        const [_head, ...remainingCards] = currentQueue;
+        const [, ...remainingCards] = currentQueue;
         remainingCards.push(card);
         return remainingCards;
       });
     } else {
-      this.queue.update(([_head, ...remainingCards]) => remainingCards);
+      this.queue.update(([, ...remainingCards]) => remainingCards);
     }
 
     this.revealed.set(false);
