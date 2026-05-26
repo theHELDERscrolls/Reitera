@@ -51,7 +51,7 @@ INSERT INTO users (
         'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         'alumno',
         'alumno@reitera.com',
-        crypt('e', gen_salt('bf', 10)),
+        crypt('reitera2026', gen_salt('bf', 10)),
         'Alumno',
         'Demo',
         (SELECT id FROM roles WHERE name = 'STUDENT'),
