@@ -14,7 +14,7 @@ export interface DueCard {
 
 export interface CardRating {
   cardId: number;
-  rating: 1 | 2 | 3 | 4;
+  rating: 1 | 3;
 }
 
 export interface StudySessionRequest {

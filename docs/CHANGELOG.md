@@ -9,6 +9,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.29.0] — 2026-05-26 — feat/120-two-button-rating-system
+
+### Changed
+- Study session rating system simplified from 4 buttons (Again / Hard / Good / Easy) to 2 buttons — **Forgotten** (rating 1) and **Remembered** (rating 3); reduces cognitive friction and produces more consistent FSRS input data
+- **Option-A requeue strategy**: forgotten cards are always re-inserted at the end of the session queue with no maximum re-queue limit; the session ends naturally only when every card has been remembered
+- Progress bar now counts cards whose last rating is 3 (Remembered), reaching 100% exactly when the session ends — previously counted cards seen at least once
+- `CardRatingDTO` — `@Max` constraint reduced from 4 to 3; rating 2 also rejected at the service level with an explicit `IllegalArgumentException` in `StudyService.processSession`
+- `CardRating` TypeScript interface — `rating` type narrowed from `1 | 2 | 3 | 4` to `1 | 3`
+- `RatingButtonsComponent` / `StudyCardComponent` — output type narrowed to `1 | 3`; `againCount` signal removed; `ratings` Map retyped as `Map<number, 1 | 3>` (eliminates `as` cast in `submitSession`)
+- i18n keys `again`, `hard`, `good`, `easy` replaced by `forgotten` and `remembered` in all four language files (EN, ES, FR, PT)
+- `FsrsServiceTest` — renamed `schedule_newCard_againRating_schedulesEarlierThaEasy` → `schedule_newCard_forgottenRating_schedulesEarlierThanRemembered`; rating 4 replaced with rating 3
+- `frontend/package.json` version bumped to `0.29.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.29.0`
+
+### What does NOT change
+- `FsrsService` algorithm — receives an `int`; `W[1]`, `W[3]`, `hardPenalty` (W[15]), `easyBonus` (W[16]) become inert parameters but cause no errors; all FSRS math remains intact
+- Card state transitions (Learning → Review, Relearning → Review) — still driven by the algorithm output
+- `study_progress` and `review_logs` table schemas — historical ratings 2 / 4 in `review_logs` remain valid; no migration needed
+- Dashboard stats — count FSRS states, not ratings
+
+---
+
 ## [0.28.0] — 2026-05-25 — chore/tag-roles-and-public-decks-update
 
 ### Removed

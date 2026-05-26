@@ -37,11 +37,11 @@ class FsrsServiceTest {
     }
 
     @Test
-    void schedule_newCard_againRating_schedulesEarlierThaEasy() {
-        StudyProgress againResult = fsrsService.schedule(null, 1, user, card, now);
-        StudyProgress easyResult = fsrsService.schedule(null, 4, user, card, now);
+    void schedule_newCard_forgottenRating_schedulesEarlierThanRemembered() {
+        StudyProgress forgottenResult = fsrsService.schedule(null, 1, user, card, now);
+        StudyProgress rememberedResult = fsrsService.schedule(null, 3, user, card, now);
 
-        assertThat(againResult.getNextReview()).isBefore(easyResult.getNextReview());
+        assertThat(forgottenResult.getNextReview()).isBefore(rememberedResult.getNextReview());
     }
 
     @Test

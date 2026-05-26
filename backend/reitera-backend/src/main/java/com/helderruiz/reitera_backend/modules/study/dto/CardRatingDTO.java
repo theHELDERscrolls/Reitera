@@ -6,17 +6,17 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Represents a single card rating submitted by the user during a study session.
- * Rating scale: 1 (Again), 2 (Hard), 3 (Good), 4 (Easy).
+ * Rating scale: 1 (Forgotten), 3 (Remembered).
  */
 public record CardRatingDTO(
 
         @NotNull(message = "Card ID is mandatory")
         Integer cardId,
 
-        // FSRS accepts ratings from 1 to 4 only
+        // Accepted ratings: 1 (Forgotten) and 3 (Remembered) only
         @NotNull(message = "Rating is mandatory")
-        @Min(value = 1, message = "Rating must be at least 1 (Again)")
-        @Max(value = 4, message = "Rating must be at most 4 (Easy)")
+        @Min(value = 1, message = "Rating must be 1 (Forgotten) or 3 (Remembered)")
+        @Max(value = 3, message = "Rating must be 1 (Forgotten) or 3 (Remembered)")
         Integer rating
 ) {
 }

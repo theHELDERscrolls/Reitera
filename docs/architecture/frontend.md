@@ -44,9 +44,11 @@ src/app/
 │   │           └── profile-panel/ → ProfilePanelComponent (view profile, theme, language, logout)
 │   └── study/          → StudyComponent (hub — deck picker, due counts, category study)
 │       ├── components/
-│       │   ├── study-hub/     → StudyHubComponent (deck list with card count badges)
-│       │   ├── study-session/ → StudySessionComponent (card review flow, progress bar, confirm-dialog back guard)
-│       │   └── study-card/    → StudyCardComponent (renders BASIC, MC, TF; reveals explanation)
+│       │   ├── study-hub/       → StudyHubComponent (deck list with card count badges)
+│       │   ├── study-session/   → StudySessionComponent (card review flow; forgotten cards requeued at end of queue with no limit; progress bar reaches 100% only when every card's last rating is Remembered; confirm-dialog back guard)
+│       │   ├── study-card/      → StudyCardComponent (renders BASIC, MC, TF; reveals explanation)
+│       │   ├── rating-buttons/  → RatingButtonsComponent (2-button Forgotten/Remembered; emits 1 | 3)
+│       │   └── card-explanation/ → CardExplanationComponent (collapsible explanation panel shown after reveal)
 │       └── services/
 │           └── study.service.ts → StudyService (getDueCards, processSession)
 └── shared/             → Reusable components with no feature-specific logic

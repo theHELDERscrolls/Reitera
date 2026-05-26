@@ -1,30 +1,14 @@
-<div class="grid grid-cols-4 gap-2 pt-2">
+<div class="grid grid-cols-2 gap-2 pt-2">
   <button
     (click)="rate.emit(1)"
-    class="flex flex-col items-center gap-1 py-3 text-xs font-bold transition-colors rounded-lg bg-error/10 text-error hover:bg-error/20"
+    class="py-3 text-xs font-bold transition-colors rounded-lg bg-error/10 text-error hover:bg-error/20"
   >
-    <span class="text-base">1</span>
-    <span>{{ 'study.session.rating.again' | transloco }}</span>
-  </button>
-  <button
-    (click)="rate.emit(2)"
-    class="flex flex-col items-center gap-1 py-3 text-xs font-bold transition-colors rounded-lg bg-accent-6/10 text-accent-6 hover:bg-accent-6/20"
-  >
-    <span class="text-base">2</span>
-    <span>{{ 'study.session.rating.hard' | transloco }}</span>
+    {{ 'study.session.rating.forgotten' | transloco }}
   </button>
   <button
     (click)="rate.emit(3)"
-    class="flex flex-col items-center gap-1 py-3 text-xs font-bold transition-colors rounded-lg bg-primary/10 text-primary hover:bg-primary/20"
+    class="py-3 text-xs font-bold transition-colors rounded-lg bg-accent-5/10 text-accent-5 hover:bg-accent-5/20"
   >
-    <span class="text-base">3</span>
-    <span>{{ 'study.session.rating.good' | transloco }}</span>
-  </button>
-  <button
-    (click)="rate.emit(4)"
-    class="flex flex-col items-center gap-1 py-3 text-xs font-bold transition-colors rounded-lg bg-accent-5/10 text-accent-5 hover:bg-accent-5/20"
-  >
-    <span class="text-base">4</span>
-    <span>{{ 'study.session.rating.easy' | transloco }}</span>
+    {{ 'study.session.rating.remembered' | transloco }}
   </button>
 </div>
