@@ -3,5 +3,10 @@
 }
 
 @if (mode() === 'session') {
-  <app-study-session [deckId]="deckId()" [categoryId]="categoryId()" />
+  <app-study-session
+    [deckId]="deckId()"
+    [categoryId]="categoryId()"
+    [deckName]="deckName()"
+    [categoryName]="categoryName()"
+  />
 }

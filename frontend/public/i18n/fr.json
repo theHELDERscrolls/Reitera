@@ -322,6 +322,19 @@
         "message": "Votre progression ne sera pas sauvegardée si vous revenez en arrière maintenant.",
         "confirm": "Quitter"
       },
+      "deactivateDialog": {
+        "title": "Quitter la session ?",
+        "message": "Vous avez des évaluations non sauvegardées. Si vous quittez maintenant, votre progression pourrait être perdue.",
+        "confirm": "Quitter"
+      },
+      "recovery": {
+        "title": "Session non soumise trouvée",
+        "description": "Vous avez une session non soumise pour \"{{name}}\" de tout à l'heure.",
+        "resume": "Reprendre et soumettre",
+        "discard": "Ignorer",
+        "success": "La session récupérée a été soumise avec succès.",
+        "noCards": "Aucune carte valide n'a été trouvée dans la session récupérée."
+      },
       "saving": "Sauvegarde en cours...",
       "empty": {
         "title": "Tout est à jour !",

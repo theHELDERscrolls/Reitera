@@ -21,8 +21,13 @@ export default class StudyComponent {
 
   readonly categoryId = computed(() => {
     const val = this.queryParams().get('categoryId');
+
     return val ? Number(val) : null;
   });
+
+  readonly deckName = computed(() => this.queryParams().get('deckName'));
+
+  readonly categoryName = computed(() => this.queryParams().get('categoryName'));
 
   readonly mode = computed(() =>
     this.deckId() !== null || this.categoryId() !== null ? 'session' : 'hub',

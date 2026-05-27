@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Angular](https://img.shields.io/badge/Angular-21-red?logo=angular)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-green?logo=springboot)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-green?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
 
 ## What is Reitera?
@@ -22,7 +22,7 @@ Cards support three types: basic (front/back), multiple choice, and true/false. 
 | Layer      | Technology                                                                                   |
 | ---------- | -------------------------------------------------------------------------------------------- |
 | Frontend   | Angular 21 — standalone components, signals, Transloco i18n, Tailwind CSS                    |
-| Backend    | Spring Boot 4.0.3 — stateless JWT auth (15 min access + 7 day refresh), Spring Security, JPA |
+| Backend    | Spring Boot 4.0.6 — stateless JWT auth (15 min access + 7 day refresh), Spring Security, JPA |
 | Database   | PostgreSQL 16 — JSONB for card variants, manual schema management                            |
 | Dev DB     | Docker Compose                                                                               |
 | Deployment | Vercel (frontend) · Render (backend) · Supabase (database)                                   |

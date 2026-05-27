@@ -322,6 +322,19 @@
         "message": "O teu progresso não será guardado se saíres agora.",
         "confirm": "Sair"
       },
+      "deactivateDialog": {
+        "title": "Sair da sessão?",
+        "message": "Tens avaliações por guardar. Se saíres agora, o teu progresso pode ser perdido.",
+        "confirm": "Sair"
+      },
+      "recovery": {
+        "title": "Sessão não submetida encontrada",
+        "description": "Tens uma sessão não submetida de \"{{name}}\" de há pouco.",
+        "resume": "Retomar e submeter",
+        "discard": "Descartar",
+        "success": "A sessão recuperada foi submetida com sucesso.",
+        "noCards": "Não foram encontrados cartões válidos na sessão recuperada."
+      },
       "saving": "A guardar resultados...",
       "empty": {
         "title": "Estás em dia!",

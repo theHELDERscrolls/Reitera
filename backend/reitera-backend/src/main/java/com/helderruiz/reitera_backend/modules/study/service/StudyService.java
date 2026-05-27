@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Orchestrates the study session flow: fetching due cards and processing ratings.
@@ -75,14 +76,17 @@ public class StudyService {
      * - Persists the updated StudyProgress.
      * - Writes an immutable ReviewLog entry for audit and analytics.
      * <p>
-     * The entire batch runs inside one transaction: if any card fails,
-     * the whole session is rolled back and nothing is persisted.
+     * Cards that no longer exist or fail scope verification are silently skipped
+     * rather than aborting the whole session. This supports the localStorage
+     * recovery path where backed-up cardIds may reference deleted cards.
+     * Rating 2 is still rejected eagerly as it signals a malformed request.
      */
     @Transactional
     public StudySessionResponseDTO processSession(StudySessionRequestDTO dto, User user) {
         validateScope(dto.deckId(), dto.categoryId());
 
         LocalDateTime now = LocalDateTime.now();
+        int processedCount = 0;
 
         for (CardRatingDTO ratingDTO : dto.ratings()) {
             if (ratingDTO.rating() == 2) {
@@ -90,16 +94,22 @@ public class StudyService {
                         "Rating 2 is not a valid rating. Use 1 (Forgotten) or 3 (Remembered).");
             }
 
-            Card card = cardRepository.findById(ratingDTO.cardId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Card not found with id: " + ratingDTO.cardId()));
+            Optional<Card> cardOpt = cardRepository.findById(ratingDTO.cardId());
 
-            verifyCardScope(card, dto.deckId(), dto.categoryId(), user);
+            if (cardOpt.isEmpty()) continue;
+
+            Card card = cardOpt.get();
+
+            try {
+                verifyCardScope(card, dto.deckId(), dto.categoryId(), user);
+            } catch (Exception e) {
+                continue;
+            }
 
             StudyProgressId progressId = new StudyProgressId(user.getId(), ratingDTO.cardId());
             StudyProgress existing = studyProgressRepository.findById(progressId).orElse(null);
-
             StudyProgress updated = fsrsService.schedule(existing, ratingDTO.rating(), user, card, now);
+
             studyProgressRepository.save(updated);
 
             ReviewLog log = ReviewLog.builder()
@@ -109,10 +119,13 @@ public class StudyService {
                     .elapsedDays(updated.getElapsedDays())
                     .scheduledDays(updated.getScheduledDays())
                     .build();
+
             reviewLogRepository.save(log);
+
+            processedCount++;
         }
 
-        return new StudySessionResponseDTO(dto.deckId(), dto.categoryId(), dto.ratings().size());
+        return new StudySessionResponseDTO(dto.deckId(), dto.categoryId(), processedCount);
     }
 
     /**

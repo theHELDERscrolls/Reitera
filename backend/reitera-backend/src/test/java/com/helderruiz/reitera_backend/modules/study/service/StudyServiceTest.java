@@ -27,6 +27,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -94,5 +95,30 @@ class StudyServiceTest {
         assertThat(result.cardsReviewed()).isEqualTo(1);
         verify(studyProgressRepository).save(updatedProgress);
         verify(reviewLogRepository).save(any());
+    }
+
+    @Test
+    void processSession_withMissingCard_skipsItAndReturnsZero() {
+        when(cardRepository.findById(card.getId())).thenReturn(Optional.empty());
+
+        StudySessionResponseDTO result = studyService.processSession(dto, user);
+
+        assertThat(result.cardsReviewed()).isEqualTo(0);
+        verify(studyProgressRepository, never()).save(any());
+        verify(reviewLogRepository, never()).save(any());
+    }
+
+    @Test
+    void processSession_withCardFromWrongDeck_skipsItAndReturnsZero() {
+        Deck otherDeck = Deck.builder().id(99).owner(user).build();
+        Card cardInOtherDeck = Card.builder().id(1).deck(otherDeck).build();
+
+        when(cardRepository.findById(card.getId())).thenReturn(Optional.of(cardInOtherDeck));
+
+        StudySessionResponseDTO result = studyService.processSession(dto, user);
+
+        assertThat(result.cardsReviewed()).isEqualTo(0);
+        verify(studyProgressRepository, never()).save(any());
+        verify(reviewLogRepository, never()).save(any());
     }
 }
