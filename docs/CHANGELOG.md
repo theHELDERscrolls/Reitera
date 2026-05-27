@@ -14,16 +14,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - **Session backup** — after each card rating, `SessionBackupService` writes a `SessionBackup` snapshot to `localStorage` (`reitera_session_backup`). Backups expire after 24 hours and carry a `version: '1'` guard for forward-compatibility.
 - **Recovery flow** — on load, `StudySessionComponent` checks for an existing backup that matches the current scope (`deckId` / `categoryId`). If found, a `'recovery'` state is shown instead of fetching due cards; the user can submit the recovered session immediately or discard it and start fresh.
+- **Hub recovery banner** — `StudyHubComponent` shows a `SessionRecoveryNoticeComponent` banner at the top of the page when `SessionBackupService.backup()` is non-null, letting the user resume or discard the pending backup without entering a session first.
+- **Conflict modal** — `StudyComponent` detects when the user navigates to a different deck/category than an existing backup and shows a `warning` `ConfirmDialogComponent`; clearing the backup is required to proceed.
+- **Logout guard bypass** — `ProfilePanelComponent.logout()` now checks `hasPendingRatings()` before calling `authService.logout()`. If true, it triggers the deactivation dialog; only after the user confirms does it call `bypassNextGuardCheck()` and then `authService.logout()`, preventing the route guard from showing a second dialog.
 - **Deactivation guard** — `studySessionGuard` (`CanDeactivateFn`) in `core/guards/study-session.guard.ts` blocks navigation away from `/study` while ratings are pending; shows a `warning` `ConfirmDialogComponent` before allowing the user to leave.
 - **`beforeunload` beacon** — `StudySessionComponent` registers a `beforeunload` listener that fires `navigator.sendBeacon` to `POST /api/v1/study/sessions` when the tab is closed mid-session with ratings in memory, as a best-effort last-resort save.
-- `StudyStateService` — new singleton service tracking `hasPendingRatings` (signal) and coordinating the async confirm-or-cancel deactivation flow via an RxJS `Subject`.
+- `SessionRecoveryNoticeComponent` — new reusable component at `features/study/components/session-recovery-notice/`; renders a warning card with a title, description, and two equal-width buttons (Discard / Resume); replaces duplicated inline markup in both `StudyHubComponent` and `StudySessionComponent`.
+- `StudyStateService` — new singleton service tracking `hasPendingRatings` (signal) and coordinating the async confirm-or-cancel deactivation flow via an RxJS `Subject`; also exposes `bypassNextGuardCheck()` / `consumeBypass()` one-shot flag for the logout flow.
 - `SessionBackup` interface added to `core/models/study.model.ts`.
-- `study.session.deactivateDialog.*` and `study.session.recovery.*` i18n keys added to all four language files (EN, ES, FR, PT).
+- `study.session.deactivateDialog.*`, `study.session.recovery.*`, `study.hub.recovery.*`, and `study.conflict.*` i18n keys added to all four language files (EN, ES, FR, PT).
 
 ### Changed
 - `StudyService.processSession` — cards not found or failing scope verification are now **silently skipped** instead of throwing `ResourceNotFoundException` / `IllegalArgumentException`; supports recovery submissions that may reference deleted cards. `cardsReviewed` in the response now reflects only actually processed cards (may be less than submitted ratings).
-- `StudySessionComponent` — `SessionState` type extended with `'recovery'`; inputs extended with `deckName` and `categoryName` (passed via query params from `StudyHubComponent`).
-- `StudyHubComponent` — study links now include `deckName` / `categoryName` as query params so the backup can store a human-readable name for the recovery prompt.
+- `StudySessionComponent` — `SessionState` type extended with `'recovery'`; inputs extended with `deckName` and `categoryName` (passed via query params from `StudyHubComponent`); recovery state now uses `SessionRecoveryNoticeComponent` instead of inline markup.
+- `StudyHubComponent` — study links now include `deckName` / `categoryName` as query params so the backup can store a human-readable name for the recovery prompt; recovery banner added using the new `SessionRecoveryNoticeComponent`.
+- `SessionBackupService` — added reactive `backup` signal initialised from `localStorage` at construction time (single source of truth for hub and session); `save()` and `clear()` keep the signal in sync; added `markAutoResume()` / `consumeAutoResume()` one-shot flag so the hub can navigate directly to the session skipping the recovery dialog.
 - `StudyServiceTest` — two new tests: `processSession_withMissingCard_skipsItAndReturnsZero` and `processSession_withCardFromWrongDeck_skipsItAndReturnsZero`.
 - `frontend/package.json` version bumped to `0.30.0`
 - `backend/reitera-backend/pom.xml` version bumped to `0.30.0`

@@ -293,7 +293,18 @@
         "new": "novos",
         "due": "pendentes",
         "relearning": "a reaprender"
+      },
+      "recovery": {
+        "title": "Sessão não submetida encontrada",
+        "description": "Tens uma sessão não submetida de \"{{name}}\" de uma visita anterior.",
+        "resume": "Retomar e submeter",
+        "discard": "Descartar"
       }
+    },
+    "conflict": {
+      "title": "Sessão pendente",
+      "message": "Tens progresso não guardado de \"{{name}}\". Se continuares, será perdido.",
+      "confirm": "Descartar e continuar"
     },
     "session": {
       "state": {

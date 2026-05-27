@@ -128,11 +128,11 @@ class XControllerTest {
 
 | Module | Unit tests | Slice tests |
 |--------|-----------|-------------|
-| auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7), `PasswordResetServiceTest` (5) | `AuthControllerTest` (12) |
-| user | `UserServiceTest` (8) | `UserControllerTest` (2) |
-| deck | `DeckServiceTest` (15), `CategoryServiceTest` (1) | `DeckControllerTest` (15), `CategoryControllerTest` (2) |
-| card | `CardServiceTest` (8) | `CardControllerTest` (11), `CardListControllerTest` (3) |
-| study | `FsrsServiceTest` (3), `StudyServiceTest` (2) | `StudyControllerTest` (5) |
+| auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7), `PasswordResetServiceTest` (5) | `AuthControllerTest` (17) |
+| user | `UserServiceTest` (9) | `UserControllerTest` (2) |
+| deck | `DeckServiceTest` (20), `CategoryServiceTest` (1) | `DeckControllerTest` (16), `CategoryControllerTest` (2) |
+| card | `CardServiceTest` (7) | `CardControllerTest` (14), `CardListControllerTest` (3) |
+| study | `FsrsServiceTest` (3), `StudyServiceTest` (4) | `StudyControllerTest` (5) |
 | dashboard | `DashboardServiceTest` (4) | `DashboardControllerTest` (4) |
 
-**Total: ~126 tests** across 18 test classes. Run with `mvn test` from `backend/reitera-backend/`.
+**Total: ~120 tests** across 17 test classes. Run with `mvn test` from `backend/reitera-backend/`.

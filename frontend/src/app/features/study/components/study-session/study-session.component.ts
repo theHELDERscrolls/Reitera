@@ -16,7 +16,6 @@ import {
   LucideBookCheck,
   LucideBookOpen,
   LucideCircleCheck,
-  LucideHistory,
 } from '@lucide/angular';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -24,6 +23,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CardRating, DueCard, SessionBackup, StudySessionRequest } from '@core/models/study.model';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { SessionBackupService } from '@features/study/services/session-backup.service';
+import { SessionRecoveryNoticeComponent } from '@features/study/components/session-recovery-notice/session-recovery-notice.component';
 import { StudyCardComponent } from '../study-card/study-card.component';
 import { StudyService } from '@features/study/services/study.service';
 import { StudyStateService } from '@features/study/services/study-state.service';
@@ -40,8 +40,8 @@ type SessionState = 'loading' | 'recovery' | 'empty' | 'active' | 'complete';
     LucideBookCheck,
     LucideBookOpen,
     LucideCircleCheck,
-    LucideHistory,
     RouterLink,
+    SessionRecoveryNoticeComponent,
     StudyCardComponent,
     TranslocoPipe,
   ],
@@ -153,8 +153,13 @@ export class StudySessionComponent implements OnInit, OnDestroy {
       backup.categoryId === (this.categoryId() ?? null);
 
     if (backupMatchesSession) {
-      this.recoveryBackup.set(backup);
-      this.isLoading.set(false);
+      if (this.sessionBackupService.consumeAutoResume()) {
+        this.isLoading.set(false);
+        this.resumeBackup();
+      } else {
+        this.recoveryBackup.set(backup);
+        this.isLoading.set(false);
+      }
     } else {
       this.loadDueCards();
     }

@@ -293,7 +293,18 @@
         "new": "nouvelles",
         "due": "à réviser",
         "relearning": "en révision"
+      },
+      "recovery": {
+        "title": "Session non soumise trouvée",
+        "description": "Vous avez une session non soumise pour \"{{name}}\" d'une visite précédente.",
+        "resume": "Reprendre et soumettre",
+        "discard": "Ignorer"
       }
+    },
+    "conflict": {
+      "title": "Session en attente",
+      "message": "Vous avez une progression non sauvegardée de \"{{name}}\". Continuer maintenant l'effacera.",
+      "confirm": "Ignorer et continuer"
     },
     "session": {
       "state": {

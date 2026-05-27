@@ -19,6 +19,18 @@
     }
   </app-page-header>
 
+  <!-- Pending backup recovery -->
+  @if (pendingBackup()) {
+    <app-session-recovery-notice
+      [title]="'study.hub.recovery.title' | transloco"
+      [description]="'study.hub.recovery.description' | transloco: { name: pendingBackupName() }"
+      [resumeLabel]="'study.hub.recovery.resume' | transloco"
+      [discardLabel]="'study.hub.recovery.discard' | transloco"
+      (resumed)="resumeBackup()"
+      (discarded)="discardBackup()"
+    />
+  }
+
   <!-- Loading skeleton -->
   @if (isLoading()) {
     <div class="flex flex-col gap-4">

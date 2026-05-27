@@ -6,6 +6,8 @@ import { StudyStateService } from '@features/study/services/study-state.service'
 export const studySessionGuard: CanDeactivateFn<unknown> = () => {
   const studyState = inject(StudyStateService);
 
+  if (studyState.consumeBypass()) return true;
+  
   if (!studyState.hasPendingRatings()) return true;
 
   return studyState.requestDeactivation();

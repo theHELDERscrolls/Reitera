@@ -293,7 +293,18 @@
         "new": "nuevas",
         "due": "pendientes",
         "relearning": "reaprendiendo"
+      },
+      "recovery": {
+        "title": "Sesión sin enviar encontrada",
+        "description": "Tienes una sesión sin enviar de \"{{name}}\" de una visita anterior.",
+        "resume": "Retomar y enviar",
+        "discard": "Descartar"
       }
+    },
+    "conflict": {
+      "title": "Sesión pendiente",
+      "message": "Tienes progreso sin guardar de \"{{name}}\". Si continúas, se perderá.",
+      "confirm": "Descartar y continuar"
     },
     "session": {
       "state": {

@@ -25,34 +25,15 @@
         <p class="text-muted">{{ 'study.session.saving' | transloco }}</p>
       </div>
     } @else {
-      <div class="flex flex-col w-full max-w-3xl gap-6 mx-auto">
-        <div class="flex flex-col gap-4 p-5 border rounded-xl bg-surface border-border">
-          <div class="flex items-start gap-3">
-            <svg lucideHistory class="mt-0.5 text-warning shrink-0 size-5" />
-            <div class="flex flex-col gap-1">
-              <p class="font-semibold text-foreground">
-                {{ 'study.session.recovery.title' | transloco }}
-              </p>
-              <p class="text-sm text-muted">
-                {{ 'study.session.recovery.description' | transloco: { name: recoveryName() } }}
-              </p>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <button
-              (click)="resumeBackup()"
-              class="flex-1 px-4 py-2 text-sm font-medium transition-all rounded-lg bg-primary text-background hover:bg-primary/90"
-            >
-              {{ 'study.session.recovery.resume' | transloco }}
-            </button>
-            <button
-              (click)="discardBackup()"
-              class="px-4 py-2 text-sm font-medium transition-all rounded-lg bg-overlay text-foreground hover:bg-overlay/70"
-            >
-              {{ 'study.session.recovery.discard' | transloco }}
-            </button>
-          </div>
-        </div>
+      <div class="w-full max-w-3xl mx-auto">
+        <app-session-recovery-notice
+          [title]="'study.session.recovery.title' | transloco"
+          [description]="'study.session.recovery.description' | transloco: { name: recoveryName() }"
+          [resumeLabel]="'study.session.recovery.resume' | transloco"
+          [discardLabel]="'study.session.recovery.discard' | transloco"
+          (resumed)="resumeBackup()"
+          (discarded)="discardBackup()"
+        />
       </div>
     }
   }

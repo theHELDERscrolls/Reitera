@@ -293,7 +293,18 @@
         "new": "new",
         "due": "due",
         "relearning": "relearning"
+      },
+      "recovery": {
+        "title": "Unsubmitted session found",
+        "description": "You have an unsubmitted session for \"{{name}}\" from a previous visit.",
+        "resume": "Resume and submit",
+        "discard": "Discard"
       }
+    },
+    "conflict": {
+      "title": "Pending session",
+      "message": "You have unsaved progress from \"{{name}}\". Starting now will discard it.",
+      "confirm": "Discard and continue"
     },
     "session": {
       "state": {

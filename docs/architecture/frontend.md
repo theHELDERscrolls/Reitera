@@ -6,65 +6,55 @@ The Angular 21 frontend is a **Single-Page Application** using standalone compon
 
 ```
 src/app/
-├── core/               → Singleton services, guards, interceptors, and models (never imported by feature modules)
-│   ├── auth/           → AuthService (login, register, logout, GET /users/me, token storage)
-│   ├── guards/         → authGuard, noAuthGuard (functional CanActivateFn) · studySessionGuard (CanDeactivateFn — blocks navigation away from /study when ratings are pending)
-│   ├── interceptors/   → jwtInterceptor (attaches Bearer token; intercepts 401 to refresh and retry)
-│   ├── models/         → TypeScript interfaces mapping all backend DTOs
-│   ├── profile-panel/  → ProfilePanelService
-│   ├── theme/          → ThemeService (dark/light, localStorage persistence, data-theme on <html>)
-│   └── toast/          → ToastService
+├── core/               → Singleton services, guards, interceptors, and models shared across all features
+│   ├── auth/           → Authentication logic, token storage, and user session
+│   ├── guards/         → Route activation and deactivation guards
+│   ├── interceptors/   → HTTP interceptor: attaches JWT and handles transparent token refresh on 401
+│   ├── models/         → TypeScript interfaces for all backend DTOs
+│   ├── profile-panel/  → Profile panel helper service
+│   ├── theme/          → Dark/light theme switching and persistence
+│   └── toast/          → Global notification service
 ├── features/           → One folder per feature; each has its own routes file and components
-│   ├── auth/           → auth.routes.ts, LoginComponent, RegisterComponent, CheckEmailComponent (/auth/check-email), VerifyComponent (/auth/verify), ForgotPasswordComponent (/auth/forgot-password), ResetPasswordComponent (/auth/reset-password)
-│   │   └── services/
-│   │       ├── email-verification.service.ts → EmailVerificationService (verifyEmail, resendEmail)
-│   │       └── password-reset.service.ts     → PasswordResetService (forgotPassword, resetPassword)
-│   ├── dashboard/      → DashboardComponent — stat badges, activity heatmap, last studied decks
-│   ├── decks/          → DecksComponent — paginated deck list with category filter and CRUD dialogs
-│   │   ├── components/
-│   │   │   ├── card-form/         → CardFormComponent (create/edit card dialog; dynamic MC options)
-│   │   │   ├── cards-table/       → CardsTableComponent (sortable table; loading skeleton; empty state; reusable)
-│   │   │   ├── category-filter/   → CategoryFilterComponent (collapsible dropdown, click-outside aware)
-│   │   │   ├── deck-card/         → DeckCardComponent (accent color, options menu, edit/delete outputs)
-│   │   │   ├── deck-detail/       → DeckDetailComponent (breadcrumb, header, stats chips, cards table, pagination)
-│   │   │   └── deck-form/         → DeckFormComponent (create/edit dialog, reactive form, save confirm)
-│   │   └── services/
-│   │       ├── deck-detail.service.ts → DeckDetailService (deck, stats, cards, card CRUD)
-│   │       └── decks.service.ts       → DecksService (CRUD + pagination + categories)
-│   ├── card-list/  → CardListComponent — cross-deck card list at /cards; filter bar (question, type, state); edit/delete inline
-│   │   └── services/
-│   │       └── cards.service.ts → CardsService (getCards w/ filters, updateCard, deleteCard)
-│   ├── profile/        → ProfileComponent — user info display, avatar, joined date, account details
-│   ├── shell/          → AppShellComponent + all layout sub-components
-│   │   ├── mobile-header/         → MobileHeaderComponent (hamburger, shown on small screens only)
-│   │   └── sidebar/               → SidebarComponent (collapsible, desktop + mobile overlay)
-│   │       ├── sidebar-header/    → SidebarHeaderComponent (logo + collapse toggle)
-│   │       ├── sidebar-nav/       → SidebarNavComponent (nav links with icons)
-│   │       └── sidebar-footer/    → SidebarFooterComponent (avatar, username, email, profile panel trigger)
-│   │           └── profile-panel/ → ProfilePanelComponent (view profile, theme, language, logout)
-│   └── study/          → StudyComponent (hub — deck picker, due counts, category study)
+│   ├── auth/           → Login, register, email verification, and password reset pages
+│   │   └── services/   → EmailVerificationService, PasswordResetService
+│   ├── dashboard/      → Overview: streak, cards due today, activity heatmap, last studied decks
+│   ├── decks/          → Deck list with category filter, deck CRUD, and card management within a deck
+│   │   ├── components/ → CardFormComponent, CardsTableComponent, CategoryFilterComponent, DeckCardComponent, DeckDetailComponent, DeckFormComponent
+│   │   └── services/   → DecksService (deck CRUD + pagination), DeckDetailService (deck stats + card CRUD)
+│   ├── card-list/      → Cross-deck card list with filters (question, type, state) and inline edit/delete
+│   │   └── services/   → CardsService
+│   ├── profile/        → Read-only display of the authenticated user's profile
+│   ├── shell/          → App layout: collapsible sidebar and mobile header
+│   │   ├── mobile-header/  → Top bar with hamburger button for small screens
+│   │   └── sidebar/        → Collapsible desktop sidebar and mobile overlay
+│   │       ├── sidebar-header/    → Logo and collapse toggle
+│   │       ├── sidebar-nav/       → Main navigation links
+│   │       └── sidebar-footer/    → User avatar and profile panel trigger
+│   │           └── profile-panel/ → Dropdown with theme, language, and logout actions
+│   └── study/          → Study hub and active card review session
 │       ├── components/
-│       │   ├── study-hub/       → StudyHubComponent (deck list with card count badges)
-│       │   ├── study-session/   → StudySessionComponent (card review flow; forgotten cards requeued at end of queue with no limit; progress bar reaches 100% only when every card's last rating is Remembered; confirm-dialog back guard; localStorage backup written after each rating; recovery state shown on load if a matching unsubmitted backup exists; beforeunload sends a beacon to persist progress on hard close)
-│       │   ├── study-card/      → StudyCardComponent (renders BASIC, MC, TF; reveals explanation)
-│       │   ├── rating-buttons/  → RatingButtonsComponent (2-button Forgotten/Remembered; emits 1 | 3)
-│       │   └── card-explanation/ → CardExplanationComponent (collapsible explanation panel shown after reveal)
+│       │   ├── study-hub/             → Deck picker with card count badges and pending session recovery banner
+│       │   ├── study-session/         → Card review flow with progress tracking, backup, and recovery
+│       │   ├── study-card/            → Renders a card (BASIC, MC, TRUE_FALSE) and handles reveal
+│       │   ├── rating-buttons/        → Two-button Forgotten / Remembered rating UI
+│       │   ├── card-explanation/      → Collapsible explanation panel shown after reveal
+│       │   └── session-recovery-notice/ → Reusable warning banner for pending unsubmitted sessions
 │       └── services/
-│           ├── study.service.ts         → StudyService (getDueCards, processSession)
-│           ├── session-backup.service.ts → SessionBackupService (save/load/clear SessionBackup in localStorage; discards entries older than 24 h or with unknown version)
-│           └── study-state.service.ts   → StudyStateService (hasPendingRatings signal; requestDeactivation / confirmDeactivation / cancelDeactivation for the studySessionGuard flow)
-└── shared/             → Reusable components with no feature-specific logic
+│           ├── study.service.ts            → API calls for due cards and session submission
+│           ├── session-backup.service.ts   → Persists and restores in-progress sessions via localStorage
+│           └── study-state.service.ts      → Coordinates the navigation guard and deactivation confirmation flow
+└── shared/             → Reusable UI components with no feature-specific logic
     └── components/
-        ├── card-count-badges/ → CardCountBadgesComponent (new/due/relearning pill group; used in study hub)
-        ├── card-state-badge/  → CardStateBadgeComponent (FSRS state pill; input: state: number | null)
-        ├── card-type-badge/   → CardTypeBadgeComponent (card type pill; input: type: CardType)
-        ├── confirm-dialog/    → ConfirmDialogComponent
-        ├── empty-state/       → EmptyStateComponent (icon + title + subtitle + action content projection)
-        ├── language-switcher/ → LanguageSwitcherComponent
-        ├── page-header/       → PageHeaderComponent (page title + subtitle)
-        ├── pagination/        → PaginationComponent (page strip with gap logic; input: currentPage, totalPages)
-        ├── filter-dropdown/   → FilterDropdownComponent (click-outside-aware dropdown; labelKey i18n or raw label)
-        └── toast/             → ToastComponent
+        ├── card-count-badges/  → New / due / relearning pill group
+        ├── card-state-badge/   → FSRS state pill
+        ├── card-type-badge/    → Card type pill (BASIC, MC, TF)
+        ├── confirm-dialog/     → Generic confirmation modal with configurable variant and labels
+        ├── empty-state/        → Icon + title + subtitle + action slot for empty screens
+        ├── filter-dropdown/    → Click-outside-aware dropdown for filter options
+        ├── language-switcher/  → Language selection dropdown
+        ├── page-header/        → Page title and subtitle header
+        ├── pagination/         → Page number strip with gap logic
+        └── toast/              → Fixed notification overlay
 ```
 
 ## Routing Pattern
