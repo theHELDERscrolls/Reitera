@@ -8,7 +8,7 @@ The Angular 21 frontend is a **Single-Page Application** using standalone compon
 src/app/
 ├── core/               → Singleton services, guards, interceptors, and models (never imported by feature modules)
 │   ├── auth/           → AuthService (login, register, logout, GET /users/me, token storage)
-│   ├── guards/         → authGuard, noAuthGuard (functional CanActivateFn)
+│   ├── guards/         → authGuard, noAuthGuard (functional CanActivateFn) · studySessionGuard (CanDeactivateFn — blocks navigation away from /study when ratings are pending)
 │   ├── interceptors/   → jwtInterceptor (attaches Bearer token; intercepts 401 to refresh and retry)
 │   ├── models/         → TypeScript interfaces mapping all backend DTOs
 │   ├── profile-panel/  → ProfilePanelService
@@ -45,12 +45,14 @@ src/app/
 │   └── study/          → StudyComponent (hub — deck picker, due counts, category study)
 │       ├── components/
 │       │   ├── study-hub/       → StudyHubComponent (deck list with card count badges)
-│       │   ├── study-session/   → StudySessionComponent (card review flow; forgotten cards requeued at end of queue with no limit; progress bar reaches 100% only when every card's last rating is Remembered; confirm-dialog back guard)
+│       │   ├── study-session/   → StudySessionComponent (card review flow; forgotten cards requeued at end of queue with no limit; progress bar reaches 100% only when every card's last rating is Remembered; confirm-dialog back guard; localStorage backup written after each rating; recovery state shown on load if a matching unsubmitted backup exists; beforeunload sends a beacon to persist progress on hard close)
 │       │   ├── study-card/      → StudyCardComponent (renders BASIC, MC, TF; reveals explanation)
 │       │   ├── rating-buttons/  → RatingButtonsComponent (2-button Forgotten/Remembered; emits 1 | 3)
 │       │   └── card-explanation/ → CardExplanationComponent (collapsible explanation panel shown after reveal)
 │       └── services/
-│           └── study.service.ts → StudyService (getDueCards, processSession)
+│           ├── study.service.ts         → StudyService (getDueCards, processSession)
+│           ├── session-backup.service.ts → SessionBackupService (save/load/clear SessionBackup in localStorage; discards entries older than 24 h or with unknown version)
+│           └── study-state.service.ts   → StudyStateService (hasPendingRatings signal; requestDeactivation / confirmDeactivation / cancelDeactivation for the studySessionGuard flow)
 └── shared/             → Reusable components with no feature-specific logic
     └── components/
         ├── card-count-badges/ → CardCountBadgesComponent (new/due/relearning pill group; used in study hub)
@@ -81,7 +83,7 @@ Authenticated routes are **nested under `AppShellComponent`**, which acts as the
   children: [
     { path: 'decks',     loadComponent: () => import('./features/decks/decks.component') },
     { path: 'cards',     loadComponent: () => import('./features/card-list/card-list.component') },
-    { path: 'study',     loadComponent: () => import('./features/study/study.component') },
+    { path: 'study',     loadComponent: () => import('./features/study/study.component'), canDeactivate: [studySessionGuard] },
     { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component') },
     { path: 'profile',   loadComponent: () => import('./features/profile/profile.component') },
   ],

@@ -9,6 +9,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.30.0] — 2026-05-27 — feat/53-study-session-persistence
+
+### Added
+- **Session backup** — after each card rating, `SessionBackupService` writes a `SessionBackup` snapshot to `localStorage` (`reitera_session_backup`). Backups expire after 24 hours and carry a `version: '1'` guard for forward-compatibility.
+- **Recovery flow** — on load, `StudySessionComponent` checks for an existing backup that matches the current scope (`deckId` / `categoryId`). If found, a `'recovery'` state is shown instead of fetching due cards; the user can submit the recovered session immediately or discard it and start fresh.
+- **Deactivation guard** — `studySessionGuard` (`CanDeactivateFn`) in `core/guards/study-session.guard.ts` blocks navigation away from `/study` while ratings are pending; shows a `warning` `ConfirmDialogComponent` before allowing the user to leave.
+- **`beforeunload` beacon** — `StudySessionComponent` registers a `beforeunload` listener that fires `navigator.sendBeacon` to `POST /api/v1/study/sessions` when the tab is closed mid-session with ratings in memory, as a best-effort last-resort save.
+- `StudyStateService` — new singleton service tracking `hasPendingRatings` (signal) and coordinating the async confirm-or-cancel deactivation flow via an RxJS `Subject`.
+- `SessionBackup` interface added to `core/models/study.model.ts`.
+- `study.session.deactivateDialog.*` and `study.session.recovery.*` i18n keys added to all four language files (EN, ES, FR, PT).
+
+### Changed
+- `StudyService.processSession` — cards not found or failing scope verification are now **silently skipped** instead of throwing `ResourceNotFoundException` / `IllegalArgumentException`; supports recovery submissions that may reference deleted cards. `cardsReviewed` in the response now reflects only actually processed cards (may be less than submitted ratings).
+- `StudySessionComponent` — `SessionState` type extended with `'recovery'`; inputs extended with `deckName` and `categoryName` (passed via query params from `StudyHubComponent`).
+- `StudyHubComponent` — study links now include `deckName` / `categoryName` as query params so the backup can store a human-readable name for the recovery prompt.
+- `StudyServiceTest` — two new tests: `processSession_withMissingCard_skipsItAndReturnsZero` and `processSession_withCardFromWrongDeck_skipsItAndReturnsZero`.
+- `frontend/package.json` version bumped to `0.30.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.30.0`
+
+---
+
 ## [0.29.0] — 2026-05-26 — feat/120-two-button-rating-system
 
 ### Changed
