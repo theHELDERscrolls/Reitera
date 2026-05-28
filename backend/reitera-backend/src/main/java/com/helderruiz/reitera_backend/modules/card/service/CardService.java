@@ -65,10 +65,10 @@ public class CardService {
         return new CardResponseDTO(
                 card.getId(),
                 card.getDeck().getId(),
+                card.getNoteId(),
                 card.getType(),
                 card.getQuestion(),
                 card.getAnswerJson(),
-                card.getExplanation(),
                 state
         );
     }
