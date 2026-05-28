@@ -133,8 +133,9 @@ class XControllerTest {
 | auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7), `PasswordResetServiceTest` (5) | `AuthControllerTest` (17) |
 | user | `UserServiceTest` (9) | `UserControllerTest` (2) |
 | deck | `DeckServiceTest` (20), `CategoryServiceTest` (1) | `DeckControllerTest` (16), `CategoryControllerTest` (2) |
+| note | `NoteParserTest` (21), `NoteServiceTest` (11) | `NoteControllerTest` (8) |
 | card | — | `CardListControllerTest` (3) |
 | study | `FsrsServiceTest` (3), `StudyServiceTest` (4) | `StudyControllerTest` (5) |
 | dashboard | `DashboardServiceTest` (4) | `DashboardControllerTest` (4) |
 
-**Total: ~107 tests** across 17 test classes. Run with `mvn test` from `backend/reitera-backend/`.
+**Total: ~147 tests** across 20 test classes. Run with `mvn test` from `backend/reitera-backend/`.
