@@ -18,9 +18,9 @@ src/app/
 │   ├── auth/           → Login, register, email verification, and password reset pages
 │   │   └── services/   → EmailVerificationService, PasswordResetService
 │   ├── dashboard/      → Overview: streak, cards due today, activity heatmap, last studied decks
-│   ├── decks/          → Deck list with category filter, deck CRUD, and card management within a deck
-│   │   ├── components/ → CardFormComponent, CardsTableComponent, CategoryFilterComponent, DeckCardComponent, DeckDetailComponent, DeckFormComponent
-│   │   └── services/   → DecksService (deck CRUD + pagination), DeckDetailService (deck stats + card CRUD)
+│   ├── decks/          → Deck list with category filter, deck CRUD, and note management within a deck
+│   │   ├── components/ → CardsTableComponent, CategoryFilterComponent, DeckCardComponent, DeckDetailComponent, DeckFormComponent, NoteEditorComponent
+│   │   └── services/   → DecksService (deck CRUD + pagination), DeckDetailService (deck stats + card listing), NoteService (note CRUD)
 │   ├── card-list/      → Cross-deck card list with filters (question, type, state) and inline edit/delete
 │   │   └── services/   → CardsService
 │   ├── profile/        → Read-only display of the authenticated user's profile
@@ -35,9 +35,9 @@ src/app/
 │       ├── components/
 │       │   ├── study-hub/             → Deck picker with card count badges and pending session recovery banner
 │       │   ├── study-session/         → Card review flow with progress tracking, backup, and recovery
-│       │   ├── study-card/            → Renders a card (BASIC, MC, TRUE_FALSE) and handles reveal
+│       │   ├── study-card/            → Renders a card (BASIC, BASIC_REVERSE, CLOZE, MULTIPLE_CHOICE) and handles reveal; uses ngx-markdown for content rendering
 │       │   ├── rating-buttons/        → Two-button Forgotten / Remembered rating UI
-│       │   ├── card-explanation/      → Collapsible explanation panel shown after reveal
+│       │   ├── card-explanation/      → Collapsible explanation panel shown after reveal; renders explanation Markdown via ngx-markdown
 │       │   └── session-recovery-notice/ → Reusable warning banner for pending unsubmitted sessions
 │       └── services/
 │           ├── study.service.ts            → API calls for due cards and session submission
@@ -47,7 +47,7 @@ src/app/
     └── components/
         ├── card-count-badges/  → New / due / relearning pill group
         ├── card-state-badge/   → FSRS state pill
-        ├── card-type-badge/    → Card type pill (BASIC, MC, TF)
+        ├── card-type-badge/    → Card type pill (BASIC, BASIC_REVERSE, CLOZE, MULTIPLE_CHOICE)
         ├── confirm-dialog/     → Generic confirmation modal with configurable variant and labels
         ├── empty-state/        → Icon + title + subtitle + action slot for empty screens
         ├── filter-dropdown/    → Click-outside-aware dropdown for filter options

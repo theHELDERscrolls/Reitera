@@ -39,7 +39,8 @@ Access tokens are valid for **15 minutes**. When expired, call `POST /api/v1/aut
 |------|-----------|
 | [auth.md](auth.md) | Register · Login · Refresh token · Logout · Email verify · Resend verification · Forgot password · Reset password |
 | [decks.md](decks.md) | Deck CRUD · Deck stats |
-| [cards.md](cards.md) | Card CRUD · All four card types |
+| [notes.md](notes.md) | Note CRUD · Auto-generates cards from Markdown content |
+| [cards.md](cards.md) | Card listing (cross-deck) · CardResponseDTO shape |
 | [users.md](users.md) | Authenticated user profile |
 | [categories.md](categories.md) | Category listing (autocomplete) |
 | [study.md](study.md) | Due cards · Submit study session (FSRS-6) |

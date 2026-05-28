@@ -69,7 +69,7 @@ Import the collection at `docs/api/reitera-postman-collection.json` into Postman
 The collection includes:
 - Pre-configured `base_url` variable (`http://localhost:8080`)
 - Auto-save script on the Login request that stores the JWT into the `token` variable
-- Example request bodies for all 3 card types (BASIC, MULTIPLE_CHOICE, TRUE_FALSE)
+- Example request bodies for note creation (all 4 types: BASIC, BASIC_REVERSE, CLOZE, MULTIPLE_CHOICE)
 
 **Recommended flow:**
 1. Run **Register** to create a test user
