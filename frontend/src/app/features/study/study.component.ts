@@ -38,7 +38,6 @@ export default class StudyComponent {
     this.deckId() !== null || this.categoryId() !== null ? 'session' : 'hub',
   );
 
-  // Conflicto: hay backup de OTRO mazo y el usuario acaba de entrar en una sesión diferente
   readonly conflictBackup = computed(() => {
     if (this.mode() !== 'session') return null;
     const backup = this.sessionBackupService.backup();
