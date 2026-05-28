@@ -31,32 +31,21 @@
     <div class="flex flex-col gap-5 p-3 sm:p-4">
       <!-- CodeMirror editor -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium text-foreground">
+        <span class="text-sm font-medium text-foreground">
           {{ 'noteEditor.contentLabel' | transloco }}
           <span class="text-error">*</span>
-        </label>
+        </span>
         <div
           #editorContainer
           class="min-h-40 rounded-lg border border-border bg-overlay text-sm focus-within:border-primary transition-colors [&_.cm-editor]:outline-none [&_.cm-focused]:outline-none [&_.cm-editor]:min-h-40 [&_.cm-scroller]:p-2 [&_.cm-content]:font-mono"
         ></div>
-        @if (detectedType() === 'UNKNOWN' && content().trim()) {
+        @if (hasConflict()) {
+          <p class="text-xs text-error">{{ 'noteEditor.conflictMarkers' | transloco }}</p>
+        } @else if (detectedType() === 'UNKNOWN' && rawContent().trim()) {
           <p class="text-xs text-warning">{{ 'noteEditor.typeHint' | transloco }}</p>
+        } @else if (!rawContent().trim()) {
+          <p class="text-xs text-muted">{{ 'noteEditor.explanationHint' | transloco }}</p>
         }
-      </div>
-
-      <!-- Explanation -->
-      <div class="flex flex-col gap-1.5">
-        <label for="note-explanation" class="text-sm font-medium text-foreground">
-          {{ 'noteEditor.explanationLabel' | transloco }}
-        </label>
-        <textarea
-          id="note-explanation"
-          [ngModel]="explanation()"
-          (ngModelChange)="explanation.set($event)"
-          rows="3"
-          [placeholder]="'noteEditor.explanationPlaceholder' | transloco"
-          class="px-3 py-2 text-sm transition-colors border rounded-lg resize-none bg-overlay border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
-        ></textarea>
       </div>
 
       <!-- Footer -->
@@ -71,7 +60,9 @@
         <button
           type="button"
           (click)="submit()"
-          [disabled]="detectedType() === 'UNKNOWN' || !content().trim() || isSaving()"
+          [disabled]="
+            detectedType() === 'UNKNOWN' || hasConflict() || !rawContent().trim() || isSaving()
+          "
           class="px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ (isSaving() ? 'noteEditor.saving' : 'noteEditor.save') | transloco }}

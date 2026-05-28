@@ -43,6 +43,12 @@ public class NoteService {
                             "or - [x]/- [ ] for MULTIPLE_CHOICE.");
         }
 
+        if (parser.hasConflict(dto.content(), type)) {
+            throw new IllegalArgumentException(
+                    "Note content mixes markers from multiple types. " +
+                            "A note must use only one type's syntax.");
+        }
+
         Note note = Note.builder()
                 .deck(deck)
                 .type(type.name())
@@ -85,6 +91,12 @@ public class NoteService {
         if (newType == NoteType.UNKNOWN) {
             throw new IllegalArgumentException(
                     "Note content does not match any supported format.");
+        }
+
+        if (parser.hasConflict(dto.content(), newType)) {
+            throw new IllegalArgumentException(
+                    "Note content mixes markers from multiple types. " +
+                            "A note must use only one type's syntax.");
         }
 
         note.setContent(dto.content());

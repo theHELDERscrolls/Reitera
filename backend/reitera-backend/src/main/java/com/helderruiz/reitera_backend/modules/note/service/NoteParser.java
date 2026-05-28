@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Stateless parser that converts Markdown note content into card data.
@@ -36,6 +37,31 @@ public class NoteParser {
         if (trimmedLines.contains("---")) return NoteType.BASIC;
 
         return NoteType.UNKNOWN;
+    }
+
+    public boolean hasConflict(String content, NoteType detectedType) {
+        if (content == null || detectedType == NoteType.UNKNOWN
+                || detectedType == NoteType.BASIC || detectedType == NoteType.BASIC_REVERSE) {
+            return false;
+        }
+
+        Set<String> lines = Arrays.stream(content.split("\n"))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+
+        boolean hasSeparator = lines.contains("---");
+        boolean hasReverse = lines.contains("<->");
+
+        if (detectedType == NoteType.CLOZE) {
+            boolean hasMCMarkers = content.contains("- [x]") || content.contains("- [ ]");
+            return hasMCMarkers || hasSeparator || hasReverse;
+        }
+
+        if (detectedType == NoteType.MULTIPLE_CHOICE) {
+            return hasSeparator || hasReverse;
+        }
+
+        return false;
     }
 
     public List<CardData> parse(String content, NoteType type) {

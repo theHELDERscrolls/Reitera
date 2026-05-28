@@ -347,9 +347,9 @@
     "titleCreate": "New note",
     "titleEdit": "Edit note",
     "contentLabel": "Content",
-    "explanationLabel": "Explanation",
-    "explanationPlaceholder": "Optional explanation shown after answering...",
+    "explanationHint": "Add === on a new line to include an explanation shown after answering.",
     "typeHint": "Format not recognized. Use --- for Basic, {{c1::text}} for Cloze, or - [x] / - [ ] for Multiple Choice.",
+    "conflictMarkers": "Mixed type markers detected. Remove the markers that do not belong to the detected type.",
     "save": "Save",
     "saving": "Saving...",
     "types": {

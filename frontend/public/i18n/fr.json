@@ -347,9 +347,9 @@
     "titleCreate": "Nouvelle note",
     "titleEdit": "Modifier la note",
     "contentLabel": "Contenu",
-    "explanationLabel": "Explication",
-    "explanationPlaceholder": "Explication optionnelle affichée après la réponse...",
+    "explanationHint": "Ajoutez === sur une nouvelle ligne pour inclure une explication affichée après la réponse.",
     "typeHint": "Format non reconnu. Utilisez --- pour Basique, {{c1::texte}} pour Texte à trous, ou - [x] / - [ ] pour Choix multiple.",
+    "conflictMarkers": "Marqueurs de types mixtes détectés. Supprimez les marqueurs qui n'appartiennent pas au type détecté.",
     "save": "Enregistrer",
     "saving": "Enregistrement...",
     "types": {

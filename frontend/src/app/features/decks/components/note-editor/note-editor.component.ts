@@ -11,28 +11,33 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { markdown } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
-import { EditorState } from '@codemirror/state';
+import { Compartment, EditorState } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 
 import { NoteRequest, NoteResponse, NoteType } from '@core/models/note.model';
+import { ThemeService } from '@core/theme/theme.service';
 import { NoteService } from '@features/decks/services/note.service';
 import { ToastService } from '@core/toast/toast.service';
 
+const EXPLANATION_SEPARATOR = '===';
+
 @Component({
   selector: 'app-note-editor',
-  imports: [FormsModule, TranslocoPipe],
+  imports: [TranslocoPipe],
   templateUrl: './note-editor.component.html',
 })
 export class NoteEditorComponent implements AfterViewInit, OnDestroy {
   private readonly noteService = inject(NoteService);
+  private readonly themeService = inject(ThemeService);
   private readonly toastService = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
+
+  private readonly darkThemeCompartment = new Compartment();
 
   readonly deckId = input.required<number>();
   readonly noteToEdit = input<NoteResponse | null>(null);
@@ -41,11 +46,15 @@ export class NoteEditorComponent implements AfterViewInit, OnDestroy {
   readonly closed = output<void>();
 
   readonly isSaving = signal(false);
-  readonly content = signal('');
-  readonly explanation = signal('');
-  readonly detectedType = signal<NoteType>('UNKNOWN');
+  readonly rawContent = signal('');
+  readonly detectedType = computed(() => this.detectType(this.rawContent()));
 
   readonly isEditMode = computed(() => this.noteToEdit() !== null);
+
+  readonly hasConflict = computed(() => {
+    const { content } = this.splitRaw(this.rawContent());
+    return this.detectConflictingMarkers(content, this.detectedType());
+  });
 
   readonly editorContainer = viewChild.required<ElementRef>('editorContainer');
 
@@ -55,33 +64,39 @@ export class NoteEditorComponent implements AfterViewInit, OnDestroy {
     effect(() => {
       const note = this.noteToEdit();
       if (this.view) {
-        const incoming = note?.content ?? '';
+        const incoming = this.buildRaw(note?.content ?? '', note?.explanation ?? null);
         if (incoming !== this.view.state.doc.toString()) {
           this.view.dispatch({
             changes: { from: 0, to: this.view.state.doc.length, insert: incoming },
           });
         }
-        this.explanation.set(note?.explanation ?? '');
       }
+    });
+
+    effect(() => {
+      this.view?.dispatch({
+        effects: this.darkThemeCompartment.reconfigure(
+          EditorView.darkTheme.of(this.themeService.theme() === 'dark'),
+        ),
+      });
     });
   }
 
   ngAfterViewInit(): void {
-    const initialContent = this.noteToEdit()?.content ?? '';
-    this.explanation.set(this.noteToEdit()?.explanation ?? '');
+    const note = this.noteToEdit();
+    const initialRaw = this.buildRaw(note?.content ?? '', note?.explanation ?? null);
 
     const state = EditorState.create({
-      doc: initialContent,
+      doc: initialRaw,
       extensions: [
         history(),
         keymap.of([...defaultKeymap, ...historyKeymap]),
         markdown({ codeLanguages: languages }),
         EditorView.lineWrapping,
+        this.darkThemeCompartment.of(EditorView.darkTheme.of(this.themeService.theme() === 'dark')),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
-            const text = update.state.doc.toString();
-            this.content.set(text);
-            this.detectedType.set(this.detectType(text));
+            this.rawContent.set(update.state.doc.toString());
           }
         }),
       ],
@@ -92,8 +107,7 @@ export class NoteEditorComponent implements AfterViewInit, OnDestroy {
       parent: this.editorContainer().nativeElement,
     });
 
-    this.content.set(initialContent);
-    this.detectedType.set(this.detectType(initialContent));
+    this.rawContent.set(initialRaw);
   }
 
   ngOnDestroy(): void {
@@ -101,14 +115,13 @@ export class NoteEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   submit(): void {
-    if (this.isSaving() || this.detectedType() === 'UNKNOWN') return;
+    if (this.isSaving() || this.detectedType() === 'UNKNOWN' || this.hasConflict()) return;
 
-    const dto: NoteRequest = {
-      content: this.content(),
-      explanation: this.explanation().trim() || null,
-    };
+    const { content, explanation } = this.splitRaw(this.rawContent());
+    const dto: NoteRequest = { content, explanation };
 
     this.isSaving.set(true);
+
     const note = this.noteToEdit();
     const operation = note
       ? this.noteService.updateNote(this.deckId(), note.id, dto)
@@ -129,14 +142,65 @@ export class NoteEditorComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private detectType(content: string): NoteType {
+  private buildRaw(content: string, explanation: string | null): string {
+    if (!explanation?.trim()) return content;
+    return `${content}\n\n${EXPLANATION_SEPARATOR}\n\n${explanation}`;
+  }
+
+  private splitRaw(raw: string): { content: string; explanation: string | null } {
+    const separatorPattern = /\n[ \t]*===[ \t]*\n/;
+    const match = separatorPattern.exec(raw);
+
+    if (!match) return { content: raw.trim(), explanation: null };
+
+    const content = raw.slice(0, match.index).trim();
+    const explanation = raw.slice(match.index + match[0].length).trim() || null;
+
+    return { content, explanation };
+  }
+
+  private detectType(raw: string): NoteType {
+    const { content } = this.splitRaw(raw);
+
     if (!content.trim()) return 'UNKNOWN';
-    const lines = content.split('\n').map((l) => l.trim());
+
+    const lines = new Set(content.split('\n').map((line) => line.trim()));
+
     if (/\{\{c\d+::/.test(content)) return 'CLOZE';
+
     if (content.includes('- [x]') || content.includes('- [ ]')) return 'MULTIPLE_CHOICE';
-    if (lines.includes('---') && lines.includes('<->')) return 'BASIC_REVERSE';
-    if (lines.includes('---')) return 'BASIC';
+
+    if (lines.has('---') && lines.has('<->')) return 'BASIC_REVERSE';
+
+    if (lines.has('---')) return 'BASIC';
+
     return 'UNKNOWN';
+  }
+
+  private detectConflictingMarkers(content: string, detectedType: NoteType): boolean {
+    if (
+      detectedType === 'UNKNOWN' ||
+      detectedType === 'BASIC' ||
+      detectedType === 'BASIC_REVERSE'
+    ) {
+      return false;
+    }
+
+    const lines = new Set(content.split('\n').map((line) => line.trim()));
+    const hasSeparator = lines.has('---');
+    const hasReverse = lines.has('<->');
+
+    if (detectedType === 'CLOZE') {
+      const hasMCMarkers = content.includes('- [x]') || content.includes('- [ ]');
+
+      return hasMCMarkers || hasSeparator || hasReverse;
+    }
+
+    if (detectedType === 'MULTIPLE_CHOICE') {
+      return hasSeparator || hasReverse;
+    }
+
+    return false;
   }
 
   private resetEditor(): void {
@@ -145,8 +209,7 @@ export class NoteEditorComponent implements AfterViewInit, OnDestroy {
         changes: { from: 0, to: this.view.state.doc.length, insert: '' },
       });
     }
-    this.content.set('');
-    this.explanation.set('');
-    this.detectedType.set('UNKNOWN');
+
+    this.rawContent.set('');
   }
 }
