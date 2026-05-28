@@ -5,8 +5,9 @@ import { LucideBookOpen, LucideChevronRight, LucidePlus } from '@lucide/angular'
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import PaginationComponent from '@shared/components/pagination/pagination.component';
-import { CardFormComponent } from '../card-form/card-form.component';
-import { CardResponse } from '@core/models/card.model';
+import { NoteEditorComponent } from '../note-editor/note-editor.component';
+import { NoteResponse } from '@core/models/note.model';
+import { NoteService } from '../../services/note.service';
 import { CardsTableComponent } from '../cards-table/cards-table.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { DeckDetailService } from '../../services/deck-detail.service';
@@ -18,7 +19,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-deck-detail',
   imports: [
-    CardFormComponent,
+    NoteEditorComponent,
     CardsTableComponent,
     ConfirmDialogComponent,
     DatePipe,
@@ -35,6 +36,7 @@ export default class DeckDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly service = inject(DeckDetailService);
+  private readonly noteService = inject(NoteService);
   private readonly toastService = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
 
@@ -42,15 +44,15 @@ export default class DeckDetailComponent implements OnInit {
 
   readonly deck = signal<DeckResponse | null>(null);
   readonly stats = signal<DeckStats | null>(null);
-  readonly cards = signal<CardResponse[]>([]);
+  readonly notes = signal<NoteResponse[]>([]);
   readonly currentPage = signal(0);
   readonly totalPages = signal(0);
   readonly isLoading = signal(true);
-  readonly isCardFormOpen = signal(false);
-  readonly cardToEdit = signal<CardResponse | null>(null);
-  readonly cardToDelete = signal<CardResponse | null>(null);
-  readonly sortField = signal<'question' | 'type'>('question');
-  readonly sortDir = signal<'asc' | 'desc'>('asc');
+  readonly isNoteEditorOpen = signal(false);
+  readonly noteToEdit = signal<NoteResponse | null>(null);
+  readonly noteToDelete = signal<NoteResponse | null>(null);
+  readonly sortField = signal<'type' | 'createdAt'>('createdAt');
+  readonly sortDir = signal<'asc' | 'desc'>('desc');
 
   ngOnInit(): void {
     if (Number.isNaN(this.deckId)) {
@@ -60,44 +62,49 @@ export default class DeckDetailComponent implements OnInit {
     this.loadAll();
   }
 
-  openCreateCardForm(): void {
-    this.cardToEdit.set(null);
-    this.isCardFormOpen.set(true);
+  openCreateNoteEditor(): void {
+    this.noteToEdit.set(null);
+    this.isNoteEditorOpen.set(true);
   }
 
-  openEditCardForm(card: CardResponse): void {
-    this.cardToEdit.set(card);
-    this.isCardFormOpen.set(true);
+  openEditNoteEditor(note: NoteResponse): void {
+    this.noteToEdit.set(note);
+    this.isNoteEditorOpen.set(true);
   }
 
-  onCardSaved(card: CardResponse): void {
-    const isEdit = this.cardToEdit() !== null;
+  closeNoteEditor(): void {
+    this.isNoteEditorOpen.set(false);
+    this.noteToEdit.set(null);
+  }
+
+  onNoteSaved(note: NoteResponse): void {
+    const isEdit = this.noteToEdit() !== null;
     if (isEdit) {
-      this.isCardFormOpen.set(false);
-      this.cardToEdit.set(null);
-      this.cards.update((current) => current.map((c) => (c.id === card.id ? card : c)));
-      this.toastService.success(this.transloco.translate('deckDetail.toast.cardUpdated'));
+      this.isNoteEditorOpen.set(false);
+      this.noteToEdit.set(null);
+      this.notes.update((current) => current.map((n) => (n.id === note.id ? note : n)));
+      this.toastService.success(this.transloco.translate('deckDetail.toast.noteUpdated'));
     } else {
-      this.toastService.success(this.transloco.translate('deckDetail.toast.cardCreated'));
-      this.loadCards();
+      this.toastService.success(this.transloco.translate('deckDetail.toast.noteCreated'));
+      this.loadNotes();
     }
     this.loadStats();
   }
 
-  requestDeleteCard(card: CardResponse): void {
-    this.cardToDelete.set(card);
+  requestDeleteNote(note: NoteResponse): void {
+    this.noteToDelete.set(note);
   }
 
-  confirmDeleteCard(): void {
-    const card = this.cardToDelete();
-    if (!card) return;
-    this.cardToDelete.set(null);
-    this.service.deleteCard(this.deckId, card.id).subscribe({
+  confirmDeleteNote(): void {
+    const note = this.noteToDelete();
+    if (!note) return;
+    this.noteToDelete.set(null);
+    this.noteService.deleteNote(this.deckId, note.id).subscribe({
       complete: () => {
-        this.isCardFormOpen.set(false);
-        this.cardToEdit.set(null);
-        this.toastService.success(this.transloco.translate('deckDetail.toast.cardDeleted'));
-        this.loadCards();
+        this.isNoteEditorOpen.set(false);
+        this.noteToEdit.set(null);
+        this.toastService.success(this.transloco.translate('deckDetail.toast.noteDeleted'));
+        this.loadNotes();
         this.loadStats();
       },
       error: () => this.toastService.error(this.transloco.translate('common.error')),
@@ -106,10 +113,10 @@ export default class DeckDetailComponent implements OnInit {
 
   goToPage(page: number): void {
     this.currentPage.set(page);
-    this.loadCards();
+    this.loadNotes();
   }
 
-  toggleSort(field: 'question' | 'type'): void {
+  toggleSort(field: 'type' | 'createdAt'): void {
     if (this.sortField() === field) {
       this.sortDir.update((d) => (d === 'asc' ? 'desc' : 'asc'));
     } else {
@@ -117,13 +124,13 @@ export default class DeckDetailComponent implements OnInit {
       this.sortDir.set('asc');
     }
     this.currentPage.set(0);
-    this.loadCards();
+    this.loadNotes();
   }
 
   private loadAll(): void {
     this.loadDeck();
     this.loadStats();
-    this.loadCards();
+    this.loadNotes();
   }
 
   private loadDeck(): void {
@@ -139,13 +146,13 @@ export default class DeckDetailComponent implements OnInit {
     });
   }
 
-  private loadCards(): void {
+  private loadNotes(): void {
     this.isLoading.set(true);
-    this.service
-      .getCards(this.deckId, this.currentPage(), PAGE_SIZE, this.sortField(), this.sortDir())
+    this.noteService
+      .getNotesByDeck(this.deckId, this.currentPage(), PAGE_SIZE, this.sortField(), this.sortDir())
       .subscribe({
         next: (page) => {
-          this.cards.set(page.content);
+          this.notes.set(page.content);
           this.totalPages.set(page.totalPages);
           this.isLoading.set(false);
         },

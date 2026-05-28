@@ -187,7 +187,7 @@
   },
   "deckDetail": {
     "createdAt": "Criado",
-    "addCard": "Adicionar cartão",
+    "addNote": "Adicionar nota",
     "study": "Estudar",
     "stats": {
       "total": "Total",
@@ -198,18 +198,20 @@
       "due": "Pendentes"
     },
     "cards": {
-      "title": "Cartões",
-      "editCard": "Editar cartão",
-      "deleteCard": "Eliminar cartão",
+      "title": "Notas",
+      "editNote": "Editar nota",
+      "deleteNote": "Eliminar nota",
       "table": {
         "question": "Pergunta",
+        "content": "Conteúdo",
         "type": "Tipo",
         "state": "Estado",
+        "cards": "Cartões",
         "actions": "Ações"
       },
       "empty": {
-        "title": "Ainda não há cartões",
-        "subtitle": "Adiciona o teu primeiro cartão para começar a estudar"
+        "title": "Ainda não há notas",
+        "subtitle": "Adiciona a tua primeira nota para começar a estudar"
       },
       "type": {
         "basic": "Básico",
@@ -224,14 +226,14 @@
         "relearning": "A reaprender"
       }
     },
-    "deleteCard": {
-      "title": "Eliminar cartão",
-      "message": "Tens a certeza que queres eliminar este cartão? Esta ação não pode ser revertida."
+    "deleteNote": {
+      "title": "Eliminar nota",
+      "message": "Tens a certeza? Todos os cartões gerados por esta nota também serão eliminados."
     },
     "toast": {
-      "cardCreated": "Cartão criado com sucesso",
-      "cardUpdated": "Cartão atualizado com sucesso",
-      "cardDeleted": "Cartão eliminado com sucesso"
+      "noteCreated": "Nota criada com sucesso",
+      "noteUpdated": "Nota atualizada com sucesso",
+      "noteDeleted": "Nota eliminada com sucesso"
     }
   },
   "study": {
@@ -327,17 +329,35 @@
     "stateLearning": "A aprender",
     "stateReview": "Revisão",
     "stateRelearning": "A reaprender",
+    "editNote": "Editar nota",
     "empty": {
       "title": "Nenhum cartão encontrado",
-      "subtitle": "Tenta ajustar os filtros ou adiciona cartões a um baralho"
+      "subtitle": "Tenta ajustar os filtros ou adiciona notas a um baralho"
     },
-    "deleteCard": {
-      "title": "Eliminar cartão",
-      "message": "Tens a certeza que queres eliminar este cartão? Esta ação não pode ser revertida."
+    "deleteNote": {
+      "title": "Eliminar nota",
+      "message": "Tens a certeza? Todos os cartões gerados por esta nota também serão eliminados."
     },
     "toast": {
-      "cardUpdated": "Cartão atualizado com sucesso",
-      "cardDeleted": "Cartão eliminado com sucesso"
+      "noteUpdated": "Nota atualizada com sucesso",
+      "noteDeleted": "Nota eliminada com sucesso"
+    }
+  },
+  "noteEditor": {
+    "titleCreate": "Nova nota",
+    "titleEdit": "Editar nota",
+    "contentLabel": "Conteúdo",
+    "explanationLabel": "Explicação",
+    "explanationPlaceholder": "Explicação opcional mostrada após responder...",
+    "typeHint": "Formato não reconhecido. Usa --- para Básico, {{c1::texto}} para Completar, ou - [x] / - [ ] para Múltipla escolha.",
+    "save": "Guardar",
+    "saving": "A guardar...",
+    "types": {
+      "BASIC": "Básico",
+      "BASIC_REVERSE": "Básico + Reverso",
+      "CLOZE": "Completar",
+      "MULTIPLE_CHOICE": "Múltipla escolha",
+      "UNKNOWN": "Formato desconhecido"
     }
   },
   "shell": {

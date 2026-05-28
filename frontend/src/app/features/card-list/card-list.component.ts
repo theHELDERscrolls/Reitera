@@ -1,17 +1,30 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideListFilter, LucideX } from '@lucide/angular';
+import {
+  LucideArrowDown,
+  LucideArrowUp,
+  LucideArrowUpDown,
+  LucideBookOpen,
+  LucideListFilter,
+  LucideSquarePen,
+  LucideTrash2,
+  LucideX,
+} from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { CardFilters, CardsService } from './services/cards.service';
-import { CardFormComponent } from '@features/decks/components/card-form/card-form.component';
 import { CardResponse } from '@core/models/card.model';
-import { CardsTableComponent } from '@features/decks/components/cards-table/cards-table.component';
+import { CardStateBadgeComponent } from '@shared/components/card-state-badge/card-state-badge.component';
+import { CardTypeBadgeComponent } from '@shared/components/card-type-badge/card-type-badge.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 import {
   FilterDropdownComponent,
   FilterOption,
 } from '@shared/components/filter-dropdown/filter-dropdown.component';
+import { NoteEditorComponent } from '@features/decks/components/note-editor/note-editor.component';
+import { NoteResponse } from '@core/models/note.model';
+import { NoteService } from '@features/decks/services/note.service';
 import { ToastService } from '@core/toast/toast.service';
 import PaginationComponent from '@shared/components/pagination/pagination.component';
 
@@ -22,13 +35,21 @@ type FilterSelectValue = string | number | null;
 @Component({
   selector: 'app-card-list',
   imports: [
-    CardFormComponent,
-    CardsTableComponent,
+    CardStateBadgeComponent,
+    CardTypeBadgeComponent,
     ConfirmDialogComponent,
+    EmptyStateComponent,
     FilterDropdownComponent,
     FormsModule,
+    LucideArrowDown,
+    LucideArrowUp,
+    LucideArrowUpDown,
+    LucideBookOpen,
     LucideListFilter,
+    LucideSquarePen,
+    LucideTrash2,
     LucideX,
+    NoteEditorComponent,
     PaginationComponent,
     TranslocoPipe,
   ],
@@ -36,14 +57,15 @@ type FilterSelectValue = string | number | null;
 })
 export default class CardListComponent implements OnInit {
   private readonly service = inject(CardsService);
+  private readonly noteService = inject(NoteService);
   private readonly toastService = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
 
   readonly cards = signal<CardResponse[]>([]);
   readonly cardToDelete = signal<CardResponse | null>(null);
-  readonly cardToEdit = signal<CardResponse | null>(null);
+  readonly noteToEdit = signal<NoteResponse | null>(null);
   readonly currentPage = signal(0);
-  readonly isCardFormOpen = signal(false);
+  readonly isNoteEditorOpen = signal(false);
   readonly isLoading = signal(true);
   readonly sortDir = signal<'asc' | 'desc'>('asc');
   readonly sortField = signal<'question' | 'type'>('question');
@@ -70,33 +92,33 @@ export default class CardListComponent implements OnInit {
   ];
 
   readonly hasActiveFilters = computed(
-    () =>
-      !!(
-        this.filterQuestion() ||
-        this.filterType() ||
-        this.filterState() !== null
-      ),
+    () => !!(this.filterQuestion() || this.filterType() || this.filterState() !== null),
   );
 
   ngOnInit(): void {
     this.loadCards();
   }
 
-  openEditCardForm(card: CardResponse): void {
-    this.cardToEdit.set(card);
-    this.isCardFormOpen.set(true);
+  openEditNoteEditor(card: CardResponse): void {
+    this.noteService.getNoteById(card.deckId, card.noteId).subscribe({
+      next: (note) => {
+        this.noteToEdit.set(note);
+        this.isNoteEditorOpen.set(true);
+      },
+      error: () => this.toastService.error(this.transloco.translate('common.error')),
+    });
   }
 
-  closeCardForm(): void {
-    this.isCardFormOpen.set(false);
-    this.cardToEdit.set(null);
+  closeNoteEditor(): void {
+    this.isNoteEditorOpen.set(false);
+    this.noteToEdit.set(null);
   }
 
-  onCardSaved(card: CardResponse): void {
-    this.isCardFormOpen.set(false);
-    this.cardToEdit.set(null);
-    this.cards.update((current) => current.map((c) => (c.id === card.id ? card : c)));
-    this.toastService.success(this.transloco.translate('cardList.toast.cardUpdated'));
+  onNoteSaved(): void {
+    this.isNoteEditorOpen.set(false);
+    this.noteToEdit.set(null);
+    this.toastService.success(this.transloco.translate('cardList.toast.noteUpdated'));
+    this.loadCards();
   }
 
   requestDeleteCard(card: CardResponse): void {
@@ -105,13 +127,11 @@ export default class CardListComponent implements OnInit {
 
   confirmDeleteCard(): void {
     const card = this.cardToDelete();
-
     if (!card) return;
-
     this.cardToDelete.set(null);
-    this.service.deleteCard(card.deckId, card.id).subscribe({
+    this.noteService.deleteNote(card.deckId, card.noteId).subscribe({
       complete: () => {
-        this.toastService.success(this.transloco.translate('cardList.toast.cardDeleted'));
+        this.toastService.success(this.transloco.translate('cardList.toast.noteDeleted'));
         this.loadCards();
       },
       error: () => this.toastService.error(this.transloco.translate('common.error')),
@@ -125,7 +145,6 @@ export default class CardListComponent implements OnInit {
       this.sortField.set(field);
       this.sortDir.set('asc');
     }
-
     this.currentPage.set(0);
     this.loadCards();
   }

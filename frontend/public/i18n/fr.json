@@ -187,7 +187,7 @@
   },
   "deckDetail": {
     "createdAt": "Créé le",
-    "addCard": "Ajouter une carte",
+    "addNote": "Ajouter une note",
     "study": "Étudier",
     "stats": {
       "total": "Total",
@@ -198,18 +198,20 @@
       "due": "À revoir"
     },
     "cards": {
-      "title": "Cartes",
-      "editCard": "Modifier la carte",
-      "deleteCard": "Supprimer la carte",
+      "title": "Notes",
+      "editNote": "Modifier la note",
+      "deleteNote": "Supprimer la note",
       "table": {
         "question": "Question",
+        "content": "Contenu",
         "type": "Type",
         "state": "État",
+        "cards": "Cartes",
         "actions": "Actions"
       },
       "empty": {
-        "title": "Aucune carte pour l'instant",
-        "subtitle": "Ajoutez votre première carte pour commencer à étudier"
+        "title": "Aucune note pour l'instant",
+        "subtitle": "Ajoutez votre première note pour commencer à étudier"
       },
       "type": {
         "basic": "Basique",
@@ -224,14 +226,14 @@
         "relearning": "Réapprentissage"
       }
     },
-    "deleteCard": {
-      "title": "Supprimer la carte",
-      "message": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible."
+    "deleteNote": {
+      "title": "Supprimer la note",
+      "message": "Êtes-vous sûr ? Toutes les cartes générées par cette note seront également supprimées."
     },
     "toast": {
-      "cardCreated": "Carte créée avec succès",
-      "cardUpdated": "Carte mise à jour avec succès",
-      "cardDeleted": "Carte supprimée avec succès"
+      "noteCreated": "Note créée avec succès",
+      "noteUpdated": "Note mise à jour avec succès",
+      "noteDeleted": "Note supprimée avec succès"
     }
   },
   "study": {
@@ -327,17 +329,35 @@
     "stateLearning": "Apprentissage",
     "stateReview": "Révision",
     "stateRelearning": "Réapprentissage",
+    "editNote": "Modifier la note",
     "empty": {
       "title": "Aucune carte trouvée",
-      "subtitle": "Essayez d'ajuster vos filtres ou ajoutez des cartes à un paquet"
+      "subtitle": "Essayez d'ajuster vos filtres ou ajoutez des notes à un paquet"
     },
-    "deleteCard": {
-      "title": "Supprimer la carte",
-      "message": "Êtes-vous sûr de vouloir supprimer cette carte ? Cette action est irréversible."
+    "deleteNote": {
+      "title": "Supprimer la note",
+      "message": "Êtes-vous sûr ? Toutes les cartes générées par cette note seront également supprimées."
     },
     "toast": {
-      "cardUpdated": "Carte mise à jour avec succès",
-      "cardDeleted": "Carte supprimée avec succès"
+      "noteUpdated": "Note mise à jour avec succès",
+      "noteDeleted": "Note supprimée avec succès"
+    }
+  },
+  "noteEditor": {
+    "titleCreate": "Nouvelle note",
+    "titleEdit": "Modifier la note",
+    "contentLabel": "Contenu",
+    "explanationLabel": "Explication",
+    "explanationPlaceholder": "Explication optionnelle affichée après la réponse...",
+    "typeHint": "Format non reconnu. Utilisez --- pour Basique, {{c1::texte}} pour Texte à trous, ou - [x] / - [ ] pour Choix multiple.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "types": {
+      "BASIC": "Basique",
+      "BASIC_REVERSE": "Basique + Inverse",
+      "CLOZE": "Texte à trous",
+      "MULTIPLE_CHOICE": "Choix multiple",
+      "UNKNOWN": "Format inconnu"
     }
   },
   "shell": {
