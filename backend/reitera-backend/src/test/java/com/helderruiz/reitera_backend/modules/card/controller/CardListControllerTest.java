@@ -44,9 +44,9 @@ class CardListControllerTest {
         card = new CardResponseDTO(
                 1,
                 1,
+                1,
                 "BASIC",
                 "What is JVM?",
-                null,
                 null,
                 0);
     }

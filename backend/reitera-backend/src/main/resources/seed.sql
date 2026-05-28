@@ -109,7 +109,7 @@ El 1 de septiembre de 1939, con la invasión alemana de Polonia$$,
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     '¿En qué fecha comenzó la Segunda Guerra Mundial?',
-    '{"answer":"El 1 de septiembre de 1939, con la invasión alemana de Polonia"}'
+    '{"answer":"El 1 de septiembre de 1939, con la invasión alemana de Polonia"}'::jsonb
 FROM n;
 
 -- [BASIC] note 2
@@ -129,7 +129,7 @@ El desembarco aliado en las playas de Normandía el 6 de junio de 1944$$,
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     '¿Qué fue el Día D?',
-    '{"answer":"El desembarco aliado en las playas de Normandía el 6 de junio de 1944"}'
+    '{"answer":"El desembarco aliado en las playas de Normandía el 6 de junio de 1944"}'::jsonb
 FROM n;
 
 -- [MULTIPLE_CHOICE] note 3
@@ -150,7 +150,7 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'MULTIPLE_CHOICE', 0,
     '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?',
-    '{"options":["Berlín","Tokio","Hiroshima","Shanghai"],"correctIndex":2}'
+    '{"options":["Berlín","Tokio","Hiroshima","Shanghai"],"correctIndex":2}'::jsonb
 FROM n;
 
 -- [MULTIPLE_CHOICE] note 4
@@ -171,7 +171,7 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'MULTIPLE_CHOICE', 0,
     '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?',
-    '{"options":["Neville Chamberlain","Winston Churchill","Clement Attlee","Anthony Eden"],"correctIndex":1}'
+    '{"options":["Neville Chamberlain","Winston Churchill","Clement Attlee","Anthony Eden"],"correctIndex":1}'::jsonb
 FROM n;
 
 -- [BASIC_REVERSE] note 5 — genera 2 cartas (ordinal 0: concepto→definición, ordinal 1: inverso)
@@ -193,12 +193,12 @@ La invasión alemana de la URSS, lanzada el 22 de junio de 1941
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC_REVERSE', 0,
     'Operación Barbarroja',
-    '{"answer":"La invasión alemana de la URSS, lanzada el 22 de junio de 1941"}'
+    '{"answer":"La invasión alemana de la URSS, lanzada el 22 de junio de 1941"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'BASIC_REVERSE', 1,
     'La invasión alemana de la URSS, lanzada el 22 de junio de 1941',
-    '{"answer":"Operación Barbarroja"}'
+    '{"answer":"Operación Barbarroja"}'::jsonb
 FROM n;
 
 -- [CLOZE] note 6 — genera 2 cartas (una por índice cloze)
@@ -214,12 +214,12 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'CLOZE', 0,
     'La batalla de [...] duró de agosto de 1942 a febrero de 1943, siendo el mayor punto de inflexión en el frente oriental.',
-    '{"clozeIndex":1,"answer":"Stalingrado"}'
+    '{"clozeIndex":1,"answer":"Stalingrado"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'CLOZE', 1,
     'La batalla de Stalingrado duró de agosto de 1942 a febrero de [...], siendo el mayor punto de inflexión en el frente oriental.',
-    '{"clozeIndex":2,"answer":"1943"}'
+    '{"clozeIndex":2,"answer":"1943"}'::jsonb
 FROM n;
 
 
@@ -242,7 +242,7 @@ Garantiza que una clase tenga una única instancia y proporciona un punto de acc
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     '¿Qué problema resuelve el patrón Singleton?',
-    '{"answer":"Garantiza que una clase tenga una única instancia y proporciona un punto de acceso global a ella"}'
+    '{"answer":"Garantiza que una clase tenga una única instancia y proporciona un punto de acceso global a ella"}'::jsonb
 FROM n;
 
 -- [BASIC] note 2
@@ -262,7 +262,7 @@ Define una familia de algoritmos intercambiables. Se usa cuando queremos selecci
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     '¿Qué es el patrón Strategy y cuándo se usa?',
-    '{"answer":"Define una familia de algoritmos intercambiables. Se usa cuando queremos seleccionar el algoritmo a ejecutar en tiempo de ejecución sin cambiar el cliente"}'
+    '{"answer":"Define una familia de algoritmos intercambiables. Se usa cuando queremos seleccionar el algoritmo a ejecutar en tiempo de ejecución sin cambiar el cliente"}'::jsonb
 FROM n;
 
 -- [MULTIPLE_CHOICE] note 3
@@ -283,7 +283,7 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'MULTIPLE_CHOICE', 0,
     '¿A qué categoría pertenece el patrón Observer?',
-    '{"options":["Creacional","Estructural","De comportamiento","Concurrencia"],"correctIndex":2}'
+    '{"options":["Creacional","Estructural","De comportamiento","Concurrencia"],"correctIndex":2}'::jsonb
 FROM n;
 
 -- [BASIC_REVERSE] note 4 — genera 2 cartas
@@ -305,12 +305,12 @@ Define una interfaz para crear objetos, pero deja que las subclases decidan qué
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC_REVERSE', 0,
     'Patrón Factory Method',
-    '{"answer":"Define una interfaz para crear objetos, pero deja que las subclases decidan qué clase instanciar"}'
+    '{"answer":"Define una interfaz para crear objetos, pero deja que las subclases decidan qué clase instanciar"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'BASIC_REVERSE', 1,
     'Define una interfaz para crear objetos, pero deja que las subclases decidan qué clase instanciar',
-    '{"answer":"Patrón Factory Method"}'
+    '{"answer":"Patrón Factory Method"}'::jsonb
 FROM n;
 
 -- [CLOZE] note 5 — genera 2 cartas
@@ -326,12 +326,12 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'CLOZE', 0,
     'El patrón [...] añade responsabilidades a un objeto dinámicamente, a diferencia de la herencia que actúa en tiempo de compilación.',
-    '{"clozeIndex":1,"answer":"Decorator"}'
+    '{"clozeIndex":1,"answer":"Decorator"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'CLOZE', 1,
     'El patrón Decorator añade responsabilidades a un objeto dinámicamente, a diferencia de la [...] que actúa en tiempo de compilación.',
-    '{"clozeIndex":2,"answer":"herencia"}'
+    '{"clozeIndex":2,"answer":"herencia"}'::jsonb
 FROM n;
 
 
@@ -354,7 +354,7 @@ To stop trying; to abandon an effort or habit$$,
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     'What does "give up" mean?',
-    '{"answer":"To stop trying; to abandon an effort or habit"}'
+    '{"answer":"To stop trying; to abandon an effort or habit"}'::jsonb
 FROM n;
 
 -- [BASIC] note 2
@@ -374,7 +374,7 @@ To postpone or delay something to a later time$$,
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     'What does "put off" mean?',
-    '{"answer":"To postpone or delay something to a later time"}'
+    '{"answer":"To postpone or delay something to a later time"}'::jsonb
 FROM n;
 
 -- [MULTIPLE_CHOICE] note 3
@@ -395,7 +395,7 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'MULTIPLE_CHOICE', 0,
     'Which sentence uses "run out of" correctly?',
-    '{"options":["We ran out of the building.","We ran out of milk, so I need to go shopping.","She ran out of the race early.","He ran out of his friend."],"correctIndex":1}'
+    '{"options":["We ran out of the building.","We ran out of milk, so I need to go shopping.","She ran out of the race early.","He ran out of his friend."],"correctIndex":1}'::jsonb
 FROM n;
 
 -- [BASIC_REVERSE] note 4 — genera 2 cartas
@@ -417,12 +417,12 @@ To end a romantic relationship; or to separate something into smaller parts
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC_REVERSE', 0,
     'break up',
-    '{"answer":"To end a romantic relationship; or to separate something into smaller parts"}'
+    '{"answer":"To end a romantic relationship; or to separate something into smaller parts"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'BASIC_REVERSE', 1,
     'To end a romantic relationship; or to separate something into smaller parts',
-    '{"answer":"break up"}'
+    '{"answer":"break up"}'::jsonb
 FROM n;
 
 -- [CLOZE] note 5 — genera 2 cartas
@@ -438,12 +438,12 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'CLOZE', 0,
     'To [...] means to stop trying, while to carry on means to continue doing something.',
-    '{"clozeIndex":1,"answer":"give up"}'
+    '{"clozeIndex":1,"answer":"give up"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'CLOZE', 1,
     'To give up means to stop trying, while to [...] means to continue doing something.',
-    '{"clozeIndex":2,"answer":"carry on"}'
+    '{"clozeIndex":2,"answer":"carry on"}'::jsonb
 FROM n;
 
 
@@ -466,7 +466,7 @@ Comenzó el 17 de julio de 1936. Los dos bandos fueron el bando republicano (gob
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC', 0,
     '¿Cuándo comenzó la Guerra Civil Española y quiénes fueron los dos bandos principales?',
-    '{"answer":"Comenzó el 17 de julio de 1936. Los dos bandos fueron el bando republicano (gobierno legítimo) y el bando nacional (sublevados liderados por Franco)"}'
+    '{"answer":"Comenzó el 17 de julio de 1936. Los dos bandos fueron el bando republicano (gobierno legítimo) y el bando nacional (sublevados liderados por Franco)"}'::jsonb
 FROM n;
 
 -- [MULTIPLE_CHOICE] note 2
@@ -487,7 +487,7 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'MULTIPLE_CHOICE', 0,
     '¿Qué país apoyó militarmente al bando republicano durante la Guerra Civil?',
-    '{"options":["Alemania","Italia","La Unión Soviética","Portugal"],"correctIndex":2}'
+    '{"options":["Alemania","Italia","La Unión Soviética","Portugal"],"correctIndex":2}'::jsonb
 FROM n;
 
 -- [BASIC_REVERSE] note 3 — genera 2 cartas
@@ -509,12 +509,12 @@ Ciudad vasca bombardeada por la Legión Cóndor el 26 de abril de 1937, inmortal
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'BASIC_REVERSE', 0,
     'Guernica',
-    '{"answer":"Ciudad vasca bombardeada por la Legión Cóndor el 26 de abril de 1937, inmortalizada en el cuadro de Picasso"}'
+    '{"answer":"Ciudad vasca bombardeada por la Legión Cóndor el 26 de abril de 1937, inmortalizada en el cuadro de Picasso"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'BASIC_REVERSE', 1,
     'Ciudad vasca bombardeada por la Legión Cóndor el 26 de abril de 1937, inmortalizada en el cuadro de Picasso',
-    '{"answer":"Guernica"}'
+    '{"answer":"Guernica"}'::jsonb
 FROM n;
 
 -- [CLOZE] note 4 — genera 2 cartas
@@ -530,12 +530,12 @@ WITH n AS (
 INSERT INTO cards (note_id, deck_id, type, ordinal, question, answer_json)
 SELECT id, deck_id, 'CLOZE', 0,
     'La Guerra Civil Española comenzó el [...] y terminó el 1 de abril de 1939 con el parte de victoria de Franco.',
-    '{"clozeIndex":1,"answer":"17 de julio de 1936"}'
+    '{"clozeIndex":1,"answer":"17 de julio de 1936"}'::jsonb
 FROM n
 UNION ALL
 SELECT id, deck_id, 'CLOZE', 1,
     'La Guerra Civil Española comenzó el 17 de julio de 1936 y terminó el [...] con el parte de victoria de Franco.',
-    '{"clozeIndex":2,"answer":"1 de abril de 1939"}'
+    '{"clozeIndex":2,"answer":"1 de abril de 1939"}'::jsonb
 FROM n;
 
 
