@@ -36,10 +36,6 @@ Returning `404` in both cases (resource not found, resource belongs to another u
 
 Applied in: `DeckService.findOwnedDeck()`, `CardService.findOwnedDeck()`.
 
-### No 404 on unknown tag IDs in `GET /api/v1/tags/{tagId}/cards`
-
-The same enumeration principle applies here. Returning `404` for a non-existent tag ID would allow an attacker to probe which tag IDs exist in the system. The endpoint always returns `200` with an empty array regardless of whether the tag exists or not.
-
 ### `authorName` uses the nickname (`username` field), not `firstName + lastName`
 
 Deck author attribution uses the unique `username` field (the user's chosen nickname) rather than `firstName + lastName`. Full names are not unique — multiple users can share the same name. The `username` column has a unique constraint and unambiguously identifies the author.
@@ -56,7 +52,7 @@ The real IP is read from the `X-Forwarded-For` header first (needed for the Rend
 
 When registration fails because the email or username is already taken, the API returns `409 Conflict` with the generic message `"The provided data is invalid or already in use"` — the same message regardless of which field caused the conflict.
 
-The 409 status (vs. the previous 400) lets the frontend distinguish a data conflict from a validation error and show a user-friendly warning toast. The message stays generic so an attacker cannot tell whether the email or the username was the duplicate. Enumeration risk at registration is accepted given that a forgot-password flow (once implemented) would expose the same information.
+The 409 status (vs. the previous 400) lets the frontend distinguish a data conflict from a validation error and show a user-friendly warning toast. The message stays generic so an attacker cannot tell whether the email or the username was the duplicate. Enumeration risk at registration is accepted given that the forgot-password flow exposes the same information anyway.
 
 Applied in: `UserService.registerUser()` via `DataConflictException` → `GlobalExceptionHandler.handleDataConflict()` → 409.
 
@@ -95,4 +91,3 @@ All request DTOs carry `@Size` (and `@Pattern` for colors) constraints validated
 - Auth: email ≤ 100, password ≤ 128, refresh token ≤ 512
 - Deck: title ≤ 100, description ≤ 2 000, category ≤ 50
 - Card: question ≤ 5 000, explanation ≤ 2 000, `answerJson` ≤ 10 KB (custom validator)
-- Tag: name ≤ 30, hexColor must match `^#[0-9A-Fa-f]{6}$`

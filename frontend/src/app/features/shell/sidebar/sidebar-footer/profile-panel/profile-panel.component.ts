@@ -5,11 +5,20 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { AuthService } from '@core/auth/auth.service';
 import { ThemeService } from '@core/theme/theme.service';
-import { LanguageSwitcherComponent } from "@shared/components/language-switcher/language-switcher.component";
+import { StudyStateService } from '@features/study/services/study-state.service';
+import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
 
 @Component({
   selector: 'app-profile-panel',
-  imports: [TranslocoPipe, RouterLink, LucideSun, LucideMoon, LucideLogOut, LucideUser, LanguageSwitcherComponent],
+  imports: [
+    TranslocoPipe,
+    RouterLink,
+    LucideSun,
+    LucideMoon,
+    LucideLogOut,
+    LucideUser,
+    LanguageSwitcherComponent,
+  ],
   templateUrl: './profile-panel.component.html',
 })
 export class ProfilePanelComponent {
@@ -17,6 +26,7 @@ export class ProfilePanelComponent {
 
   private readonly authService = inject(AuthService);
   readonly themeService = inject(ThemeService);
+  private readonly studyState = inject(StudyStateService);
   private readonly transloco = inject(TranslocoService);
 
   readonly currentUser = this.authService.currentUser;
@@ -40,6 +50,16 @@ export class ProfilePanelComponent {
   }
 
   logout(): void {
-    this.authService.logout();
+    if (this.studyState.hasPendingRatings()) {
+      this.studyState.requestDeactivation().subscribe((confirmed) => {
+        
+        if (confirmed) {
+          this.studyState.bypassNextGuardCheck();
+          this.authService.logout();
+        }
+      });
+    } else {
+      this.authService.logout();
+    }
   }
 }

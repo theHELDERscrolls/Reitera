@@ -1,7 +1,23 @@
+@if (conflictBackup()) {
+  <app-confirm-dialog
+    variant="warning"
+    [title]="'study.conflict.title' | transloco"
+    [message]="conflictMessage()"
+    [confirmLabel]="'study.conflict.confirm' | transloco"
+    (confirmed)="confirmConflict()"
+    (cancelled)="cancelConflict()"
+  />
+}
+
 @if (mode() === 'hub') {
   <app-study-hub />
 }
 
 @if (mode() === 'session') {
-  <app-study-session [deckId]="deckId()" [categoryId]="categoryId()" />
+  <app-study-session
+    [deckId]="deckId()"
+    [categoryId]="categoryId()"
+    [deckName]="deckName()"
+    [categoryName]="categoryName()"
+  />
 }

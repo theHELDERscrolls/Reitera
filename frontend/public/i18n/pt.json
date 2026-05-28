@@ -293,7 +293,18 @@
         "new": "novos",
         "due": "pendentes",
         "relearning": "a reaprender"
+      },
+      "recovery": {
+        "title": "Sessão não submetida encontrada",
+        "description": "Tens uma sessão não submetida de \"{{name}}\" de uma visita anterior.",
+        "resume": "Retomar e submeter",
+        "discard": "Descartar"
       }
+    },
+    "conflict": {
+      "title": "Sessão pendente",
+      "message": "Tens progresso não guardado de \"{{name}}\". Se continuares, será perdido.",
+      "confirm": "Descartar e continuar"
     },
     "session": {
       "state": {
@@ -321,6 +332,19 @@
         "title": "Sair da sessão?",
         "message": "O teu progresso não será guardado se saíres agora.",
         "confirm": "Sair"
+      },
+      "deactivateDialog": {
+        "title": "Sair da sessão?",
+        "message": "Tens avaliações por guardar. Se saíres agora, o teu progresso pode ser perdido.",
+        "confirm": "Sair"
+      },
+      "recovery": {
+        "title": "Sessão não submetida encontrada",
+        "description": "Tens uma sessão não submetida de \"{{name}}\" de há pouco.",
+        "resume": "Retomar e submeter",
+        "discard": "Descartar",
+        "success": "A sessão recuperada foi submetida com sucesso.",
+        "noCards": "Não foram encontrados cartões válidos na sessão recuperada."
       },
       "saving": "A guardar resultados...",
       "empty": {

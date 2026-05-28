@@ -28,3 +28,14 @@ export interface StudySessionResponse {
   categoryId: number | null;
   cardsReviewed: number;
 }
+
+export interface SessionBackup {
+  version: '1';
+  deckId: number | null;
+  deckName: string | null;
+  categoryId: number | null;
+  categoryName: string | null;
+  ratings: CardRating[];
+  startedAt: number;
+  updatedAt: number;
+}

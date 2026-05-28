@@ -1,6 +1,6 @@
 # Backend — Reitera API
 
-Spring Boot 4.0.3 REST API for the Reitera spaced repetition application.
+Spring Boot 4.0.6 REST API for the Reitera spaced repetition application.
 
 ## Requirements
 

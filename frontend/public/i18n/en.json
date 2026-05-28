@@ -293,7 +293,18 @@
         "new": "new",
         "due": "due",
         "relearning": "relearning"
+      },
+      "recovery": {
+        "title": "Unsubmitted session found",
+        "description": "You have an unsubmitted session for \"{{name}}\" from a previous visit.",
+        "resume": "Resume and submit",
+        "discard": "Discard"
       }
+    },
+    "conflict": {
+      "title": "Pending session",
+      "message": "You have unsaved progress from \"{{name}}\". Starting now will discard it.",
+      "confirm": "Discard and continue"
     },
     "session": {
       "state": {
@@ -321,6 +332,19 @@
         "title": "Leave session?",
         "message": "Your progress won't be saved if you go back now.",
         "confirm": "Leave"
+      },
+      "deactivateDialog": {
+        "title": "Leave session?",
+        "message": "You have unsaved ratings. If you leave now, your progress may be lost.",
+        "confirm": "Leave"
+      },
+      "recovery": {
+        "title": "Unsubmitted session found",
+        "description": "You have an unsubmitted session for \"{{name}}\" from earlier.",
+        "resume": "Resume and submit",
+        "discard": "Discard",
+        "success": "Recovered session submitted successfully.",
+        "noCards": "No valid cards were found in the recovered session."
       },
       "saving": "Saving results...",
       "empty": {

@@ -18,6 +18,26 @@
     </div>
   }
 
+  <!-- Recovery: unsubmitted session found -->
+  @case ('recovery') {
+    @if (isSubmitting()) {
+      <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+        <p class="text-muted">{{ 'study.session.saving' | transloco }}</p>
+      </div>
+    } @else {
+      <div class="w-full max-w-3xl mx-auto">
+        <app-session-recovery-notice
+          [title]="'study.session.recovery.title' | transloco"
+          [description]="'study.session.recovery.description' | transloco: { name: recoveryName() }"
+          [resumeLabel]="'study.session.recovery.resume' | transloco"
+          [discardLabel]="'study.session.recovery.discard' | transloco"
+          (resumed)="resumeBackup()"
+          (discarded)="discardBackup()"
+        />
+      </div>
+    }
+  }
+
   <!-- Empty: no cards due -->
   @case ('empty') {
     <app-empty-state
@@ -45,6 +65,17 @@
         [confirmLabel]="'study.session.backDialog.confirm' | transloco"
         (confirmed)="confirmGoBack()"
         (cancelled)="showBackDialog.set(false)"
+      />
+    }
+
+    @if (deactivationRequested()) {
+      <app-confirm-dialog
+        variant="warning"
+        [title]="'study.session.deactivateDialog.title' | transloco"
+        [message]="'study.session.deactivateDialog.message' | transloco"
+        [confirmLabel]="'study.session.deactivateDialog.confirm' | transloco"
+        (confirmed)="confirmDeactivation()"
+        (cancelled)="cancelDeactivation()"
       />
     }
 

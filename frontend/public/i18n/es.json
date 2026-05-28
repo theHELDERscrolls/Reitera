@@ -293,7 +293,18 @@
         "new": "nuevas",
         "due": "pendientes",
         "relearning": "reaprendiendo"
+      },
+      "recovery": {
+        "title": "Sesión sin enviar encontrada",
+        "description": "Tienes una sesión sin enviar de \"{{name}}\" de una visita anterior.",
+        "resume": "Retomar y enviar",
+        "discard": "Descartar"
       }
+    },
+    "conflict": {
+      "title": "Sesión pendiente",
+      "message": "Tienes progreso sin guardar de \"{{name}}\". Si continúas, se perderá.",
+      "confirm": "Descartar y continuar"
     },
     "session": {
       "state": {
@@ -321,6 +332,19 @@
         "title": "¿Salir de la sesión?",
         "message": "Tu progreso no se guardará si vuelves atrás ahora.",
         "confirm": "Salir"
+      },
+      "deactivateDialog": {
+        "title": "¿Salir de la sesión?",
+        "message": "Tienes valoraciones sin guardar. Si sales ahora, tu progreso podría perderse.",
+        "confirm": "Salir"
+      },
+      "recovery": {
+        "title": "Sesión sin enviar encontrada",
+        "description": "Tienes una sesión sin enviar de \"{{name}}\" de antes.",
+        "resume": "Retomar y enviar",
+        "discard": "Descartar",
+        "success": "La sesión recuperada se envió correctamente.",
+        "noCards": "No se encontraron tarjetas válidas en la sesión recuperada."
       },
       "saving": "Guardando resultados...",
       "empty": {

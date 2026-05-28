@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from '@core/guards/auth.guard';
-import { noAuthGuard } from '@core/guards/no-auth-guard';
+import { noAuthGuard } from '@core/guards/no-auth.guard';
+import { studySessionGuard } from '@core/guards/study-session.guard';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,7 @@ export const routes: Routes = [
       {
         path: 'study',
         loadComponent: () => import('./features/study/study.component'),
+        canDeactivate: [studySessionGuard],
       },
       {
         path: 'profile',
