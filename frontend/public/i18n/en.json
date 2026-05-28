@@ -213,8 +213,9 @@
       },
       "type": {
         "basic": "Basic",
-        "multiple_choice": "Multi",
-        "true_false": "True / False"
+        "basic_reverse": "Basic + Reverse",
+        "cloze": "Cloze",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "New",
@@ -231,51 +232,6 @@
       "cardCreated": "Card created successfully",
       "cardUpdated": "Card updated successfully",
       "cardDeleted": "Card deleted successfully"
-    }
-  },
-  "cardForm": {
-    "createTitle": "New card",
-    "editTitle": "Edit card",
-    "type": {
-      "label": "Card type",
-      "basic": "Basic",
-      "multiple_choice": "MC",
-      "true_false": "T/F"
-    },
-    "question": {
-      "label": "Question",
-      "placeholder": "Enter the question..."
-    },
-    "answer": {
-      "label": "Answer",
-      "placeholder": "Enter the answer..."
-    },
-    "options": {
-      "label": "Options (click the circle to mark the correct one)",
-      "placeholder": "Enter option...",
-      "markCorrect": "Mark as correct",
-      "remove": "Remove option",
-      "add": "Add option"
-    },
-    "correct": {
-      "label": "Correct answer"
-    },
-    "trueFalse": {
-      "true": "True",
-      "false": "False"
-    },
-    "explanation": {
-      "label": "Explanation (optional)",
-      "placeholder": "Explain why this is the correct answer..."
-    },
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "delete": "Delete card",
-    "error": {
-      "questionRequired": "Question is required.",
-      "questionMax": "Question must be at most 5000 characters.",
-      "explanationMax": "Explanation must be at most 2000 characters."
     }
   },
   "study": {
@@ -315,12 +271,11 @@
       },
       "type": {
         "BASIC": "Basic",
-        "MULTIPLE_CHOICE": "Multiple choice",
-        "TRUE_FALSE": "True / False"
+        "BASIC_REVERSE": "Basic + Reverse",
+        "CLOZE": "Cloze",
+        "MULTIPLE_CHOICE": "Multiple choice"
       },
       "showAnswer": "Show answer",
-      "true": "True",
-      "false": "False",
       "explanation": "Explanation",
       "rating": {
         "forgotten": "Forgotten",

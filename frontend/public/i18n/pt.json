@@ -213,8 +213,9 @@
       },
       "type": {
         "basic": "Básico",
-        "multiple_choice": "Multi",
-        "true_false": "V / F"
+        "basic_reverse": "Básico + Reverso",
+        "cloze": "Completar",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "Novo",
@@ -231,51 +232,6 @@
       "cardCreated": "Cartão criado com sucesso",
       "cardUpdated": "Cartão atualizado com sucesso",
       "cardDeleted": "Cartão eliminado com sucesso"
-    }
-  },
-  "cardForm": {
-    "createTitle": "Novo cartão",
-    "editTitle": "Editar cartão",
-    "type": {
-      "label": "Tipo de cartão",
-      "basic": "Básico",
-      "multiple_choice": "EM",
-      "true_false": "V/F"
-    },
-    "question": {
-      "label": "Pergunta",
-      "placeholder": "Introduz a pergunta..."
-    },
-    "answer": {
-      "label": "Resposta",
-      "placeholder": "Introduz a resposta..."
-    },
-    "options": {
-      "label": "Opções (clica no círculo para marcar a correta)",
-      "placeholder": "Introduz uma opção...",
-      "markCorrect": "Marcar como correta",
-      "remove": "Remover opção",
-      "add": "Adicionar opção"
-    },
-    "correct": {
-      "label": "Resposta correta"
-    },
-    "trueFalse": {
-      "true": "Verdadeiro",
-      "false": "Falso"
-    },
-    "explanation": {
-      "label": "Explicação (opcional)",
-      "placeholder": "Explica porque é que esta é a resposta correta..."
-    },
-    "cancel": "Cancelar",
-    "save": "Guardar",
-    "saving": "A guardar...",
-    "delete": "Eliminar cartão",
-    "error": {
-      "questionRequired": "A pergunta é obrigatória.",
-      "questionMax": "A pergunta não pode ter mais de 5000 caracteres.",
-      "explanationMax": "A explicação não pode ter mais de 2000 caracteres."
     }
   },
   "study": {
@@ -315,12 +271,11 @@
       },
       "type": {
         "BASIC": "Básico",
-        "MULTIPLE_CHOICE": "Escolha múltipla",
-        "TRUE_FALSE": "Verdadeiro / Falso"
+        "BASIC_REVERSE": "Básico + Reverso",
+        "CLOZE": "Completar",
+        "MULTIPLE_CHOICE": "Escolha múltipla"
       },
       "showAnswer": "Mostrar resposta",
-      "true": "Verdadeiro",
-      "false": "Falso",
       "explanation": "Explicação",
       "rating": {
         "forgotten": "Esquecido",

@@ -56,8 +56,9 @@ export default class CardListComponent implements OnInit {
   readonly typeOptions: FilterOption[] = [
     { value: null, labelKey: 'cardList.allTypes' },
     { value: 'BASIC', labelKey: 'study.session.type.BASIC' },
+    { value: 'BASIC_REVERSE', labelKey: 'study.session.type.BASIC_REVERSE' },
+    { value: 'CLOZE', labelKey: 'study.session.type.CLOZE' },
     { value: 'MULTIPLE_CHOICE', labelKey: 'study.session.type.MULTIPLE_CHOICE' },
-    { value: 'TRUE_FALSE', labelKey: 'study.session.type.TRUE_FALSE' },
   ];
 
   readonly stateOptions: FilterOption[] = [

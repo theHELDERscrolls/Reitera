@@ -18,13 +18,11 @@ export class StudyCardComponent {
   readonly rate = output<1 | 3>();
 
   readonly selectedMcIndex = signal<number | null>(null);
-  readonly selectedTf = signal<boolean | null>(null);
 
   constructor() {
     effect(() => {
       this.card();
       this.selectedMcIndex.set(null);
-      this.selectedTf.set(null);
     });
   }
 
@@ -45,12 +43,6 @@ export class StudyCardComponent {
     return mapped;
   });
 
-  readonly tfCorrect = computed(() => {
-    const json = this.card().answerJson as { correct: boolean };
-
-    return json.correct;
-  });
-
   readonly basicAnswer = computed(() => {
     const json = this.card().answerJson as { answer: string };
 
@@ -61,13 +53,6 @@ export class StudyCardComponent {
     if (this.revealed()) return;
 
     this.selectedMcIndex.set(index);
-    this.reveal.emit();
-  }
-
-  selectTf(value: boolean): void {
-    if (this.revealed()) return;
-
-    this.selectedTf.set(value);
     this.reveal.emit();
   }
 }

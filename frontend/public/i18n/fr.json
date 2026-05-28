@@ -213,8 +213,9 @@
       },
       "type": {
         "basic": "Basique",
-        "multiple_choice": "Multi",
-        "true_false": "Vrai / Faux"
+        "basic_reverse": "Basique + Inverse",
+        "cloze": "Texte à trous",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "Nouvelle",
@@ -231,51 +232,6 @@
       "cardCreated": "Carte créée avec succès",
       "cardUpdated": "Carte mise à jour avec succès",
       "cardDeleted": "Carte supprimée avec succès"
-    }
-  },
-  "cardForm": {
-    "createTitle": "Nouvelle carte",
-    "editTitle": "Modifier la carte",
-    "type": {
-      "label": "Type de carte",
-      "basic": "Basique",
-      "multiple_choice": "QCM",
-      "true_false": "V/F"
-    },
-    "question": {
-      "label": "Question",
-      "placeholder": "Saisissez la question..."
-    },
-    "answer": {
-      "label": "Réponse",
-      "placeholder": "Saisissez la réponse..."
-    },
-    "options": {
-      "label": "Options (cliquez sur le cercle pour marquer la bonne réponse)",
-      "placeholder": "Saisir une option...",
-      "markCorrect": "Marquer comme correcte",
-      "remove": "Supprimer l'option",
-      "add": "Ajouter une option"
-    },
-    "correct": {
-      "label": "Bonne réponse"
-    },
-    "trueFalse": {
-      "true": "Vrai",
-      "false": "Faux"
-    },
-    "explanation": {
-      "label": "Explication (facultatif)",
-      "placeholder": "Expliquez pourquoi c'est la bonne réponse..."
-    },
-    "cancel": "Annuler",
-    "save": "Enregistrer",
-    "saving": "Enregistrement...",
-    "delete": "Supprimer la carte",
-    "error": {
-      "questionRequired": "La question est obligatoire.",
-      "questionMax": "La question ne peut pas dépasser 5000 caractères.",
-      "explanationMax": "L'explication ne peut pas dépasser 2000 caractères."
     }
   },
   "study": {
@@ -315,12 +271,11 @@
       },
       "type": {
         "BASIC": "Basique",
-        "MULTIPLE_CHOICE": "Choix multiple",
-        "TRUE_FALSE": "Vrai / Faux"
+        "BASIC_REVERSE": "Basique + Inverse",
+        "CLOZE": "Texte à trous",
+        "MULTIPLE_CHOICE": "Choix multiple"
       },
       "showAnswer": "Afficher la réponse",
-      "true": "Vrai",
-      "false": "Faux",
       "explanation": "Explication",
       "rating": {
         "forgotten": "Oublié",

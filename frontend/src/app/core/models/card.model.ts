@@ -1,11 +1,4 @@
-export type CardType = 'BASIC' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
-
-export interface CardRequest {
-  type: CardType;
-  question: string;
-  answerJson: Record<string, unknown>;
-  explanation: string | null;
-}
+export type CardType = 'BASIC' | 'BASIC_REVERSE' | 'CLOZE' | 'MULTIPLE_CHOICE';
 
 export interface CardResponse {
   id: number;

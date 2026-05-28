@@ -7,8 +7,8 @@
 
   <!-- Answer section -->
 
-  <!-- BASIC -->
-  @if (card().type === 'BASIC') {
+  <!-- BASIC / BASIC_REVERSE / CLOZE -->
+  @if (card().type === 'BASIC' || card().type === 'BASIC_REVERSE' || card().type === 'CLOZE') {
     @if (!revealed()) {
       <button
         (click)="reveal.emit()"
@@ -60,52 +60,6 @@
           }
         </button>
       }
-    </div>
-
-    @if (revealed()) {
-      @if (card().explanation) {
-        <app-card-explanation [text]="card().explanation!" />
-      }
-
-      <app-rating-buttons (rate)="rate.emit($event)" />
-    }
-  }
-
-  <!-- TRUE / FALSE -->
-  @if (card().type === 'TRUE_FALSE') {
-    <div class="flex gap-3">
-      <button
-        (click)="selectTf(true)"
-        [disabled]="revealed()"
-        class="flex-1 py-3 text-sm font-semibold text-center transition-colors border rounded-lg disabled:cursor-default"
-        [class]="
-          !revealed()
-            ? 'border-border bg-overlay text-foreground hover:bg-border hover:border-primary'
-            : tfCorrect()
-              ? 'border-accent-5 bg-accent-5/10 text-accent-5'
-              : selectedTf() === true
-                ? 'border-error bg-error/10 text-error'
-                : 'border-border bg-overlay text-muted'
-        "
-      >
-        {{ 'study.session.true' | transloco }}
-      </button>
-      <button
-        (click)="selectTf(false)"
-        [disabled]="revealed()"
-        class="flex-1 py-3 text-sm font-semibold text-center transition-colors border rounded-lg disabled:cursor-default"
-        [class]="
-          !revealed()
-            ? 'border-border bg-overlay text-foreground hover:bg-border hover:border-primary'
-            : !tfCorrect()
-              ? 'border-accent-5 bg-accent-5/10 text-accent-5'
-              : selectedTf() === false
-                ? 'border-error bg-error/10 text-error'
-                : 'border-border bg-overlay text-muted'
-        "
-      >
-        {{ 'study.session.false' | transloco }}
-      </button>
     </div>
 
     @if (revealed()) {

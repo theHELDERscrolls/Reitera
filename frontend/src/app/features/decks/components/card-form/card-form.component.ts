@@ -9,7 +9,7 @@ import {
 import { LucideMinus, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import { CardRequest, CardResponse, CardType } from '@core/models/card.model';
+import { CardResponse, CardType } from '@core/models/card.model';
 import { DeckDetailService } from '../../services/deck-detail.service';
 import { ToastService } from '@core/toast/toast.service';
 
@@ -52,7 +52,7 @@ export class CardFormComponent {
   readonly maxOptions = 8;
 
   readonly isEditMode = computed(() => this.cardToEdit() !== null);
-  readonly cardTypes: CardType[] = ['BASIC', 'MULTIPLE_CHOICE', 'TRUE_FALSE'];
+  readonly cardTypes: CardType[] = ['BASIC', 'MULTIPLE_CHOICE'];
 
   get optionsArray(): FormArray<FormControl<string | null>> {
     return this.form.controls.options;
@@ -108,7 +108,7 @@ export class CardFormComponent {
     const answerJson = this.buildAnswerJson();
     const { type, question, explanation } = this.form.getRawValue();
 
-    const dto: CardRequest = {
+    const dto = {
       type: type as CardType,
       question: question ?? '',
       answerJson,
