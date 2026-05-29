@@ -278,3 +278,39 @@ html {
     width: 0%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MARKDOWN — code blocks
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+markdown pre,
+markdown code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  font-size: 0.875em;
+}
+
+markdown pre {
+  background-color: var(--color-overlay);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  overflow-x: auto;
+  line-height: 1.6;
+  margin: 0.75rem 0;
+}
+
+markdown pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  color: var(--color-foreground);
+}
+
+markdown code {
+  background-color: var(--color-overlay);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 0.3rem;
+  padding: 0.15em 0.4em;
+  color: var(--color-primary);
+}

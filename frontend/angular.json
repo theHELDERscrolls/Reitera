@@ -34,8 +34,7 @@
               }
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/highlight.js/styles/github-dark-dimmed.min.css"
+              "src/styles.css"
             ]
           },
           "configurations": {
