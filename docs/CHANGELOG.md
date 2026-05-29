@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+- **Vercel build budget exceeded** — removed `highlight.js` (^11.11.1) and `marked` (^18.0.14) as direct dependencies; both were imported at root level in `app.config.ts`, forcing ~1.08 MB of syntax-highlighting code into the initial bundle (exceeded the 1 MB error budget). Also removed the stale `angular.json` entry for `highlight.js/styles/github-dark-dimmed.min.css`. Initial bundle is now 434 KB.
+- **Markdown code block styling** — replaced the removed `highlight.js` renderer with pure CSS rules in `styles.css`; fenced code blocks render with monospace font, Catppuccin `--color-overlay` background, rounded corners and a subtle border, consistent with the app's dark/light theme. Inline `<code>` spans are tinted with `--color-primary`.
+
 ---
 
 ## [0.31.0] — 2026-05-28 — feat/54-note-based-card-system-md
