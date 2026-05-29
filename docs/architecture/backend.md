@@ -44,7 +44,8 @@ modules/
 │   └── service/    → JwtService, RefreshTokenService
 ├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
 ├── deck/           → Deck, Category entities + CRUD, categories and deck stats APIs
-├── card/           → Card entity + CRUD API (nested under decks) + cross-deck search with dynamic JPA Specifications
+├── note/           → Note entity + CRUD API (nested under decks) + NoteParser (Markdown → cards auto-generation)
+├── card/           → Card entity + cross-deck search (CardListController) with dynamic JPA Specifications
 ├── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
 └── dashboard/      → DashboardController, DashboardService — stats, heatmap and last-studied endpoints
 
@@ -57,7 +58,8 @@ core/
 
 - **Schema management:** Manual SQL scripts (`ddl-auto: none`). No Flyway/Liquibase yet.
 - **Primary keys:** UUID for `users`, auto-increment Integer for all other entities.
-- **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different card types (BASIC, MULTIPLE_CHOICE, TRUE_FALSE) to use different answer structures without schema changes.
+- **Note-based card generation:** Cards are never created directly. Each `Note` has a `content` (Markdown) field that `NoteParser` converts to one or more `Card` rows. Supported note types: `BASIC` (1 card), `BASIC_REVERSE` (2 cards), `CLOZE` (one card per `{{cN::}}` deletion), `MULTIPLE_CHOICE` (1 card). Cards inherit the note's type string.
+- **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different note/card types to use different answer structures without schema changes.
 - **Composite keys:** `StudyProgress` uses a composite PK of `(user_id, card_id)` — one progress record per user per card.
 - **Refresh tokens:** the raw UUID token is never stored. Only its SHA-256 hex digest (`token_hash VARCHAR(64)`) is persisted. `ON DELETE CASCADE` on `user_id` ensures cleanup on user deletion. The `revoked` flag preserves the audit trail without physically deleting rows.
 
@@ -131,8 +133,9 @@ class XControllerTest {
 | auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7), `PasswordResetServiceTest` (5) | `AuthControllerTest` (17) |
 | user | `UserServiceTest` (9) | `UserControllerTest` (2) |
 | deck | `DeckServiceTest` (20), `CategoryServiceTest` (1) | `DeckControllerTest` (16), `CategoryControllerTest` (2) |
-| card | `CardServiceTest` (7) | `CardControllerTest` (14), `CardListControllerTest` (3) |
+| note | `NoteParserTest` (21), `NoteServiceTest` (11) | `NoteControllerTest` (8) |
+| card | — | `CardListControllerTest` (3) |
 | study | `FsrsServiceTest` (3), `StudyServiceTest` (4) | `StudyControllerTest` (5) |
 | dashboard | `DashboardServiceTest` (4) | `DashboardControllerTest` (4) |
 
-**Total: ~120 tests** across 17 test classes. Run with `mvn test` from `backend/reitera-backend/`.
+**Total: ~147 tests** across 20 test classes. Run with `mvn test` from `backend/reitera-backend/`.

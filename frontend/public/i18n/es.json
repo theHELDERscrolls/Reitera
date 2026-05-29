@@ -187,7 +187,7 @@
   },
   "deckDetail": {
     "createdAt": "Creado",
-    "addCard": "Añadir tarjeta",
+    "addNote": "Añadir nota",
     "study": "Estudiar",
     "stats": {
       "total": "Total",
@@ -198,23 +198,26 @@
       "due": "Pendientes"
     },
     "cards": {
-      "title": "Tarjetas",
-      "editCard": "Editar tarjeta",
-      "deleteCard": "Eliminar tarjeta",
+      "title": "Notas",
+      "editNote": "Editar nota",
+      "deleteNote": "Eliminar nota",
       "table": {
         "question": "Pregunta",
+        "content": "Contenido",
         "type": "Tipo",
         "state": "Estado",
+        "cards": "Tarjetas",
         "actions": "Acciones"
       },
       "empty": {
-        "title": "Aún no hay tarjetas",
-        "subtitle": "Añade tu primera tarjeta para empezar a estudiar"
+        "title": "Aún no hay notas",
+        "subtitle": "Añade tu primera nota para empezar a estudiar"
       },
       "type": {
         "basic": "Básica",
-        "multiple_choice": "Multi",
-        "true_false": "Verdadero / Falso"
+        "basic_reverse": "Básica + Reversa",
+        "cloze": "Rellenar",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "Nueva",
@@ -223,59 +226,14 @@
         "relearning": "Reaprendiendo"
       }
     },
-    "deleteCard": {
-      "title": "Eliminar tarjeta",
-      "message": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer."
+    "deleteNote": {
+      "title": "Eliminar nota",
+      "message": "¿Estás seguro? También se eliminarán todas las tarjetas generadas por esta nota."
     },
     "toast": {
-      "cardCreated": "Tarjeta creada correctamente",
-      "cardUpdated": "Tarjeta actualizada correctamente",
-      "cardDeleted": "Tarjeta eliminada correctamente"
-    }
-  },
-  "cardForm": {
-    "createTitle": "Nueva tarjeta",
-    "editTitle": "Editar tarjeta",
-    "type": {
-      "label": "Tipo de tarjeta",
-      "basic": "Básica",
-      "multiple_choice": "OM",
-      "true_false": "V/F"
-    },
-    "question": {
-      "label": "Pregunta",
-      "placeholder": "Escribe la pregunta..."
-    },
-    "answer": {
-      "label": "Respuesta",
-      "placeholder": "Escribe la respuesta..."
-    },
-    "options": {
-      "label": "Opciones (haz clic en el círculo para marcar la correcta)",
-      "placeholder": "Escribe una opción...",
-      "markCorrect": "Marcar como correcta",
-      "remove": "Eliminar opción",
-      "add": "Añadir opción"
-    },
-    "correct": {
-      "label": "Respuesta correcta"
-    },
-    "trueFalse": {
-      "true": "Verdadero",
-      "false": "Falso"
-    },
-    "explanation": {
-      "label": "Explicación (opcional)",
-      "placeholder": "Explica por qué esta es la respuesta correcta..."
-    },
-    "cancel": "Cancelar",
-    "save": "Guardar",
-    "saving": "Guardando...",
-    "delete": "Eliminar tarjeta",
-    "error": {
-      "questionRequired": "La pregunta es obligatoria.",
-      "questionMax": "La pregunta no puede superar los 5000 caracteres.",
-      "explanationMax": "La explicación no puede superar los 2000 caracteres."
+      "noteCreated": "Nota creada correctamente",
+      "noteUpdated": "Nota actualizada correctamente",
+      "noteDeleted": "Nota eliminada correctamente"
     }
   },
   "study": {
@@ -315,12 +273,11 @@
       },
       "type": {
         "BASIC": "Básica",
-        "MULTIPLE_CHOICE": "Múltiple opción",
-        "TRUE_FALSE": "Verdadero / Falso"
+        "BASIC_REVERSE": "Básica + Reversa",
+        "CLOZE": "Rellenar",
+        "MULTIPLE_CHOICE": "Múltiple opción"
       },
       "showAnswer": "Mostrar respuesta",
-      "true": "Verdadero",
-      "false": "Falso",
       "explanation": "Explicación",
       "rating": {
         "forgotten": "Olvidada",
@@ -372,17 +329,35 @@
     "stateLearning": "Aprendiendo",
     "stateReview": "Repaso",
     "stateRelearning": "Reaprendiendo",
+    "editNote": "Editar nota",
     "empty": {
       "title": "No se encontraron tarjetas",
-      "subtitle": "Prueba a ajustar los filtros o añade tarjetas a un mazo"
+      "subtitle": "Prueba a ajustar los filtros o añade notas a un mazo"
     },
-    "deleteCard": {
-      "title": "Eliminar tarjeta",
-      "message": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer."
+    "deleteNote": {
+      "title": "Eliminar nota",
+      "message": "¿Estás seguro? También se eliminarán todas las tarjetas generadas por esta nota."
     },
     "toast": {
-      "cardUpdated": "Tarjeta actualizada correctamente",
-      "cardDeleted": "Tarjeta eliminada correctamente"
+      "noteUpdated": "Nota actualizada correctamente",
+      "noteDeleted": "Nota eliminada correctamente"
+    }
+  },
+  "noteEditor": {
+    "titleCreate": "Nueva nota",
+    "titleEdit": "Editar nota",
+    "contentLabel": "Contenido",
+    "explanationHint": "Añade === en una nueva línea para incluir una explicación que se muestra al responder.",
+    "typeHint": "Formato no reconocido. Usa --- para Básica, {{c1::texto}} para Cloze, o - [x] / - [ ] para Múltiple.",
+    "conflictMarkers": "Se detectaron marcadores de tipos mezclados. Elimina los marcadores que no correspondan al tipo detectado.",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "types": {
+      "BASIC": "Básica",
+      "BASIC_REVERSE": "Básica + Reversa",
+      "CLOZE": "Rellenar",
+      "MULTIPLE_CHOICE": "Múltiple opción",
+      "UNKNOWN": "Formato desconocido"
     }
   },
   "shell": {

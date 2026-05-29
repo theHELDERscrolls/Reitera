@@ -1,0 +1,73 @@
+<div
+  class="fixed inset-0 z-40 flex items-start justify-center p-4 pt-16 overflow-y-auto bg-black/50 backdrop-blur-sm"
+  tabindex="0"
+  (click)="closed.emit()"
+  (keydown.escape)="closed.emit()"
+>
+  <div
+    class="flex flex-col w-full max-w-2xl mb-4 border shadow-xl bg-surface rounded-xl border-border"
+    tabindex="0"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between p-3 border-b border-border">
+      <h2 class="text-base font-semibold text-foreground">
+        {{ (isEditMode() ? 'noteEditor.titleEdit' : 'noteEditor.titleCreate') | transloco }}
+      </h2>
+
+      <!-- Type badge -->
+      @if (detectedType() !== 'UNKNOWN') {
+        <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-accent-1/10 text-accent-1">
+          {{ 'noteEditor.types.' + detectedType() | transloco }}
+        </span>
+      } @else {
+        <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-overlay text-muted">
+          {{ 'noteEditor.types.UNKNOWN' | transloco }}
+        </span>
+      }
+    </div>
+
+    <div class="flex flex-col gap-5 p-3 sm:p-4">
+      <!-- CodeMirror editor -->
+      <div class="flex flex-col gap-1.5">
+        <span class="text-sm font-medium text-foreground">
+          {{ 'noteEditor.contentLabel' | transloco }}
+          <span class="text-error">*</span>
+        </span>
+        <div
+          #editorContainer
+          class="min-h-40 rounded-lg border border-border bg-overlay text-sm focus-within:border-primary transition-colors [&_.cm-editor]:outline-none [&_.cm-focused]:outline-none [&_.cm-editor]:min-h-40 [&_.cm-scroller]:p-2 [&_.cm-content]:font-mono"
+        ></div>
+        @if (hasConflict()) {
+          <p class="text-xs text-error">{{ 'noteEditor.conflictMarkers' | transloco }}</p>
+        } @else if (detectedType() === 'UNKNOWN' && rawContent().trim()) {
+          <p class="text-xs text-warning">{{ 'noteEditor.typeHint' | transloco }}</p>
+        } @else if (!rawContent().trim()) {
+          <p class="text-xs text-muted">{{ 'noteEditor.explanationHint' | transloco }}</p>
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center gap-2 pt-3 border-t border-border">
+        <button
+          type="button"
+          (click)="closed.emit()"
+          class="px-4 py-2 ml-auto text-sm font-medium transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
+        >
+          {{ 'common.cancel' | transloco }}
+        </button>
+        <button
+          type="button"
+          (click)="submit()"
+          [disabled]="
+            detectedType() === 'UNKNOWN' || hasConflict() || !rawContent().trim() || isSaving()
+          "
+          class="px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ (isSaving() ? 'noteEditor.saving' : 'noteEditor.save') | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

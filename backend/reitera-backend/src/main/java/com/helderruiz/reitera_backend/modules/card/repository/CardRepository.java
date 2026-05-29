@@ -55,6 +55,7 @@ public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecifi
      * These cards will be included in the due list alongside overdue cards.
      */
     @Query("SELECT c FROM Card c " +
+            "JOIN FETCH c.note " +
             "WHERE c.deck.id = :deckId " +
             "AND NOT EXISTS (" +
             "    SELECT sp FROM StudyProgress sp " +
@@ -69,6 +70,7 @@ public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecifi
      * to exclude cards the user has already started studying.
      */
     @Query("SELECT c FROM Card c " +
+            "JOIN FETCH c.note " +
             "WHERE c.deck.category.id = :categoryId " +
             "AND c.deck.owner.id = :userId " +
             "AND NOT EXISTS (" +

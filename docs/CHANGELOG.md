@@ -7,6 +7,46 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+- **Vercel build budget exceeded** — removed `highlight.js` (^11.11.1) and `marked` (^18.0.14) as direct dependencies; both were imported at root level in `app.config.ts`, forcing ~1.08 MB of syntax-highlighting code into the initial bundle (exceeded the 1 MB error budget). Also removed the stale `angular.json` entry for `highlight.js/styles/github-dark-dimmed.min.css`. Initial bundle is now 434 KB.
+- **Markdown code block styling** — replaced the removed `highlight.js` renderer with pure CSS rules in `styles.css`; fenced code blocks render with monospace font, Catppuccin `--color-overlay` background, rounded corners and a subtle border, consistent with the app's dark/light theme. Inline `<code>` spans are tinted with `--color-primary`.
+
+---
+
+## [0.31.0] — 2026-05-28 — feat/54-note-based-card-system-md
+
+### Added
+- **Note module (backend)** — `Note` entity, `NoteController`, `NoteService`, `NoteParser`, `NoteRepository` under `modules/note/`
+  - Notes are the source content from which cards are generated automatically via Markdown parsing
+  - `NoteParser` detects the note type from content markers and produces `CardData` records; detection priority: CLOZE > MULTIPLE_CHOICE > BASIC_REVERSE > BASIC > UNKNOWN
+  - Smart merge on update: if the type is unchanged, existing cards are updated in-place by key (`clozeIndex` for CLOZE, `ordinal` for all others) so `StudyProgress` rows survive; if the type changes, cards are replaced and FSRS state resets
+  - 5 endpoints: `POST /api/v1/decks/{deckId}/notes` (201), `GET /api/v1/decks/{deckId}/notes` (paginated), `GET /api/v1/decks/{deckId}/notes/{noteId}`, `PUT /api/v1/decks/{deckId}/notes/{noteId}`, `DELETE /api/v1/decks/{deckId}/notes/{noteId}` (204)
+  - `NoteRequestDTO` — `content` (required, max 10 000 chars) + `explanation` (optional, max 2 000 chars)
+  - `NoteResponseDTO` — `id`, `deckId`, `type`, `content`, `explanation`, `cardCount`, `createdAt`
+- **Two new card types**: `BASIC_REVERSE` (generates front + reverse cards from a single note) and `CLOZE` (one card per `{{cN::}}` deletion); `MULTIPLE_CHOICE` retained; `TRUE_FALSE` removed (see below)
+- **`NoteEditorComponent`** (`features/decks/components/note-editor/`) — CodeMirror-based Markdown editor with live type detection, conflict validation, create/edit modes, and theme-aware dark mode; sends note to `NoteService`
+- **`NoteService`** (`features/decks/services/note.service.ts`) — wraps all 5 note API endpoints
+- **`CardExplanationComponent`** (`features/study/components/card-explanation/`) — collapsible explanation panel that renders Markdown via `ngx-markdown`
+- **`note.model.ts`** added to `core/models/` — exports `NoteRequest`, `NoteResponse`, `NoteType`
+- **Study session Markdown rendering** — `StudyCardComponent` and `CardExplanationComponent` now use `ngx-markdown` (`MarkdownComponent`) to render card content and explanations
+- `cards` table gains `note_id` FK column (`INTEGER NOT NULL REFERENCES notes(id) ON DELETE CASCADE`) and `ordinal` column for sibling card ordering
+- `notes` table added to `init.sql` with `deck_id` FK, `type`, `content`, `explanation`, `created_at`
+
+### Removed
+- **`TRUE_FALSE` card type** — removed from `NoteParser`, `CardType` frontend union, `CardTypeBadgeComponent`, and all type filter options; existing data using this type is no longer writable
+- **Direct card CRUD endpoints** (`POST/PUT/DELETE /api/v1/decks/{deckId}/cards`) — cards are now managed exclusively through the note system; `CardController` deleted; `CardListController` (`GET /api/v1/cards`) is retained
+
+### Changed
+- `CardResponseDTO` gains `noteId` field (ID of the parent note)
+- `CardType` TypeScript union narrowed from `BASIC | MULTIPLE_CHOICE | TRUE_FALSE` to `BASIC | BASIC_REVERSE | CLOZE | MULTIPLE_CHOICE`
+- `CardTypeBadgeComponent` updated with color slots for `BASIC_REVERSE` (`accent-2`) and `CLOZE` (`accent-4`)
+- `DeckDetailComponent` — card form replaced with `NoteEditorComponent`
+- `frontend/package.json` version bumped to `0.31.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.31.0`
+- `NoteParserTest` (21 tests) — unit tests for all `detectType`, `hasConflict` and `parse` paths across the four note types
+- `NoteServiceTest` (11 tests) — unit tests for `createNote`, `updateNote`, `deleteNote`, `getNotesByDeck` and `getNoteById`; covers UNKNOWN content, conflicting markers, ownership and not-found errors
+- `NoteControllerTest` (8 tests) — slice tests for all 5 endpoints: 201/401/400 on POST, 200 on GET list, 200/404 on GET single, 200 on PUT, 204 on DELETE
+
 ---
 
 ## [0.30.0] — 2026-05-27 — feat/53-study-session-persistence

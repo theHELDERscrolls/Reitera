@@ -19,6 +19,7 @@ TRUNCATE TABLE
     review_logs,
     study_progress,
     cards,
+    notes,
     decks,
     categories,
     users,

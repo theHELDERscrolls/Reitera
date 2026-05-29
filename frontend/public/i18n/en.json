@@ -187,7 +187,7 @@
   },
   "deckDetail": {
     "createdAt": "Created",
-    "addCard": "Add card",
+    "addNote": "Add note",
     "study": "Study",
     "stats": {
       "total": "Total",
@@ -198,23 +198,26 @@
       "due": "Due"
     },
     "cards": {
-      "title": "Cards",
-      "editCard": "Edit card",
-      "deleteCard": "Delete card",
+      "title": "Notes",
+      "editNote": "Edit note",
+      "deleteNote": "Delete note",
       "table": {
         "question": "Question",
+        "content": "Content",
         "type": "Type",
         "state": "State",
+        "cards": "Cards",
         "actions": "Actions"
       },
       "empty": {
-        "title": "No cards yet",
-        "subtitle": "Add your first card to start studying"
+        "title": "No notes yet",
+        "subtitle": "Add your first note to start studying"
       },
       "type": {
         "basic": "Basic",
-        "multiple_choice": "Multi",
-        "true_false": "True / False"
+        "basic_reverse": "Basic + Reverse",
+        "cloze": "Cloze",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "New",
@@ -223,59 +226,14 @@
         "relearning": "Relearning"
       }
     },
-    "deleteCard": {
-      "title": "Delete card",
-      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    "deleteNote": {
+      "title": "Delete note",
+      "message": "Are you sure? All cards generated from this note will also be deleted."
     },
     "toast": {
-      "cardCreated": "Card created successfully",
-      "cardUpdated": "Card updated successfully",
-      "cardDeleted": "Card deleted successfully"
-    }
-  },
-  "cardForm": {
-    "createTitle": "New card",
-    "editTitle": "Edit card",
-    "type": {
-      "label": "Card type",
-      "basic": "Basic",
-      "multiple_choice": "MC",
-      "true_false": "T/F"
-    },
-    "question": {
-      "label": "Question",
-      "placeholder": "Enter the question..."
-    },
-    "answer": {
-      "label": "Answer",
-      "placeholder": "Enter the answer..."
-    },
-    "options": {
-      "label": "Options (click the circle to mark the correct one)",
-      "placeholder": "Enter option...",
-      "markCorrect": "Mark as correct",
-      "remove": "Remove option",
-      "add": "Add option"
-    },
-    "correct": {
-      "label": "Correct answer"
-    },
-    "trueFalse": {
-      "true": "True",
-      "false": "False"
-    },
-    "explanation": {
-      "label": "Explanation (optional)",
-      "placeholder": "Explain why this is the correct answer..."
-    },
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "delete": "Delete card",
-    "error": {
-      "questionRequired": "Question is required.",
-      "questionMax": "Question must be at most 5000 characters.",
-      "explanationMax": "Explanation must be at most 2000 characters."
+      "noteCreated": "Note created successfully",
+      "noteUpdated": "Note updated successfully",
+      "noteDeleted": "Note deleted successfully"
     }
   },
   "study": {
@@ -315,12 +273,11 @@
       },
       "type": {
         "BASIC": "Basic",
-        "MULTIPLE_CHOICE": "Multiple choice",
-        "TRUE_FALSE": "True / False"
+        "BASIC_REVERSE": "Basic + Reverse",
+        "CLOZE": "Cloze",
+        "MULTIPLE_CHOICE": "Multiple choice"
       },
       "showAnswer": "Show answer",
-      "true": "True",
-      "false": "False",
       "explanation": "Explanation",
       "rating": {
         "forgotten": "Forgotten",
@@ -372,17 +329,35 @@
     "stateLearning": "Learning",
     "stateReview": "Review",
     "stateRelearning": "Relearning",
+    "editNote": "Edit note",
     "empty": {
       "title": "No cards found",
-      "subtitle": "Try adjusting your filters or add cards to a deck"
+      "subtitle": "Try adjusting your filters or add notes to a deck"
     },
-    "deleteCard": {
-      "title": "Delete card",
-      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    "deleteNote": {
+      "title": "Delete note",
+      "message": "Are you sure? All cards generated from this note will also be deleted."
     },
     "toast": {
-      "cardUpdated": "Card updated successfully",
-      "cardDeleted": "Card deleted successfully"
+      "noteUpdated": "Note updated successfully",
+      "noteDeleted": "Note deleted successfully"
+    }
+  },
+  "noteEditor": {
+    "titleCreate": "New note",
+    "titleEdit": "Edit note",
+    "contentLabel": "Content",
+    "explanationHint": "Add === on a new line to include an explanation shown after answering.",
+    "typeHint": "Format not recognized. Use --- for Basic, {{c1::text}} for Cloze, or - [x] / - [ ] for Multiple Choice.",
+    "conflictMarkers": "Mixed type markers detected. Remove the markers that do not belong to the detected type.",
+    "save": "Save",
+    "saving": "Saving...",
+    "types": {
+      "BASIC": "Basic",
+      "BASIC_REVERSE": "Basic + Reverse",
+      "CLOZE": "Cloze",
+      "MULTIPLE_CHOICE": "Multiple Choice",
+      "UNKNOWN": "Unknown format"
     }
   },
   "shell": {

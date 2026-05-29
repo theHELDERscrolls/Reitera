@@ -233,7 +233,7 @@ public class StudyService {
                 card.getType(),
                 card.getQuestion(),
                 card.getAnswerJson(),
-                card.getExplanation(),
+                card.getNote().getExplanation(),
                 state
         );
     }

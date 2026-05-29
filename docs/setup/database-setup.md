@@ -95,7 +95,8 @@ backend/reitera-backend/src/main/resources/seed.sql
 |---|---|---|
 | Categories | 3 | Historia de España · Programación Java · Inglés B2 |
 | Decks | 4 | Two under "Historia de España" (enables category-scoped study demo), one under "Programación Java", one under "Inglés B2" |
-| Cards | 48 | BASIC(27) · MULTIPLE_CHOICE(12) · TRUE_FALSE(9) — 12 per deck |
+| Notes | 20 | Source content; auto-generates child cards via `NoteParser` |
+| Cards | 20+ | Generated from notes; types: BASIC · BASIC_REVERSE · CLOZE · MULTIPLE_CHOICE (BASIC_REVERSE and CLOZE notes produce multiple cards each) |
 | StudyProgress | 10 | Deck 1: 6 records (Learning, Review, Relearning); Decks 2 & 3: 2 records each |
 | ReviewLogs | 20 | Historical review entries for all 10 progress records |
 

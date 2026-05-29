@@ -10,10 +10,10 @@ import java.util.Map;
 public record CardResponseDTO(
         Integer id,
         Integer deckId,
+        Integer noteId,
         String type,
         String question,
         Map<String, Object> answerJson,
-        String explanation,
         Integer state
 ) {
 }

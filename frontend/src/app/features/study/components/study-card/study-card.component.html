@@ -1,14 +1,15 @@
 <div class="flex flex-col gap-3 p-3 border sm:gap-6 sm:p-6 rounded-xl bg-surface border-border">
   <!-- Question -->
-  <p class="text-base font-medium leading-relaxed text-foreground">{{ card().question }}</p>
+  <markdown
+    class="text-base font-medium leading-relaxed text-foreground prose prose-sm max-w-none"
+    [data]="card().question"
+  />
 
   <!-- Divider -->
   <div class="w-full h-px bg-border"></div>
 
-  <!-- Answer section -->
-
-  <!-- BASIC -->
-  @if (card().type === 'BASIC') {
+  <!-- BASIC / BASIC_REVERSE / CLOZE -->
+  @if (card().type === 'BASIC' || card().type === 'BASIC_REVERSE' || card().type === 'CLOZE') {
     @if (!revealed()) {
       <button
         (click)="reveal.emit()"
@@ -20,7 +21,10 @@
 
     @if (revealed()) {
       <div class="flex flex-col gap-4">
-        <p class="text-base leading-relaxed text-foreground">{{ basicAnswer() }}</p>
+        <markdown
+          class="text-base leading-relaxed text-foreground prose prose-sm max-w-none"
+          [data]="basicAnswer()"
+        />
 
         @if (card().explanation) {
           <app-card-explanation [text]="card().explanation!" />
@@ -60,52 +64,6 @@
           }
         </button>
       }
-    </div>
-
-    @if (revealed()) {
-      @if (card().explanation) {
-        <app-card-explanation [text]="card().explanation!" />
-      }
-
-      <app-rating-buttons (rate)="rate.emit($event)" />
-    }
-  }
-
-  <!-- TRUE / FALSE -->
-  @if (card().type === 'TRUE_FALSE') {
-    <div class="flex gap-3">
-      <button
-        (click)="selectTf(true)"
-        [disabled]="revealed()"
-        class="flex-1 py-3 text-sm font-semibold text-center transition-colors border rounded-lg disabled:cursor-default"
-        [class]="
-          !revealed()
-            ? 'border-border bg-overlay text-foreground hover:bg-border hover:border-primary'
-            : tfCorrect()
-              ? 'border-accent-5 bg-accent-5/10 text-accent-5'
-              : selectedTf() === true
-                ? 'border-error bg-error/10 text-error'
-                : 'border-border bg-overlay text-muted'
-        "
-      >
-        {{ 'study.session.true' | transloco }}
-      </button>
-      <button
-        (click)="selectTf(false)"
-        [disabled]="revealed()"
-        class="flex-1 py-3 text-sm font-semibold text-center transition-colors border rounded-lg disabled:cursor-default"
-        [class]="
-          !revealed()
-            ? 'border-border bg-overlay text-foreground hover:bg-border hover:border-primary'
-            : !tfCorrect()
-              ? 'border-accent-5 bg-accent-5/10 text-accent-5'
-              : selectedTf() === false
-                ? 'border-error bg-error/10 text-error'
-                : 'border-border bg-overlay text-muted'
-        "
-      >
-        {{ 'study.session.false' | transloco }}
-      </button>
     </div>
 
     @if (revealed()) {
