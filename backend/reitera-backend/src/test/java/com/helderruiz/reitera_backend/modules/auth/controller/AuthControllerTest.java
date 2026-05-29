@@ -85,7 +85,7 @@ class AuthControllerTest {
                 .build();
         userResponse = new UserResponseDTO(
                 mockUser.getId(), "reitera", "reitera@test.com",
-                "Reitera", "Testez", "STUDENT", LocalDateTime.now());
+                "Reitera", "Testez", null, LocalDateTime.now());
         authResponse = new AuthResponseDTO("access-token", "refresh-token", "Login successful");
     }
 
@@ -100,7 +100,7 @@ class AuthControllerTest {
                                 + "\"firstName\":\"Reitera\",\"lastName\":\"Testez\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value("reitera@test.com"))
-                .andExpect(jsonPath("$.roleName").value("STUDENT"));
+                .andExpect(jsonPath("$.username").value("reitera"));
     }
 
     @Test

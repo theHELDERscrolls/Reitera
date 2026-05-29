@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="34" fill="#f9e2af"/>
+  <line x1="50" y1="6" x2="50" y2="16" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="50" y1="84" x2="50" y2="94" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="6" y1="50" x2="16" y2="50" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="84" y1="50" x2="94" y2="50" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="18" y1="18" x2="25" y2="25" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="75" y1="75" x2="82" y2="82" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="82" y1="18" x2="75" y2="25" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <line x1="25" y1="75" x2="18" y2="82" stroke="#f9e2af" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="50" cy="50" r="34" fill="#f9e2af"/>
+  <path d="M 30 46 Q 36 40 42 46" stroke="#1e1e2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 58 46 Q 64 40 70 46" stroke="#1e1e2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 30 58 Q 50 76 70 58" stroke="#1e1e2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="24" cy="58" r="7" fill="#fab387" opacity="0.6"/>
+  <circle cx="76" cy="58" r="7" fill="#fab387" opacity="0.6"/>
+</svg>

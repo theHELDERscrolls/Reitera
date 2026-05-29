@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="46" fill="#fab387"/>
+  <circle cx="50" cy="50" r="40" fill="#fe8019" opacity="0.4"/>
+  <circle cx="50" cy="50" r="38" fill="#fab387"/>
+  <circle cx="35" cy="44" r="11" fill="none" stroke="#1e1e2e" stroke-width="3"/>
+  <circle cx="65" cy="44" r="11" fill="none" stroke="#1e1e2e" stroke-width="3"/>
+  <line x1="46" y1="44" x2="54" y2="44" stroke="#1e1e2e" stroke-width="2.5"/>
+  <line x1="14" y1="42" x2="24" y2="44" stroke="#1e1e2e" stroke-width="2.5"/>
+  <line x1="76" y1="44" x2="86" y2="42" stroke="#1e1e2e" stroke-width="2.5"/>
+  <circle cx="35" cy="44" r="4" fill="#1e1e2e"/>
+  <circle cx="65" cy="44" r="4" fill="#1e1e2e"/>
+  <circle cx="37" cy="42" r="1.5" fill="#cdd6f4"/>
+  <circle cx="67" cy="42" r="1.5" fill="#cdd6f4"/>
+  <line x1="36" y1="64" x2="64" y2="64" stroke="#1e1e2e" stroke-width="3" stroke-linecap="round"/>
+</svg>
