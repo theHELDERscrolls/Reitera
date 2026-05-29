@@ -39,6 +39,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `DeckDetailComponent` — card form replaced with `NoteEditorComponent`
 - `frontend/package.json` version bumped to `0.31.0`
 - `backend/reitera-backend/pom.xml` version bumped to `0.31.0`
+- `NoteParserTest` (21 tests) — unit tests for all `detectType`, `hasConflict` and `parse` paths across the four note types
+- `NoteServiceTest` (11 tests) — unit tests for `createNote`, `updateNote`, `deleteNote`, `getNotesByDeck` and `getNoteById`; covers UNKNOWN content, conflicting markers, ownership and not-found errors
+- `NoteControllerTest` (8 tests) — slice tests for all 5 endpoints: 201/401/400 on POST, 200 on GET list, 200/404 on GET single, 200 on PUT, 204 on DELETE
 
 ---
 
