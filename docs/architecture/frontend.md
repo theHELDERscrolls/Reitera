@@ -105,3 +105,67 @@ Three-layer token system in `styles.css`:
 ## i18n
 
 Transloco v8 — translation files live in `public/i18n/{lang}.json`. Available languages: `en` (English), `es` (Spanish), `fr` (French), `pt` (Portuguese). Components use `TranslocoPipe` (`| transloco`), never the deprecated `TranslocoDirective` with `inlineRead`.
+
+## Testing
+
+Unit tests use **Vitest 4** with **jsdom**, integrated via Angular's `@angular/build:unit-test` builder — no separate `vitest.config.ts` is needed. Test files are co-located with their source as `.spec.ts` files. Run all tests with:
+
+```bash
+cd frontend
+ng test            # single run
+ng test --watch    # watch mode during development
+```
+
+### Coverage
+
+Nine spec files cover the critical frontend paths:
+
+| Spec file | What it covers |
+|---|---|
+| `core/auth/auth.service.spec.ts` | Constructor session restore, `login()` (token storage + signal update), `register()`, `logout()` (success / server error / no-refresh-token paths), `getAccessToken()`, `refreshCurrentUser()`, `isLoggedIn` computed |
+| `core/interceptors/jwt.interceptor.spec.ts` | Bearer injection, `/auth/` passthrough, 401 refresh-token rotation, retry with new token, `AuthService.logout()` on missing or expired refresh token, no-refresh on non-401 errors |
+| `core/guards/auth.guard.spec.ts` | Returns `true` with token; `UrlTree` to `/auth/login` without token |
+| `core/guards/no-auth.guard.spec.ts` | Returns `true` without token; `UrlTree` to `/decks` when already logged in |
+| `core/guards/study-session.guard.spec.ts` | Bypass flag fast-path, no-pending-ratings fast-path, `Observable<boolean>` deactivation flow (confirm / cancel) |
+| `features/study/services/session-backup.service.spec.ts` | Signal initialisation from localStorage (valid / wrong-version / expired / corrupt), `save()`, `clear()`, `markAutoResume`/`consumeAutoResume` one-shot flag |
+| `features/study/services/study-state.service.spec.ts` | Initial signal values, `bypassNextGuardCheck`/`consumeBypass` one-shot flag, `requestDeactivation` Observable, `confirmDeactivation`, `cancelDeactivation` |
+| `features/decks/services/decks.service.spec.ts` | `getDecks()` default params + optional `categoryId`, `getCategories()`, `createDeck()`, `updateDeck()`, `deleteDeck()` |
+| `features/study/services/study.service.spec.ts` | `getDueCards()` with all param combinations (none / deckId / categoryId / both), `processSession()` |
+
+### Patterns
+
+**Services with HTTP** — use `provideHttpClient()` + `provideHttpClientTesting()` (not the deprecated `HttpClientTestingModule`). Call `httpMock.verify()` in `afterEach` to catch undrained requests:
+
+```typescript
+TestBed.configureTestingModule({
+  providers: [provideHttpClient(), provideHttpClientTesting()],
+});
+service  = TestBed.inject(TheService);
+httpMock = TestBed.inject(HttpTestingController);
+
+afterEach(() => {
+  httpMock.verify();
+  localStorage.clear();
+});
+```
+
+**Functional guards** — guards are plain functions; run them with `TestBed.runInInjectionContext()`. Use real `ActivatedRouteSnapshot` / `RouterStateSnapshot` types, not `any`:
+
+```typescript
+TestBed.configureTestingModule({ providers: [provideRouter([])] });
+const result = TestBed.runInInjectionContext(() =>
+  authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot)
+);
+```
+
+**Signals** — Angular signals are synchronous. Read them directly after a `.set()` — no `fakeAsync`, `tick()`, or `await` needed.
+
+**Services that read `localStorage` during construction** — set `localStorage` values *before* calling `TestBed.inject()`, because property initializers (`readonly backup = signal(this.load())`) run at construction time:
+
+```typescript
+it('loads backup on init', () => {
+  localStorage.setItem(BACKUP_KEY, JSON.stringify(validBackup));
+  const service = TestBed.inject(SessionBackupService); // reads localStorage here
+  expect(service.backup()).not.toBeNull();
+});
+```

@@ -40,20 +40,20 @@ export class SessionBackupService {
       const parsed = JSON.parse(raw) as SessionBackup;
 
       if (parsed.version !== '1') {
-        this.clear();
-        
+        localStorage.removeItem(BACKUP_KEY);
+
         return null;
       }
 
       if (Date.now() - parsed.updatedAt > MAX_AGE_MS) {
-        this.clear();
+        localStorage.removeItem(BACKUP_KEY);
 
         return null;
       }
 
       return parsed;
     } catch {
-      this.clear();
+      localStorage.removeItem(BACKUP_KEY);
 
       return null;
     }
