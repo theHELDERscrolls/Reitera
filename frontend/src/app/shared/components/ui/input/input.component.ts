@@ -37,7 +37,7 @@ export default class AppInputComponent implements ControlValueAccessor {
 
   readonly inputClasses = computed(() => {
     const base =
-      'w-full rounded-lg border bg-surface-alt px-3.5 py-2.5 text-sm text-foreground ' +
+      'w-full rounded-md border-2 bg-surface-alt px-3.5 py-2.5 text-sm text-foreground ' +
       'placeholder:text-subtle-foreground outline-none transition ' +
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ' +
       'disabled:cursor-not-allowed disabled:opacity-50';

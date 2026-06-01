@@ -40,7 +40,7 @@ export default class AppBadgeComponent {
 
   private readonly SIZE_CLASSES: Record<BadgeSize, string> = {
     sm: 'px-2 py-0.5 text-xs rounded-full',
-    md: 'px-2.5 py-1 text-xs rounded-lg font-semibold',
+    md: 'px-2.5 py-1 text-xs rounded-md font-semibold',
   };
 
   private readonly DOT_CLASSES: Record<BadgeVariant, string> = {

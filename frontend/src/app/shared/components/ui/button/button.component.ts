@@ -29,22 +29,24 @@ export default class AppButtonComponent {
 
   private readonly VARIANT_CLASSES: Record<ButtonVariant, string> = {
     primary:
-      'bg-primary text-primary-foreground border-2 border-primary rounded-lg ' +
+      'bg-primary text-primary-foreground border-2 border-primary rounded-md ' +
       'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] ' +
       'active:translate-y-px active:shadow-none',
     secondary:
-      'bg-surface text-foreground border-2 border-border rounded-lg ' +
+      'bg-surface text-foreground border-2 border-border rounded-md ' +
       'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] ' +
       'active:translate-y-px active:shadow-none',
     ghost:
-      'bg-transparent text-muted-foreground border-2 border-transparent rounded-lg ' +
+      'bg-transparent text-muted-foreground border-2 border-transparent rounded-md ' +
       'hover:text-foreground hover:bg-overlay',
     danger:
-      'bg-transparent text-error border-2 border-transparent rounded-lg ' +
-      'hover:bg-error/10 hover:border-error/20',
+      'bg-error text-error-foreground border-2 border-error rounded-md ' +
+      'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] ' +
+      'active:translate-y-px active:shadow-none',
     success:
-      'bg-transparent text-success border-2 border-transparent rounded-lg ' +
-      'hover:bg-success/10 hover:border-success/20',
+      'bg-success text-success-foreground border-2 border-success rounded-md ' +
+      'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] ' +
+      'active:translate-y-px active:shadow-none',
   };
 
   private readonly SIZE_CLASSES: Record<ButtonSize, string> = {

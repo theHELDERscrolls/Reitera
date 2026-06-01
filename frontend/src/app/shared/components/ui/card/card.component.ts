@@ -22,7 +22,7 @@ export default class AppCardComponent {
   };
 
   readonly classes = computed(() => {
-    const base = 'rounded-xl border-2 border-border bg-surface transition-all duration-200';
+    const base = 'rounded-md border-2 border-border bg-surface transition-all duration-200';
     const padding = this.PADDING_CLASSES[this.padding()];
     const shadow = this.shadow() === 'offset' ? 'shadow-[3px_3px_0_var(--ctp-mocha-crust)]' : '';
     const interactive = this.interactive()
