@@ -27,20 +27,20 @@ export default class AppBadgeComponent {
 
   private readonly VARIANT_CLASSES: Record<BadgeVariant, string> = {
     default: 'bg-overlay text-muted-foreground',
-    primary: 'bg-primary/15 text-primary',
-    info: 'bg-info/10 text-info',
-    success: 'bg-success/10 text-success',
-    warning: 'bg-warning/10 text-warning',
-    error: 'bg-error/10 text-error',
-    'accent-1': 'bg-accent-1/15 text-accent-1',
-    'accent-2': 'bg-accent-2/15 text-accent-2',
-    'accent-4': 'bg-accent-4/15 text-accent-4',
-    'accent-5': 'bg-accent-5/15 text-accent-5',
+    primary: 'bg-primary text-primary-foreground',
+    info: 'bg-info text-info-foreground',
+    success: 'bg-success text-success-foreground',
+    warning: 'bg-warning text-warning-foreground',
+    error: 'bg-error text-error-foreground',
+    'accent-1': 'bg-accent-1 text-primary-foreground',
+    'accent-2': 'bg-accent-2 text-primary-foreground',
+    'accent-4': 'bg-accent-4 text-primary-foreground',
+    'accent-5': 'bg-accent-5 text-primary-foreground',
   };
 
   private readonly SIZE_CLASSES: Record<BadgeSize, string> = {
-    sm: 'px-2 py-0.5 text-xs rounded-full',
-    md: 'px-2.5 py-1 text-xs rounded-md font-semibold',
+    sm: 'px-2 py-0.5 text-xs rounded-xs',
+    md: 'px-2.5 py-1 text-xs rounded-xs font-semibold',
   };
 
   private readonly DOT_CLASSES: Record<BadgeVariant, string> = {
