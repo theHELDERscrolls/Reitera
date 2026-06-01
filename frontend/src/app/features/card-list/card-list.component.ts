@@ -12,6 +12,7 @@ import {
 } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 import { CardFilters, CardsService } from './services/cards.service';
 import { CardResponse } from '@core/models/card.model';
 import { CardStateBadgeComponent } from '@shared/components/card-state-badge/card-state-badge.component';
@@ -35,6 +36,7 @@ type FilterSelectValue = string | number | null;
 @Component({
   selector: 'app-card-list',
   imports: [
+    AppButtonComponent,
     CardStateBadgeComponent,
     CardTypeBadgeComponent,
     ConfirmDialogComponent,
