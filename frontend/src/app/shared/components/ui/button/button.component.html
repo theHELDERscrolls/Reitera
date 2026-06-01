@@ -1,0 +1,32 @@
+<button
+  [type]="type()"
+  [disabled]="isDisabled()"
+  [class]="classes()"
+  (click)="!isDisabled() && clicked.emit($event)"
+>
+  @if (loading()) {
+    <svg
+      class="animate-spin shrink-0"
+      [class]="iconSizeClass()"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
+  } @else if (iconLeft()) {
+    <svg [lucideIcon]="iconLeft()!" [class]="iconSizeClass()" aria-hidden="true"></svg>
+  }
+
+  <ng-content />
+
+  @if (!loading() && iconRight()) {
+    <svg [lucideIcon]="iconRight()!" [class]="iconSizeClass()" aria-hidden="true"></svg>
+  }
+</button>
