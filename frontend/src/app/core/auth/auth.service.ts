@@ -58,6 +58,14 @@ export class AuthService {
   }
 
   /**
+   * Re-fetches the user profile and updates the signal.
+   * Called after a profile update so the sidebar and header reflect the new data immediately.
+   */
+  refreshCurrentUser(): void {
+    this.fetchCurrentUser().subscribe();
+  }
+
+  /**
    * Fetches the full user profile from the backend and updates the signal.
    * Called after login/register and on page reload when a token is present.
    */

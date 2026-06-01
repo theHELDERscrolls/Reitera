@@ -387,8 +387,29 @@
     "fullName": "Full name",
     "username": "Username",
     "email": "Email address",
-    "role": "Role",
-    "memberSince": "Member since"
+    "memberSince": "Member since",
+    "editButton": "Edit profile",
+    "saveButton": "Save changes",
+    "cancelButton": "Cancel",
+    "saveSuccess": "Profile updated successfully.",
+    "avatarSection": "Choose an avatar",
+    "githubFooter": "Open-source project — contribute on GitHub",
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "username": "Username",
+      "error": {
+        "firstNameRequired": "First name is required.",
+        "firstNameMax": "First name must be at most 50 characters.",
+        "lastNameRequired": "Last name is required.",
+        "lastNameMax": "Last name must be at most 100 characters.",
+        "usernameRequired": "Username is required.",
+        "usernameMin": "Username must be at least 3 characters.",
+        "usernameMax": "Username must be at most 50 characters.",
+        "usernameTaken": "This username is already taken.",
+        "saveFailed": "Could not save changes. Please try again."
+      }
+    }
   },
   "dashboard": {
     "title": "Stats",

@@ -7,6 +7,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **Profile editing** — `ProfileComponent` now includes an inline edit form for `firstName`, `lastName`, and `username`, plus an avatar picker (8 predefined SVG avatars in `public/avatars/`). Selecting and saving an avatar persists the choice in the database (`avatar_id` column, `User` entity) and updates the sidebar footer in real time via `AuthService.refreshCurrentUser()`.
+- **`PUT /api/v1/users/me`** — new endpoint that updates personal data and avatar; enforces username uniqueness (409 Conflict if taken). Accepts `{firstName, lastName, username, avatarId}`.
+- **`ProfileService`** (`features/profile/services/profile.service.ts`) — wraps `PUT /api/v1/users/me`.
+- **`UpdateUserRequestDTO`** — new backend request record with Bean Validation constraints.
+- **`avatar_id VARCHAR(50)`** — new nullable column added to the `users` table in `init.sql`.
+- **Avatar sidebar** — `SidebarFooterComponent` now shows the user's selected avatar SVG; falls back to the initial-letter circle when no avatar is set.
+- **GitHub footer** — profile page includes a card-style link to the repository.
+
+### Changed
+- **`UserResponseDTO`** — `roleName` field removed; `avatarId` field added. Role is system-level and no longer exposed in the profile API response.
+- **`User` model** (`core/models/user.model.ts`) — `roleName` removed; `avatarId?: string | null` added.
+- **Profile i18n** — `profile.role` key removed from all four language files (`en`, `es`, `fr`, `pt`); new keys added under `profile.form.*` and `profile.form.error.*` for edit form labels and validation messages.
+
 ### Fixed
 - **Vercel build budget exceeded** — removed `highlight.js` (^11.11.1) and `marked` (^18.0.14) as direct dependencies; both were imported at root level in `app.config.ts`, forcing ~1.08 MB of syntax-highlighting code into the initial bundle (exceeded the 1 MB error budget). Also removed the stale `angular.json` entry for `highlight.js/styles/github-dark-dimmed.min.css`. Initial bundle is now 434 KB.
 - **Markdown code block styling** — replaced the removed `highlight.js` renderer with pure CSS rules in `styles.css`; fenced code blocks render with monospace font, Catppuccin `--color-overlay` background, rounded corners and a subtle border, consistent with the app's dark/light theme. Inline `<code>` spans are tinted with `--color-primary`.

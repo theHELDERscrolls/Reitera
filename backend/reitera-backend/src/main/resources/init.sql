@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS users (
     verification_token            VARCHAR(64)  UNIQUE,
     verification_token_expires_at TIMESTAMP,
     password_reset_token            VARCHAR(64)  UNIQUE,
-    password_reset_token_expires_at TIMESTAMP
+    password_reset_token_expires_at TIMESTAMP,
+    avatar_id                       VARCHAR(50)
 );
 
 

@@ -387,8 +387,29 @@
     "fullName": "Nome completo",
     "username": "Nome de utilizador",
     "email": "Endereço de e-mail",
-    "role": "Função",
-    "memberSince": "Membro desde"
+    "memberSince": "Membro desde",
+    "editButton": "Editar perfil",
+    "saveButton": "Guardar alterações",
+    "cancelButton": "Cancelar",
+    "saveSuccess": "Perfil atualizado com sucesso.",
+    "avatarSection": "Escolhe um avatar",
+    "githubFooter": "Projeto open-source — contribui no GitHub",
+    "form": {
+      "firstName": "Nome próprio",
+      "lastName": "Apelido",
+      "username": "Nome de utilizador",
+      "error": {
+        "firstNameRequired": "O nome próprio é obrigatório.",
+        "firstNameMax": "O nome próprio não pode ter mais de 50 caracteres.",
+        "lastNameRequired": "O apelido é obrigatório.",
+        "lastNameMax": "O apelido não pode ter mais de 100 caracteres.",
+        "usernameRequired": "O nome de utilizador é obrigatório.",
+        "usernameMin": "O nome de utilizador deve ter pelo menos 3 caracteres.",
+        "usernameMax": "O nome de utilizador não pode ter mais de 50 caracteres.",
+        "usernameTaken": "Este nome de utilizador já está em uso.",
+        "saveFailed": "Não foi possível guardar as alterações. Tente novamente."
+      }
+    }
   },
   "dashboard": {
     "title": "Estatísticas",

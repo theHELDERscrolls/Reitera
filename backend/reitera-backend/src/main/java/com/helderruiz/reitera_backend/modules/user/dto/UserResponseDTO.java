@@ -9,6 +9,6 @@ public record UserResponseDTO(
         String email,
         String firstName,
         String lastName,
-        String roleName,
+        String avatarId,
         LocalDateTime createdAt
 ) {}

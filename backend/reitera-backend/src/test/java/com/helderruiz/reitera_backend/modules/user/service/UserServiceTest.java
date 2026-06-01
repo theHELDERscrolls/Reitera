@@ -5,6 +5,7 @@ import com.helderruiz.reitera_backend.core.exception.DataConflictException;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
+import com.helderruiz.reitera_backend.modules.user.dto.UpdateUserRequestDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserLoginDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserRegisterDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserResponseDTO;
@@ -96,7 +97,6 @@ class UserServiceTest {
 
         assertThat(result.email()).isEqualTo(savedUser.getUsername());
         assertThat(result.username()).isEqualTo(savedUser.getNickname());
-        assertThat(result.roleName()).isEqualTo("STUDENT");
     }
 
     @Test
@@ -139,7 +139,6 @@ class UserServiceTest {
 
         assertThat(result.id()).isEqualTo(savedUser.getId());
         assertThat(result.email()).isEqualTo(savedUser.getUsername());
-        assertThat(result.roleName()).isEqualTo("STUDENT");
     }
 
     @Test
@@ -191,5 +190,43 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.loginUser(validLoginDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid credentials");
+    }
+
+    @Test
+    void updateMe_success_returnsUpdatedUser() {
+        UpdateUserRequestDTO dto = new UpdateUserRequestDTO("newname", "New", "Name", "avatar-01");
+        User updatedUser = User.builder()
+                .id(savedUser.getId())
+                .username("newname")
+                .email("reitera@test.com")
+                .password("encoded-password")
+                .firstName("New")
+                .lastName("Name")
+                .avatarId("avatar-01")
+                .role(studentRole)
+                .createdAt(savedUser.getCreatedAt())
+                .emailVerified(true)
+                .build();
+
+        when(userRepository.findByUsername("newname")).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        UserResponseDTO result = userService.updateMe(dto, savedUser);
+
+        assertThat(result.username()).isEqualTo("newname");
+        assertThat(result.firstName()).isEqualTo("New");
+        assertThat(result.avatarId()).isEqualTo("avatar-01");
+    }
+
+    @Test
+    void updateMe_throws_whenUsernameAlreadyTaken() {
+        UpdateUserRequestDTO dto = new UpdateUserRequestDTO("takenname", "New", "Name", null);
+        User otherUser = User.builder().id(UUID.randomUUID()).build();
+
+        when(userRepository.findByUsername("takenname")).thenReturn(Optional.of(otherUser));
+
+        assertThatThrownBy(() -> userService.updateMe(dto, savedUser))
+                .isInstanceOf(DataConflictException.class)
+                .hasMessageContaining("The provided data is invalid or already in use");
     }
 }

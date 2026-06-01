@@ -387,8 +387,29 @@
     "fullName": "Nom complet",
     "username": "Nom d'utilisateur",
     "email": "Adresse e-mail",
-    "role": "Rôle",
-    "memberSince": "Membre depuis"
+    "memberSince": "Membre depuis",
+    "editButton": "Modifier le profil",
+    "saveButton": "Enregistrer",
+    "cancelButton": "Annuler",
+    "saveSuccess": "Profil mis à jour avec succès.",
+    "avatarSection": "Choisir un avatar",
+    "githubFooter": "Projet open-source — contribuez sur GitHub",
+    "form": {
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "username": "Nom d'utilisateur",
+      "error": {
+        "firstNameRequired": "Le prénom est obligatoire.",
+        "firstNameMax": "Le prénom ne peut pas dépasser 50 caractères.",
+        "lastNameRequired": "Le nom de famille est obligatoire.",
+        "lastNameMax": "Le nom de famille ne peut pas dépasser 100 caractères.",
+        "usernameRequired": "Le nom d'utilisateur est obligatoire.",
+        "usernameMin": "Le nom d'utilisateur doit comporter au moins 3 caractères.",
+        "usernameMax": "Le nom d'utilisateur ne peut pas dépasser 50 caractères.",
+        "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
+        "saveFailed": "Impossible d'enregistrer les modifications. Veuillez réessayer."
+      }
+    }
   },
   "dashboard": {
     "title": "Statistiques",

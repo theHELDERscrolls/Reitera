@@ -9,11 +9,19 @@
     [class]="isCollapsed() ? 'justify-center' : 'gap-3'"
     [attr.aria-label]="'shell.profile.open' | transloco"
   >
-    <div
-      class="flex items-center justify-center text-xs font-semibold uppercase border rounded-full size-8 bg-overlay border-border shrink-0 text-foreground"
-    >
-      {{ (currentUser()?.username ?? '?').charAt(0) }}
-    </div>
+    @if (currentUser()?.avatarId) {
+      <img
+        [src]="'avatars/' + currentUser()!.avatarId + '.svg'"
+        alt="Avatar"
+        class="border rounded-full size-8 shrink-0 border-border"
+      />
+    } @else {
+      <div
+        class="flex items-center justify-center text-xs font-semibold uppercase border rounded-full size-8 bg-overlay border-border shrink-0 text-foreground"
+      >
+        {{ (currentUser()?.username ?? '?').charAt(0) }}
+      </div>
+    }
     @if (!isCollapsed()) {
       <div class="flex flex-col items-start justify-center gap-0.5 min-w-0">
         <span class="font-semibold text-md text-foreground">{{

@@ -23,7 +23,8 @@ src/app/
 │   │   └── services/   → DecksService (deck CRUD + pagination), DeckDetailService (deck stats + card listing), NoteService (note CRUD)
 │   ├── card-list/      → Cross-deck card list with filters (question, type, state) and inline edit/delete
 │   │   └── services/   → CardsService
-│   ├── profile/        → Read-only display of the authenticated user's profile
+│   ├── profile/        → Editable user profile: personal data (firstName, lastName, username), avatar selection from a predefined set, and GitHub repository link
+│   │   └── services/   → ProfileService (PUT /api/v1/users/me)
 │   ├── shell/          → App layout: collapsible sidebar and mobile header
 │   │   ├── mobile-header/  → Top bar with hamburger button for small screens
 │   │   └── sidebar/        → Collapsible desktop sidebar and mobile overlay
