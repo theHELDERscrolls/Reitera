@@ -18,108 +18,80 @@
 >
   <!-- Modal card -->
   <div
-    class="flex flex-col w-full max-w-xl border shadow-xl bg-surface rounded-xl border-border"
+    class="flex flex-col w-full max-w-xl border-2 border-border rounded-md bg-surface shadow-[4px_4px_0_var(--ctp-mocha-crust)]"
     tabindex="0"
     (click)="$event.stopPropagation()"
     (keydown)="$event.stopPropagation()"
   >
     <!-- Header -->
-    <div class="flex items-center justify-between p-3">
+    <div class="flex items-center justify-between px-5 py-4 border-b-2 border-border">
       <h2 class="text-base font-semibold text-foreground">
         {{ (isEditMode ? 'decks.form.editTitle' : 'decks.form.createTitle') | transloco }}
       </h2>
-      <button
-        (click)="closed.emit()"
-        class="p-1.5 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
-      >
+      <app-button variant="danger" size="sm" (clicked)="closed.emit()">
         <svg lucideX class="size-4" />
-      </button>
+      </app-button>
     </div>
 
     <!-- Form body -->
-    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4 p-3">
-      <!-- Title -->
-      <div class="flex flex-col gap-1.5">
-        <label for="title" class="text-sm font-medium text-foreground">
-          {{ 'decks.form.titleLabel' | transloco }}
-          <span class="text-error">*</span>
-        </label>
-        <input
-          formControlName="title"
-          name="title"
-          type="text"
-          [placeholder]="'decks.form.titlePlaceholder' | transloco"
-          class="px-3 py-2 text-sm transition-colors border rounded-lg bg-overlay border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
-        />
-        @if (titleControl.invalid && titleControl.touched) {
-          @if (titleControl.errors?.['required']) {
-            <p class="text-xs text-error">{{ 'decks.form.error.titleRequired' | transloco }}</p>
-          } @else if (titleControl.errors?.['maxlength']) {
-            <p class="text-xs text-error">{{ 'decks.form.error.titleMax' | transloco }}</p>
-          }
-        }
-      </div>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4 p-5">
+      @let titleErr =
+        titleControl.touched && titleControl.hasError('required')
+          ? ('decks.form.error.titleRequired' | transloco)
+          : titleControl.touched && titleControl.hasError('maxlength')
+            ? ('decks.form.error.titleMax' | transloco)
+            : '';
+      <app-input
+        formControlName="title"
+        [label]="'decks.form.titleLabel' | transloco"
+        [placeholder]="'decks.form.titlePlaceholder' | transloco"
+        [error]="titleErr"
+      />
 
-      <!-- Description -->
-      <div class="flex flex-col gap-1.5">
-        <label for="description" class="text-sm font-medium text-foreground">
-          {{ 'decks.form.descriptionLabel' | transloco }}
-        </label>
-        <textarea
-          formControlName="description"
-          name="description"
-          rows="3"
-          [placeholder]="'decks.form.descriptionPlaceholder' | transloco"
-          class="px-3 py-2 text-sm transition-colors border rounded-lg resize-none bg-overlay border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
-        ></textarea>
-        @if (form.controls.description.invalid && form.controls.description.touched) {
-          @if (form.controls.description.errors?.['maxlength']) {
-            <p class="text-xs text-error">{{ 'decks.form.error.descriptionMax' | transloco }}</p>
-          }
-        }
-      </div>
+      <app-input
+        formControlName="description"
+        [label]="'decks.form.descriptionLabel' | transloco"
+        [placeholder]="'decks.form.descriptionPlaceholder' | transloco"
+        [multiline]="true"
+        [rows]="3"
+      />
 
-      <!-- Category -->
+      <!-- Category — native input para soporte de datalist -->
       <div class="flex flex-col gap-1.5">
-        <label for="category" class="text-sm font-medium text-foreground">
+        <label for="categoryName" class="text-sm font-medium text-foreground">
           {{ 'decks.form.categoryLabel' | transloco }}
         </label>
         <input
+          id="categoryName"
           formControlName="categoryName"
           name="category"
           type="text"
           list="deck-categories"
           [placeholder]="'decks.form.categoryPlaceholder' | transloco"
-          class="px-3 py-2 text-sm transition-colors border rounded-lg bg-overlay border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary"
+          class="w-full rounded-md border-2 bg-surface-alt px-3.5 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground outline-none transition border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary"
         />
         <datalist id="deck-categories">
           @for (cat of categories(); track cat.id) {
             <option [value]="cat.name"></option>
           }
         </datalist>
-        @if (form.controls.categoryName.invalid && form.controls.categoryName.touched) {
-          @if (form.controls.categoryName.errors?.['maxlength']) {
-            <p class="text-xs text-error">{{ 'decks.form.error.categoryMax' | transloco }}</p>
-          }
+        @if (
+          form.controls.categoryName.touched && form.controls.categoryName.hasError('maxlength')
+        ) {
+          <p class="text-xs text-error animate-fade-in">
+            {{ 'decks.form.error.categoryMax' | transloco }}
+          </p>
         }
       </div>
 
       <!-- Footer actions -->
-      <div class="flex justify-end gap-2 pt-3 border-t border-border">
-        <button
-          type="button"
-          (click)="closed.emit()"
-          class="px-4 py-2 text-sm font-medium transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
-        >
+      <div class="flex justify-end gap-2 pt-3">
+        <app-button variant="ghost" type="button" (clicked)="closed.emit()">
           {{ 'decks.form.cancel' | transloco }}
-        </button>
-        <button
-          type="submit"
-          [disabled]="form.invalid || isSaving()"
-          class="px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ (isSaving() ? 'decks.form.saving' : 'decks.form.save') | transloco }}
-        </button>
+        </app-button>
+        <app-button type="submit" [loading]="isSaving()">
+          {{ 'decks.form.save' | transloco }}
+        </app-button>
       </div>
     </form>
   </div>

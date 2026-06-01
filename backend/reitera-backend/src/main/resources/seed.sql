@@ -544,70 +544,89 @@ FROM n;
 -- Cards from Decks 1–3 with FSRS state. States: 1=Learning,
 -- 2=Review, 3=Relearning. Cards with next_review in the past
 -- appear immediately in GET /study/due.
+--
+-- Card lookups join through notes→decks so the query is scoped
+-- by deck title. This prevents "more than one row" errors if the
+-- same question text ever appears in two different decks.
 -- ============================================================
+
+-- Helper: returns the card ID for a given (deck title, question) pair.
+-- Used in study_progress and review_logs to avoid ambiguous lookups.
+CREATE OR REPLACE FUNCTION seed_card_id(p_deck_title TEXT, p_question TEXT)
+RETURNS INTEGER LANGUAGE sql AS $$
+    SELECT c.id
+    FROM cards c
+    JOIN notes n ON c.note_id = n.id
+    JOIN decks d ON n.deck_id = d.id
+    WHERE d.title = p_deck_title
+      AND c.question = p_question
+    LIMIT 1;
+$$;
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = '¿En qué fecha comenzó la Segunda Guerra Mundial?'),
+    seed_card_id('La Segunda Guerra Mundial', '¿En qué fecha comenzó la Segunda Guerra Mundial?'),
     21.5, 4.2, 7, 21, 3, 0, 2, NOW() - INTERVAL '7 days', NOW() + INTERVAL '14 days');  -- Review, not due
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = '¿Qué fue el Día D?'),
+    seed_card_id('La Segunda Guerra Mundial', '¿Qué fue el Día D?'),
     10.3, 5.1, 10, 10, 2, 0, 2, NOW() - INTERVAL '10 days', NOW() - INTERVAL '1 minute');  -- Review, DUE
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'),
+    seed_card_id('La Segunda Guerra Mundial', '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'),
     2.1, 7.4, 3, 3, 4, 1, 3, NOW() - INTERVAL '3 days', NOW() - INTERVAL '30 minutes');  -- Relearning, DUE
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'),
+    seed_card_id('La Segunda Guerra Mundial', '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'),
     1.8, 6.9, 5, 5, 3, 2, 3, NOW() - INTERVAL '5 days', NOW() - INTERVAL '1 hour');  -- Relearning, DUE
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = '¿Qué problema resuelve el patrón Singleton?'),
+    seed_card_id('Patrones de Diseño GoF', '¿Qué problema resuelve el patrón Singleton?'),
     15.2, 3.8, 5, 15, 2, 0, 2, NOW() - INTERVAL '5 days', NOW() + INTERVAL '10 days');  -- Review, not due
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = '¿Qué es el patrón Strategy y cuándo se usa?'),
+    seed_card_id('Patrones de Diseño GoF', '¿Qué es el patrón Strategy y cuándo se usa?'),
     0.8, 4.5, 0, 0, 1, 0, 1, NOW() - INTERVAL '30 minutes', NOW() - INTERVAL '10 minutes');  -- Learning, DUE
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = 'What does "give up" mean?'),
+    seed_card_id('Phrasal Verbs Esenciales', 'What does "give up" mean?'),
     8.7, 4.1, 8, 8, 2, 0, 2, NOW() - INTERVAL '8 days', NOW() - INTERVAL '2 hours');  -- Review, DUE
 
 INSERT INTO study_progress (user_id, card_id, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review, next_review)
 VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    (SELECT id FROM cards WHERE question = 'What does "put off" mean?'),
+    seed_card_id('Phrasal Verbs Esenciales', 'What does "put off" mean?'),
     1.2, 5.3, 0, 0, 1, 0, 1, NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '15 minutes');  -- Learning, DUE
 
 
 -- 7. REVIEW LOGS (ratings: 1=Again, 2=Hard, 3=Good, 4=Easy)
 
 INSERT INTO review_logs (user_id, card_id, rating, elapsed_days, scheduled_days) VALUES
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 3, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 3, 1, 1),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 4, 7, 7),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué fue el Día D?'), 2, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué fue el Día D?'), 3, 1, 1),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 3, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 3, 1, 1),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 4, 3, 3),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 1, 3, 3),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 3, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 1, 5, 5),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 1, 5, 5),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué problema resuelve el patrón Singleton?'), 3, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué problema resuelve el patrón Singleton?'), 4, 5, 5),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = '¿Qué es el patrón Strategy y cuándo se usa?'), 2, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = 'What does "give up" mean?'), 3, 0, 0),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = 'What does "give up" mean?'), 4, 8, 8),
-    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (SELECT id FROM cards WHERE question = 'What does "put off" mean?'), 3, 0, 0);
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 3, 1, 1),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿En qué fecha comenzó la Segunda Guerra Mundial?'), 4, 7, 7),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Qué fue el Día D?'), 2, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Qué fue el Día D?'), 3, 1, 1),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 3, 1, 1),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 4, 3, 3),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Cuál de estas ciudades fue destruida por una bomba atómica en agosto de 1945?'), 1, 3, 3),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 1, 5, 5),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('La Segunda Guerra Mundial',   '¿Quién fue el Primer Ministro británico durante la mayor parte de la SGMU?'), 1, 5, 5),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('Patrones de Diseño GoF',      '¿Qué problema resuelve el patrón Singleton?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('Patrones de Diseño GoF',      '¿Qué problema resuelve el patrón Singleton?'), 4, 5, 5),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('Patrones de Diseño GoF',      '¿Qué es el patrón Strategy y cuándo se usa?'), 2, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('Phrasal Verbs Esenciales',    'What does "give up" mean?'), 3, 0, 0),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('Phrasal Verbs Esenciales',    'What does "give up" mean?'), 4, 8, 8),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', seed_card_id('Phrasal Verbs Esenciales',    'What does "put off" mean?'), 3, 0, 0);
+
+DROP FUNCTION seed_card_id(TEXT, TEXT);
 
 
 COMMIT;

@@ -6,20 +6,16 @@
   </div>
 } @else if (notes().length === 0) {
   <app-empty-state [title]="emptyTitle() | transloco" [subtitle]="emptySubtitle() | transloco">
-    <svg icon lucideBookOpen class="size-8 text-muted" />
+    <svg icon lucideBookOpen class="size-8 text-muted-foreground" />
     @if (showAddAction()) {
-      <button
-        action
-        (click)="addNote.emit()"
-        class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
-      >
+      <app-button action size="sm" (clicked)="addNote.emit()">
         <svg lucidePlus class="size-4" />
         {{ 'deckDetail.addNote' | transloco }}
-      </button>
+      </app-button>
     }
   </app-empty-state>
 } @else {
-  <div class="overflow-x-auto border rounded-xl border-border">
+  <div class="overflow-x-auto border-2 rounded-md border-border">
     <table class="w-full text-sm table-auto">
       <thead>
         <tr class="border-b border-border bg-overlay/50">

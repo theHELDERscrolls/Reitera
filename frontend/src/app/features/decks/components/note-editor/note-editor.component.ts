@@ -1,34 +1,36 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
-  OnDestroy,
   computed,
   effect,
+  ElementRef,
   inject,
   input,
+  OnDestroy,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { markdown } from '@codemirror/lang-markdown';
-import { languages } from '@codemirror/language-data';
 import { Compartment, EditorState } from '@codemirror/state';
+import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { EditorView, keymap } from '@codemirror/view';
+import { languages } from '@codemirror/language-data';
+import { markdown } from '@codemirror/lang-markdown';
 
 import { NoteRequest, NoteResponse, NoteType } from '@core/models/note.model';
-import { ThemeService } from '@core/theme/theme.service';
 import { NoteService } from '@features/decks/services/note.service';
+import { ThemeService } from '@core/theme/theme.service';
 import { ToastService } from '@core/toast/toast.service';
+import AppBadgeComponent from '@shared/components/ui/badge/badge.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 
 const EXPLANATION_SEPARATOR = '===';
 
 @Component({
   selector: 'app-note-editor',
-  imports: [TranslocoPipe],
+  imports: [AppBadgeComponent, AppButtonComponent, TranslocoPipe],
   templateUrl: './note-editor.component.html',
 })
 export class NoteEditorComponent implements AfterViewInit, OnDestroy {
