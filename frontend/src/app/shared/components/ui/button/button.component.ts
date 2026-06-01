@@ -1,5 +1,5 @@
 import { Component, computed, input, output } from '@angular/core';
-import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
+import { LucideDynamicIcon, LucideIconInput, LucideLoaderCircle } from '@lucide/angular';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -7,7 +7,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [LucideDynamicIcon],
+  imports: [LucideDynamicIcon, LucideLoaderCircle],
   templateUrl: './button.component.html',
 })
 export default class AppButtonComponent {
@@ -30,11 +30,11 @@ export default class AppButtonComponent {
   private readonly VARIANT_CLASSES: Record<ButtonVariant, string> = {
     primary:
       'bg-primary text-primary-foreground border-2 border-primary rounded-lg ' +
-      'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--color-border)] ' +
+      'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] ' +
       'active:translate-y-px active:shadow-none',
     secondary:
       'bg-surface text-foreground border-2 border-border rounded-lg ' +
-      'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--color-border)] ' +
+      'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] ' +
       'active:translate-y-px active:shadow-none',
     ghost:
       'bg-transparent text-muted-foreground border-2 border-transparent rounded-lg ' +

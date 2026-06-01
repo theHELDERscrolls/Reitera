@@ -1,7 +1,8 @@
-<div class="flex items-center justify-center min-h-screen p-4 bg-background">
+<div class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-background to-surface">
   <div class="w-full max-w-md">
+    <!-- Header -->
     <div class="mb-8 text-center">
-      <h1 class="text-2xl font-semibold text-foreground">
+      <h1 class="text-3xl font-extrabold text-foreground">
         {{ 'auth.check_email.title' | transloco }}
       </h1>
       <p class="mt-1 text-sm text-muted-foreground">
@@ -9,7 +10,8 @@
       </p>
     </div>
 
-    <div class="relative p-8 border bg-surface rounded-xl border-border">
+    <!-- Card -->
+    <div class="relative p-8 border-2 bg-surface rounded-xl border-border shadow-[4px_4px_0_var(--ctp-mocha-crust)]">
       <app-language-switcher />
 
       @if (email()) {
@@ -39,13 +41,9 @@
             {{ 'auth.check_email.check_spam' | transloco }}
           </p>
 
-          <button
-            type="button"
-            (click)="resend()"
-            class="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 active:opacity-80"
-          >
+          <app-button type="button" [fullWidth]="true" (clicked)="resend()">
             {{ 'auth.check_email.resend' | transloco }}
-          </button>
+          </app-button>
         </div>
       } @else {
         <div class="flex flex-col items-center gap-4 text-center">

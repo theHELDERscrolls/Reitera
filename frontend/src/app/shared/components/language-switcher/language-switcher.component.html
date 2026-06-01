@@ -1,8 +1,8 @@
-<div class="absolute top-2 right-2" data-language-switcher>
+<div class="absolute z-50 top-2 right-2" data-language-switcher>
   <!-- Trigger -->
   <button
     (click)="isOpen.set(!isOpen())"
-    class="flex items-center gap-1 px-2 py-1 text-xs font-medium transition rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-alt"
+    class="flex items-center gap-1 px-2 py-1 text-sm font-semibold transition rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-alt"
     [attr.aria-expanded]="isOpen()"
   >
     <svg lucideEarth class="size-3.5" />
@@ -13,13 +13,13 @@
   <!-- Dropdown -->
   @if (isOpen()) {
     <ul
-      class="absolute right-0 w-32 mt-1 overflow-hidden border rounded-lg shadow-lg top-full border-border bg-surface"
+      class="absolute right-0 w-32 mt-1 overflow-hidden border-2 rounded-lg top-full border-border bg-surface shadow-[3px_3px_0_var(--ctp-mocha-crust)] animate-fade-in"
     >
       @for (lang of languages; track lang.code) {
         <li>
           <button
             (click)="select(lang.code)"
-            class="flex items-center justify-between w-full px-3 py-2 text-xs transition hover:bg-surface-alt"
+            class="flex items-center justify-between w-full px-3 py-2 text-sm font-semibold transition hover:bg-surface-alt"
             [class.text-primary]="lang.code === activeLang"
             [class.text-muted-foreground]="lang.code !== activeLang"
           >
