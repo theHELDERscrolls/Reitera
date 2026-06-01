@@ -2,52 +2,64 @@
   <a
     routerLink="/decks"
     (click)="navItemClicked.emit()"
-    routerLinkActive="bg-overlay text-foreground"
-    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    routerLinkActive="bg-primary text-primary-foreground shadow-[2px_2px_0_var(--ctp-mocha-crust)] hover:bg-primary"
+    class="flex items-center w-full py-2 text-sm transition-all rounded-md min-h-9 text-muted hover:bg-overlay"
+    [class]="isCollapsed() ? 'justify-center' : 'justify-start gap-3 px-3'"
     [attr.title]="isCollapsed() ? ('shell.nav.decks' | transloco) : null"
   >
     <svg lucideWalletCards class="size-4 shrink-0" />
-    @if (!isCollapsed()) {
-      <span class="font-semibold">{{ 'shell.nav.decks' | transloco }}</span>
-    }
+    <span
+      class="overflow-hidden font-semibold transition-all duration-200 whitespace-nowrap"
+      [class]="isCollapsed() ? 'opacity-0 max-w-0' : 'opacity-100 max-w-xs'"
+      >{{ 'shell.nav.decks' | transloco }}</span
+    >
   </a>
 
   <a
     routerLink="/study"
     (click)="navItemClicked.emit()"
-    routerLinkActive="bg-overlay text-foreground"
-    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    routerLinkActive="bg-primary text-primary-foreground shadow-[2px_2px_0_var(--ctp-mocha-crust)] hover:bg-primary"
+    class="flex items-center w-full py-2 text-sm transition-all rounded-md min-h-9 text-muted hover:bg-overlay"
+    [class]="isCollapsed() ? 'justify-center' : 'justify-start gap-3 px-3'"
     [attr.title]="isCollapsed() ? ('shell.nav.study' | transloco) : null"
   >
     <svg lucideBrain class="size-4 shrink-0" />
-    @if (!isCollapsed()) {
-      <span class="font-semibold">{{ 'shell.nav.study' | transloco }}</span>
-    }
+    <span
+      class="overflow-hidden font-semibold transition-all duration-200 whitespace-nowrap"
+      [class]="isCollapsed() ? 'opacity-0 max-w-0' : 'opacity-100 max-w-xs'"
+      >{{ 'shell.nav.study' | transloco }}</span
+    >
   </a>
 
   <a
     routerLink="/cards"
     (click)="navItemClicked.emit()"
-    routerLinkActive="bg-overlay text-foreground"
-    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    routerLinkActive="bg-primary text-primary-foreground shadow-[2px_2px_0_var(--ctp-mocha-crust)] hover:bg-primary"
+    class="flex items-center w-full py-2 text-sm transition-all rounded-md min-h-9 text-muted hover:bg-overlay"
+    [class]="isCollapsed() ? 'justify-center' : 'justify-start gap-3 px-3'"
     [attr.title]="isCollapsed() ? ('shell.nav.cards' | transloco) : null"
   >
     <svg lucideSquareStack class="size-4 shrink-0" />
-    @if (!isCollapsed()) {
-      <span class="font-semibold">{{ 'shell.nav.cards' | transloco }}</span>
-    }
+    <span
+      class="overflow-hidden font-semibold transition-all duration-200 whitespace-nowrap"
+      [class]="isCollapsed() ? 'opacity-0 max-w-0' : 'opacity-100 max-w-xs'"
+      >{{ 'shell.nav.cards' | transloco }}</span
+    >
   </a>
 
   <a
     routerLink="/dashboard"
     (click)="navItemClicked.emit()"
-    routerLinkActive="bg-overlay text-foreground"
-    class="flex items-center w-full gap-3 px-3 py-2 text-sm transition-colors rounded-md min-h-9 text-muted hover:text-foreground hover:bg-overlay"
+    routerLinkActive="bg-primary text-primary-foreground shadow-[2px_2px_0_var(--ctp-mocha-crust)] hover:bg-primary"
+    class="flex items-center w-full py-2 text-sm transition-all rounded-md min-h-9 text-muted hover:bg-overlay"
+    [class]="isCollapsed() ? 'justify-center' : 'justify-start gap-3 px-3'"
     [attr.title]="isCollapsed() ? ('shell.nav.dashboard' | transloco) : null"
   >
     <svg lucideChartBar class="size-4 shrink-0" />
-    @if (!isCollapsed()) {
-      <span class="font-semibold">{{ 'shell.nav.dashboard' | transloco }}</span>
-    }
+    <span
+      class="overflow-hidden font-semibold transition-all duration-200 whitespace-nowrap"
+      [class]="isCollapsed() ? 'opacity-0 max-w-0' : 'opacity-100 max-w-xs'"
+      >{{ 'shell.nav.dashboard' | transloco }}</span
+    >
   </a>
 </nav>

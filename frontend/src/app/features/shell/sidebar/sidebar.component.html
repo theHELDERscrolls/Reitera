@@ -1,6 +1,6 @@
-<!-- ─── DESKTOP SIDEBAR ───────────────────────────────────────────────────── -->
+<!-- DESKTOP SIDEBAR -->
 <aside
-  class="flex-col hidden h-full overflow-hidden transition-all duration-300 ease-in-out border-r md:flex shrink-0 bg-surface border-border"
+  class="flex-col hidden h-full overflow-hidden transition-all duration-300 ease-in-out border-r-2 md:flex shrink-0 bg-surface border-border"
   [class]="isCollapsed() ? 'w-14' : 'w-60'"
 >
   <app-sidebar-header [isCollapsed]="isCollapsed()" (toggled)="toggleCollapse()" />
@@ -8,7 +8,7 @@
   <app-sidebar-footer [isCollapsed]="isCollapsed()" />
 </aside>
 
-<!-- ─── MOBILE OVERLAY ────────────────────────────────────────────────────── -->
+<!-- MOBILE OVERLAY -->
 @if (isMobileOpen()) {
   <div
     class="fixed inset-0 z-40 bg-black/50 md:hidden"
@@ -24,7 +24,7 @@
   <!-- Mobile header -->
   <div class="flex items-center justify-between px-4 border-b h-14 border-border shrink-0">
     <div class="flex items-center gap-2">
-      <svg lucideLibraryBig class="rounded-md p-0.5 size-7 bg-primary shrink-0 text-background" />
+      <img class="rounded-md size-8" src="./reitera_logo.png" alt="reitera_logo" />
       <span class="font-semibold text-foreground">Reitera</span>
     </div>
     <button
