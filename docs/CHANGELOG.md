@@ -5,7 +5,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased]
+## [0.32.0] — 2026-05-28 — feat/55-edit-profile
 
 ### Added
 - **Profile editing** — `ProfileComponent` now includes an inline edit form for `firstName`, `lastName`, and `username`, plus an avatar picker (8 predefined SVG avatars in `public/avatars/`). Selecting and saving an avatar persists the choice in the database (`avatar_id` column, `User` entity) and updates the sidebar footer in real time via `AuthService.refreshCurrentUser()`.
@@ -24,6 +24,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - **Vercel build budget exceeded** — removed `highlight.js` (^11.11.1) and `marked` (^18.0.14) as direct dependencies; both were imported at root level in `app.config.ts`, forcing ~1.08 MB of syntax-highlighting code into the initial bundle (exceeded the 1 MB error budget). Also removed the stale `angular.json` entry for `highlight.js/styles/github-dark-dimmed.min.css`. Initial bundle is now 434 KB.
 - **Markdown code block styling** — replaced the removed `highlight.js` renderer with pure CSS rules in `styles.css`; fenced code blocks render with monospace font, Catppuccin `--color-overlay` background, rounded corners and a subtle border, consistent with the app's dark/light theme. Inline `<code>` spans are tinted with `--color-primary`.
+
+---
+
+## [0.33.0] — 2026-06-01 — feat/56-frontend-testing
+
+### Added
+- **Frontend unit tests** — 74 tests across 9 spec files covering all critical frontend paths, using Angular 21 + Vitest 4 with `provideHttpClient` / `HttpTestingController`:
+  - `auth.service.spec.ts` — constructor session-restore, `login()` (token storage + signal update), `register()`, `logout()` (success / server error / no-refresh-token paths), `getAccessToken()`, `refreshCurrentUser()`, `isLoggedIn` computed
+  - `jwt.interceptor.spec.ts` — Bearer token injection, `/auth/` passthrough, 401 refresh-token rotation, retry with new token, `AuthService.logout()` on missing or expired refresh token, no-refresh on non-401 errors
+  - `auth.guard.spec.ts` / `no-auth.guard.spec.ts` — localStorage-based allow/redirect using real `UrlTree`
+  - `study-session.guard.spec.ts` — bypass flag, no-pending-ratings fast-path, `Observable<boolean>` deactivation flow (confirm / cancel)
+  - `session-backup.service.spec.ts` — signal initialization from localStorage (valid / wrong-version / expired / corrupt), `save()`, `clear()`, `markAutoResume` / `consumeAutoResume` one-shot flag
+  - `study-state.service.spec.ts` — initial signals, `bypassNextGuardCheck` / `consumeBypass` one-shot, `requestDeactivation` Observable, `confirmDeactivation`, `cancelDeactivation`
+  - `decks.service.spec.ts` — `getDecks()` default params + optional `categoryId`, `getCategories()`, `createDeck()`, `updateDeck()`, `deleteDeck()`
+  - `study.service.spec.ts` — `getDueCards()` with all param combinations, `processSession()`
+
+### Fixed
+- **`SessionBackupService` initialization crash** — `load()` called `this.clear()` when finding an expired or version-mismatched backup in localStorage. `clear()` accesses `this.backup.set()`, but `this.backup` does not exist yet because the signal is declared as `readonly backup = signal(this.load())` — `load()` runs as the initializer. Fixed by replacing the three `this.clear()` calls inside `load()` with `localStorage.removeItem(BACKUP_KEY)` directly; `return null` already sets the signal to `null` implicitly.
 
 ---
 

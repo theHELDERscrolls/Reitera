@@ -62,7 +62,27 @@ npm start
 
 The Angular dev server will be available at `http://localhost:4200`.
 
-## 5. Testing the API with Postman
+## 5. Run the Tests
+
+### Frontend
+
+```bash
+cd frontend
+ng test
+```
+
+Runs all 74 unit tests with Vitest + jsdom in a single pass. No database or backend is required — HTTP calls are intercepted by `HttpTestingController`.
+
+### Backend
+
+```bash
+cd backend/reitera-backend
+mvn test
+```
+
+Requires the PostgreSQL container to be running (step 2 above) because the backend uses `hibernate.ddl-auto: none`, native JSONB columns, and `pgcrypto` — none of which an in-memory database supports.
+
+## 6. Testing the API with Postman
 
 Import the collection at `docs/api/reitera-postman-collection.json` into Postman.
 
