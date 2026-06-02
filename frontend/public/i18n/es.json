@@ -409,6 +409,53 @@
         "usernameTaken": "Este nombre de usuario ya está en uso.",
         "saveFailed": "No se pudieron guardar los cambios. Inténtalo de nuevo."
       }
+    },
+    "guide": {
+      "title": "Guía de creación de cards",
+      "subtitle": "Escribe tus notas con sintaxis Markdown en el editor. Opcionalmente añade una explicación tras una línea === — se mostrará después de responder durante el estudio.",
+      "basic": {
+        "label": "Básica",
+        "description": "Una card simple de pregunta y respuesta, separadas por ---. Añade === tras la respuesta para incluir una explicación opcional que se muestra tras revisar.",
+        "cards": "Genera 1 card"
+      },
+      "basicReverse": {
+        "label": "Básica (inversa)",
+        "description": "Igual que Básica, pero el marcador <-> al final también genera una card inversa (respuesta → pregunta). Añade === tras <-> para una explicación opcional.",
+        "cards": "Genera 2 cards"
+      },
+      "cloze": {
+        "label": "Cloze",
+        "description": "Oculta palabras usando {{c1::palabra}}. Números distintos (c1, c2...) generan cards separadas. Añade === al final para una explicación opcional mostrada tras cada hueco.",
+        "cards": "1 card por grupo de eliminación"
+      },
+      "multipleChoice": {
+        "label": "Opción múltiple",
+        "description": "Una pregunta seguida de opciones. Marca la correcta con [x] y las incorrectas con [ ]. Añade === tras las opciones para una explicación opcional.",
+        "cards": "Genera 1 card"
+      }
+    },
+    "tips": {
+      "title": "Tips y aclaraciones",
+      "basic": {
+        "tip1": "El separador --- debe estar en su propia línea, sin ningún otro texto en esa línea.",
+        "tip2": "Si el tipo aparece como Desconocido, comprueba que no haya marcadores <-> o {{...}} accidentales.",
+        "tip3": "Ambas caras admiten Markdown completo: negrita, listas, código en línea, etc."
+      },
+      "basicReverse": {
+        "tip1": "<-> debe ser la última línea antes de ===. Cualquier texto después rompe la detección.",
+        "tip2": "Se generan dos cards: Pregunta → Respuesta y Respuesta → Pregunta.",
+        "tip3": "Ambas caras pueden ser tan largas como necesites — la longitud no afecta a la detección del tipo."
+      },
+      "cloze": {
+        "tip1": "Varios {{c1::...}} en la misma nota pertenecen a una sola card (mismo número de grupo).",
+        "tip2": "No combines {{...}} con marcadores --- o - [x] en la misma nota.",
+        "tip3": "Usa números consecutivos (c1, c2, c3...). Saltarse números puede dar resultados inesperados."
+      },
+      "multipleChoice": {
+        "tip1": "Debe haber exactamente un [x] — la respuesta correcta. Varios [x] rompen la detección.",
+        "tip2": "Las opciones incorrectas usan - [ ] con un espacio entre corchetes, no - [].",
+        "tip3": "No combines opciones con marcadores --- o {{...}} en la misma nota."
+      }
     }
   },
   "dashboard": {

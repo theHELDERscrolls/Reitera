@@ -1,0 +1,23 @@
+<div class="flex flex-col gap-4">
+  <h2 class="text-lg font-semibold text-foreground">{{ 'profile.tips.title' | transloco }}</h2>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    @for (tip of tipItems; track tip.id) {
+      <div
+        class="flex flex-col gap-3 p-4 transition-all border-2 rounded-md hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)]"
+        [class]="tipCardClasses(tip.variant)"
+      >
+        <p class="text-base font-semibold text-primary-foreground">
+          {{ tip.labelKey | transloco }}
+        </p>
+        <ul class="flex flex-col gap-2.5">
+          @for (key of tip.tipKeys; track key) {
+            <li class="flex items-start gap-2 text-sm font-medium text-primary-foreground/80">
+              <svg lucideMinus class="size-3.5 mt-0.5 shrink-0 text-primary-foreground/60" />
+              <span>{{ key | transloco }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+</div>
