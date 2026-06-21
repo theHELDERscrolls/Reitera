@@ -8,6 +8,8 @@ spring:
       maximum-pool-size: 5
       minimum-idle: 1
       connection-timeout: 20000
+      data-source-properties:
+        prepareThreshold: 0
   jpa:
     show-sql: false
 

@@ -4,11 +4,13 @@ updates:
     directory: "/backend/reitera-backend"
     schedule:
       interval: "weekly"
+    target-branch: "develop"
 
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
+    target-branch: "develop"
     groups:
       angular:
         patterns:
