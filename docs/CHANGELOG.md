@@ -5,6 +5,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.0.0] — 2026-06-21 — First production release
+
+### Added
+- **Neo-brutalism UI redesign** — global design system applied across the entire app:
+  - All borders unified to `border-3` and `rounded-xs` (no exceptions except `rounded-full` on avatars)
+  - Static box-shadow system: buttons use a press pattern (shadow shifts diagonally toward cursor on hover, disappears on active); cards use a lift pattern (shadow grows and element rises on hover)
+  - Shadow colors use `--ctp-mocha-crust` token for both dark and light themes
+  - `AppButtonComponent` — press shadow pattern per size (sm/md/lg); ghost variant gains visible `border-border` instead of transparent border
+  - `AppInputComponent` — `border-3 rounded-xs` across all states
+  - `AppCardComponent` — static `shadow-[3px_3px_0_0]` always visible; interactive lift pattern with `hover:-translate-y-1` and `hover:shadow-[6px_6px_0_0]`
+  - `AvatarComponent` — `border-3` (keeps `rounded-full`)
+  - Toast — `rounded-xs border-3 shadow-[3px_3px_0_0]`
+  - ConfirmDialog — `rounded-xs border-3` modal card and buttons with press pattern
+  - Sidebar nav — `transition-[box-shadow,transform]` replaces `transition-all` to prevent color fade on `routerLinkActive` changes
+  - Profile, deck cards, study hub, study session, dashboard all updated to the new system
+- **Light mode as default** — new users get light theme instead of dark; `ThemeService.resolveInitialTheme()` returns `'light'` unconditionally when no stored preference exists
+
+### Changed
+- **Spring Boot 4.0.6 → 4.1.0** — includes ~35 bug fixes (SSL, CORS, NullPointerException in reactor-netty, memory leak in meter registry cleanup, HikariCP datasource property support)
+- **`typescript-eslint` 8.60.1 → 8.61.1** — bugfix release (ESLint plugin false positive fixes)
+- **Backend cleanup** — removed unused imports from `StudyProgressRepository`
+- **Tailwind translate values** — all arbitrary `[Npx]` translate values replaced with Tailwind scale utilities (`[2px]`→`0.5`, `[3px]`→`0.75`, `[4px]`→`1`, `[6px]`→`1.5`, `[8px]`→`2`)
+- `frontend/package.json` version bumped to `1.0.0`
+- `backend/reitera-backend/pom.xml` version bumped to `1.0.0`
+
+---
+
 ## [0.32.0] — 2026-05-28 — feat/55-edit-profile
 
 ### Added
