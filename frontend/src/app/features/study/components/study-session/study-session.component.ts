@@ -9,6 +9,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 import { environment } from '@environments/environment';
 import {
@@ -33,7 +34,9 @@ type SessionState = 'loading' | 'recovery' | 'empty' | 'active' | 'complete';
 
 @Component({
   selector: 'app-study-session',
+  host: { class: 'flex flex-col h-full' },
   imports: [
+    AppButtonComponent,
     ConfirmDialogComponent,
     EmptyStateComponent,
     LucideArrowLeft,

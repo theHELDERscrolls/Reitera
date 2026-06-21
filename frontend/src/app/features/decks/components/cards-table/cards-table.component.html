@@ -1,25 +1,21 @@
 @if (isLoading()) {
   <div class="flex flex-col gap-2">
     @for (_ of [1, 2, 3, 4, 5]; track $index) {
-      <div class="rounded-lg h-14 bg-overlay animate-pulse"></div>
+      <div class="rounded-xs h-14 bg-overlay animate-pulse"></div>
     }
   </div>
 } @else if (notes().length === 0) {
   <app-empty-state [title]="emptyTitle() | transloco" [subtitle]="emptySubtitle() | transloco">
-    <svg icon lucideBookOpen class="size-8 text-muted" />
+    <svg icon lucideBookOpen class="size-8 text-muted-foreground" />
     @if (showAddAction()) {
-      <button
-        action
-        (click)="addNote.emit()"
-        class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
-      >
+      <app-button action size="sm" (clicked)="addNote.emit()">
         <svg lucidePlus class="size-4" />
         {{ 'deckDetail.addNote' | transloco }}
-      </button>
+      </app-button>
     }
   </app-empty-state>
 } @else {
-  <div class="overflow-x-auto border rounded-xl border-border">
+  <div class="overflow-x-auto border-3 rounded-xs border-border">
     <table class="w-full text-sm table-auto">
       <thead>
         <tr class="border-b border-border bg-overlay/50">
@@ -98,14 +94,14 @@
               <div class="flex items-center justify-end gap-1">
                 <button
                   (click)="edit.emit(note)"
-                  class="p-1.5 rounded-md text-muted hover:text-primary hover:bg-primary/10 transition-colors"
+                  class="p-1.5 rounded-xs text-muted hover:text-primary hover:bg-primary/10 transition-colors"
                   [attr.aria-label]="'deckDetail.cards.editNote' | transloco"
                 >
                   <svg lucideSquarePen class="size-4" />
                 </button>
                 <button
                   (click)="delete.emit(note)"
-                  class="p-1.5 rounded-md text-muted hover:text-error hover:bg-error/10 transition-colors"
+                  class="p-1.5 rounded-xs text-muted hover:text-error hover:bg-error/10 transition-colors"
                   [attr.aria-label]="'deckDetail.cards.deleteNote' | transloco"
                 >
                   <svg lucideTrash2 class="size-4" />

@@ -3,23 +3,24 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { CardType } from '@core/models/card.model';
 import { NoteType } from '@core/models/note.model';
+import AppBadgeComponent, { BadgeVariant } from '../ui/badge/badge.component';
 
 type BadgeType = CardType | NoteType;
 
-const COLOR_MAP: Record<string, string> = {
-  BASIC: 'bg-info/10 text-info',
-  BASIC_REVERSE: 'bg-accent-2/10 text-accent-2',
-  CLOZE: 'bg-accent-4/10 text-accent-4',
-  MULTIPLE_CHOICE: 'bg-success/10 text-success',
+const VARIANT_MAP: Record<string, BadgeVariant> = {
+  BASIC: 'info',
+  BASIC_REVERSE: 'accent-2',
+  CLOZE: 'accent-4',
+  MULTIPLE_CHOICE: 'success',
 };
 
 @Component({
   selector: 'app-card-type-badge',
-  imports: [TranslocoPipe],
+  imports: [TranslocoPipe, AppBadgeComponent],
   templateUrl: './card-type-badge.component.html',
 })
 export class CardTypeBadgeComponent {
   readonly type = input.required<BadgeType>();
 
-  readonly badgeClass = computed(() => COLOR_MAP[this.type()] ?? 'bg-overlay text-muted');
+  readonly badgeVariant = computed<BadgeVariant>(() => VARIANT_MAP[this.type()] ?? 'default');
 }

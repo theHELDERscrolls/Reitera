@@ -1,0 +1,7 @@
+<div [class]="containerClasses()">
+  @if (src()) {
+    <img [src]="src()!" [alt]="name() || 'Avatar'" class="w-full h-full object-cover" />
+  } @else {
+    <div [class]="initialsClasses()">{{ initials() }}</div>
+  }
+</div>

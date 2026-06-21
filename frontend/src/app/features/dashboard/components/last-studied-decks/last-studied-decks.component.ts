@@ -5,10 +5,11 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { CardCountBadgesComponent } from '@shared/components/card-count-badges/card-count-badges.component';
 import { LastStudiedDeck } from '@core/models/dashboard.model';
+import AppBadgeComponent from '@shared/components/ui/badge/badge.component';
 
 @Component({
   selector: 'app-last-studied-decks',
-  imports: [RouterLink, TranslocoPipe, LucidePlay, CardCountBadgesComponent],
+  imports: [RouterLink, TranslocoPipe, LucidePlay, CardCountBadgesComponent, AppBadgeComponent],
   templateUrl: './last-studied-decks.component.html',
 })
 export class LastStudiedDecksComponent {

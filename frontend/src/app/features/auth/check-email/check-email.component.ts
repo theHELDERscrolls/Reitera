@@ -5,10 +5,11 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { EmailVerificationService } from '../services/email-verification.service';
 import { ToastService } from '@core/toast/toast.service';
 import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 
 @Component({
   selector: 'app-check-email',
-  imports: [RouterLink, TranslocoPipe, LanguageSwitcherComponent],
+  imports: [RouterLink, TranslocoPipe, LanguageSwitcherComponent, AppButtonComponent],
   templateUrl: './check-email.component.html',
 })
 export default class CheckEmailComponent {

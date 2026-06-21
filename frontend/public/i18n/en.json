@@ -409,6 +409,53 @@
         "usernameTaken": "This username is already taken.",
         "saveFailed": "Could not save changes. Please try again."
       }
+    },
+    "guide": {
+      "title": "Card creation guide",
+      "subtitle": "Write notes using Markdown syntax in the editor. Optionally add an explanation after a === line — it will be shown to you after answering during study.",
+      "basic": {
+        "label": "Basic",
+        "description": "A simple question and answer card, separated by ---. Add === after the answer to include an optional explanation shown post-review.",
+        "cards": "Generates 1 card"
+      },
+      "basicReverse": {
+        "label": "Basic (reverse)",
+        "description": "Like Basic, but the <-> marker at the end also generates a reverse card (answer → question). Add === after <-> for an optional explanation.",
+        "cards": "Generates 2 cards"
+      },
+      "cloze": {
+        "label": "Cloze",
+        "description": "Hide specific words using {{c1::word}}. Different numbers (c1, c2...) generate separate cards. Add === at the end for an optional explanation shown after each deletion.",
+        "cards": "1 card per deletion group"
+      },
+      "multipleChoice": {
+        "label": "Multiple choice",
+        "description": "A question followed by options. Mark the correct answer with [x] and wrong ones with [ ]. Add === after the options for an optional explanation.",
+        "cards": "Generates 1 card"
+      }
+    },
+    "tips": {
+      "title": "Tips & clarifications",
+      "basic": {
+        "tip1": "The --- separator must be on its own line with no other text on that line.",
+        "tip2": "If the type shows as Unknown, check for accidental <-> or {{...}} markers.",
+        "tip3": "Both sides support full Markdown: bold, lists, inline code, and more."
+      },
+      "basicReverse": {
+        "tip1": "<-> must be the very last line before ===. Any text after it breaks detection.",
+        "tip2": "Two cards are created: Question → Answer and Answer → Question.",
+        "tip3": "Both sides can be as long as needed — length does not affect type detection."
+      },
+      "cloze": {
+        "tip1": "Multiple {{c1::...}} in the same note all belong to one card (same group number).",
+        "tip2": "Do not mix {{...}} with --- or - [x] markers in the same note.",
+        "tip3": "Use consecutive numbers (c1, c2, c3...). Skipping numbers may produce unexpected results."
+      },
+      "multipleChoice": {
+        "tip1": "There must be exactly one [x] — the correct answer. Multiple [x] break detection.",
+        "tip2": "Wrong options use - [ ] with a space between the brackets, not - [].",
+        "tip3": "Do not mix options with --- or {{...}} markers in the same note."
+      }
     }
   },
   "dashboard": {

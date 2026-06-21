@@ -2,8 +2,8 @@
   <div class="relative inline-block" data-category-filter>
     <button
       (click)="toggleFilter()"
-      class="flex min-w-3xs justify-between items-center gap-2 px-3 py-1.5 text-sm font-medium transition-colors border rounded-lg bg-surface border-border hover:border-border-strong"
-      [class]="activeCategory() ? 'text-foreground' : 'text-muted'"
+      class="flex min-w-3xs justify-between items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all border-3 rounded-xs bg-surface border-border hover:border-border-strong shadow-[4px_4px_0_0_var(--ctp-mocha-crust)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_var(--ctp-mocha-crust)] active:translate-x-1 active:translate-y-1 active:shadow-none"
+      [class]="activeCategory() ? 'text-foreground' : 'text-muted-foreground'"
     >
       <span>{{ activeCategory() ?? ('decks.filter.all' | transloco) }}</span>
       <svg
@@ -15,16 +15,16 @@
 
     @if (isFilterOpen()) {
       <div
-        class="absolute left-0 z-20 mt-1 overflow-hidden border rounded-lg shadow-lg bg-surface border-border min-w-3xs"
+        class="absolute left-0 z-20 mt-1 overflow-hidden border-3 border-border rounded-xs bg-surface shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] min-w-3xs animate-fade-in"
       >
         <div class="flex flex-wrap gap-1.5 p-2.5">
           <button
             (click)="selectCategory(null)"
-            class="px-2.5 py-1 text-xs font-medium transition-colors rounded-full"
+            class="px-2.5 py-1 text-xs font-medium transition-colors rounded-xs"
             [class]="
               activeCategory() === null
-                ? 'bg-primary text-background'
-                : 'bg-overlay text-muted hover:text-foreground'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-overlay text-muted-foreground hover:text-foreground'
             "
           >
             {{ 'decks.filter.all' | transloco }}
@@ -32,11 +32,11 @@
           @for (cat of categories(); track cat.id) {
             <button
               (click)="selectCategory(cat.name)"
-              class="px-2.5 py-1 text-xs font-medium transition-colors rounded-full"
+              class="px-2.5 py-1 text-xs font-medium transition-colors rounded-xs"
               [class]="
                 activeCategory() === cat.name
-                  ? 'bg-primary text-background'
-                  : 'bg-overlay text-muted hover:text-foreground'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-overlay text-muted-foreground hover:text-foreground'
               "
             >
               {{ cat.name }}

@@ -409,6 +409,53 @@
         "usernameTaken": "Este nome de utilizador já está em uso.",
         "saveFailed": "Não foi possível guardar as alterações. Tente novamente."
       }
+    },
+    "guide": {
+      "title": "Guia de criação de cards",
+      "subtitle": "Escreva notas com sintaxe Markdown no editor. Opcionalmente adicione uma explicação após uma linha === — ela será exibida após a resposta durante o estudo.",
+      "basic": {
+        "label": "Básico",
+        "description": "Um card simples de pergunta e resposta, separadas por ---. Adicione === após a resposta para incluir uma explicação opcional exibida após a revisão.",
+        "cards": "Gera 1 card"
+      },
+      "basicReverse": {
+        "label": "Básico (inverso)",
+        "description": "Igual ao Básico, mas o marcador <-> ao final gera também um card inverso (resposta → pergunta). Adicione === após <-> para uma explicação opcional.",
+        "cards": "Gera 2 cards"
+      },
+      "cloze": {
+        "label": "Cloze",
+        "description": "Oculte palavras usando {{c1::palavra}}. Números distintos (c1, c2...) geram cards separados. Adicione === ao final para uma explicação opcional exibida após cada lacuna.",
+        "cards": "1 card por grupo de eliminação"
+      },
+      "multipleChoice": {
+        "label": "Múltipla escolha",
+        "description": "Uma pergunta seguida de opções. Marque a correta com [x] e as incorretas com [ ]. Adicione === após as opções para uma explicação opcional.",
+        "cards": "Gera 1 card"
+      }
+    },
+    "tips": {
+      "title": "Dicas e esclarecimentos",
+      "basic": {
+        "tip1": "O separador --- deve estar em sua própria linha, sem nenhum outro texto nessa linha.",
+        "tip2": "Se o tipo aparecer como Desconhecido, verifique se não há marcadores acidentais <-> ou {{...}}.",
+        "tip3": "Ambos os lados suportam Markdown completo: negrito, listas, código inline, etc."
+      },
+      "basicReverse": {
+        "tip1": "<-> deve ser a última linha antes de ===. Qualquer texto depois quebra a detecção.",
+        "tip2": "Dois cards são criados: Pergunta → Resposta e Resposta → Pergunta.",
+        "tip3": "Ambos os lados podem ser tão longos quanto necessário — o comprimento não afeta a detecção."
+      },
+      "cloze": {
+        "tip1": "Vários {{c1::...}} na mesma nota pertencem a um único card (mesmo número de grupo).",
+        "tip2": "Não misture {{...}} com marcadores --- ou - [x] na mesma nota.",
+        "tip3": "Use números consecutivos (c1, c2, c3...). Pular números pode produzir resultados inesperados."
+      },
+      "multipleChoice": {
+        "tip1": "Deve haver exatamente um [x] — a resposta correta. Vários [x] quebrarão a detecção.",
+        "tip2": "As opções incorretas usam - [ ] com um espaço entre os colchetes, não - [].",
+        "tip3": "Não misture opções com marcadores --- ou {{...}} na mesma nota."
+      }
     }
   },
   "dashboard": {

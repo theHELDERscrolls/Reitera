@@ -9,10 +9,13 @@ import {
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { LucideLock } from '@lucide/angular';
 
 import { PasswordResetService } from '../services/password-reset.service';
 import { ToastService } from '@core/toast/toast.service';
 import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 
 const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
 
@@ -24,7 +27,14 @@ const matchPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors |
 
 @Component({
   selector: 'app-reset-password',
-  imports: [ReactiveFormsModule, RouterLink, TranslocoPipe, LanguageSwitcherComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoPipe,
+    LanguageSwitcherComponent,
+    AppButtonComponent,
+    AppInputComponent,
+  ],
   templateUrl: './reset-password.component.html',
 })
 export default class ResetPasswordComponent implements OnInit {
@@ -39,6 +49,7 @@ export default class ResetPasswordComponent implements OnInit {
 
   readonly loading = signal(false);
   readonly tokenState = signal<'valid' | 'missing' | 'expired' | 'invalid'>('valid');
+  readonly lockIcon = LucideLock;
 
   readonly form = this.fb.group(
     {
@@ -63,7 +74,6 @@ export default class ResetPasswordComponent implements OnInit {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      
       return;
     }
 

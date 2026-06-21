@@ -1,20 +1,11 @@
 <div [class]="containerClass()">
-  <span [class]="badgeBase() + ' bg-accent-1/20 text-accent-1'">
-    {{ newCount() }}
-    @if (newLabel()) {
-      {{ newLabel() }}
-    }
-  </span>
-  <span [class]="badgeBase() + ' bg-accent-5/20 text-accent-5'">
-    {{ dueCount() }}
-    @if (dueLabel()) {
-      {{ dueLabel() }}
-    }
-  </span>
-  <span [class]="badgeBase() + ' bg-error/20 text-error'">
-    {{ relearningCount() }}
-    @if (relearningLabel()) {
-      {{ relearningLabel() }}
-    }
-  </span>
+  <app-badge variant="accent-1" [size]="badgeSize()">
+    {{ newCount() }}{{ newLabel() ? ' ' + newLabel() : '' }}
+  </app-badge>
+  <app-badge variant="accent-5" [size]="badgeSize()">
+    {{ dueCount() }}{{ dueLabel() ? ' ' + dueLabel() : '' }}
+  </app-badge>
+  <app-badge variant="error" [size]="badgeSize()">
+    {{ relearningCount() }}{{ relearningLabel() ? ' ' + relearningLabel() : '' }}
+  </app-badge>
 </div>

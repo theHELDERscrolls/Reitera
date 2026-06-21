@@ -9,6 +9,8 @@ import {
 } from '@lucide/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
+import AppBadgeComponent from '@shared/components/ui/badge/badge.component';
+import { CardCountBadgesComponent } from '@shared/components/card-count-badges/card-count-badges.component';
 import { DeckResponse } from '@core/models/deck.model';
 
 const ACCENT_COLORS = [
@@ -23,6 +25,8 @@ const ACCENT_COLORS = [
 @Component({
   selector: 'app-deck-card',
   imports: [
+    AppBadgeComponent,
+    CardCountBadgesComponent,
     DatePipe,
     LucideCalendar,
     LucideSquarePen,
