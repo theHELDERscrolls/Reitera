@@ -1,14 +1,21 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
-import { TranslocoPipe } from '@jsverse/transloco';
 import { MarkdownComponent } from 'ngx-markdown';
+import { TranslocoPipe } from '@jsverse/transloco';
 
-import { DueCard } from '@core/models/study.model';
 import { CardExplanationComponent } from '../card-explanation/card-explanation.component';
+import { DueCard } from '@core/models/study.model';
 import { RatingButtonsComponent } from '../rating-buttons/rating-buttons.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 
 @Component({
   selector: 'app-study-card',
-  imports: [TranslocoPipe, CardExplanationComponent, RatingButtonsComponent, MarkdownComponent],
+  imports: [
+    AppButtonComponent,
+    TranslocoPipe,
+    CardExplanationComponent,
+    RatingButtonsComponent,
+    MarkdownComponent,
+  ],
   templateUrl: './study-card.component.html',
 })
 export class StudyCardComponent {

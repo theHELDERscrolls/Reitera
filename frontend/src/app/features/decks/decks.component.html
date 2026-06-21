@@ -21,14 +21,10 @@
 <div class="flex flex-col gap-6">
   <!-- Page header -->
   <app-page-header [title]="'decks.title' | transloco" [subtitle]="'decks.subtitle' | transloco">
-    <button
-      action
-      (click)="openCreateDialog()"
-      class="flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
-    >
+    <app-button action size="sm" (clicked)="openCreateDialog()">
       <svg lucidePlus class="size-4" />
       <span class="hidden sm:flex">{{ 'decks.newDeck' | transloco }}</span>
-    </button>
+    </app-button>
   </app-page-header>
 
   <!-- Category filter -->
@@ -42,45 +38,38 @@
   @if (isLoading()) {
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       @for (_ of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track $index) {
-        <div class="rounded-lg h-36 bg-overlay animate-pulse"></div>
+        <div class="rounded-xs h-44 bg-overlay animate-pulse"></div>
       }
     </div>
   }
 
   <!-- Deck grid -->
   @if (!isLoading()) {
-    @if (decks().length > 0) {
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        @for (deck of decks(); track deck.id) {
-          <app-deck-card
-            [deck]="deck"
-            (edit)="openEditDialog($event)"
-            (delete)="requestDeleteDeck($event)"
-          />
-        }
-      </div>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (deck of decks(); track deck.id) {
+        <app-deck-card
+          [deck]="deck"
+          (edit)="openEditDialog($event)"
+          (delete)="requestDeleteDeck($event)"
+        />
+      }
 
-      <!-- Pagination -->
+      <!-- Add new deck card -->
+      <button
+        (click)="openCreateDialog()"
+        class="flex flex-col items-center justify-center gap-2 transition-all border-3 border-dashed rounded-xs cursor-pointer min-h-44 border-border text-muted-foreground hover:border-primary hover:text-primary"
+      >
+        <svg lucidePlus class="size-6" />
+        <span class="text-sm font-medium">{{ 'decks.newDeck' | transloco }}</span>
+      </button>
+    </div>
+
+    @if (decks().length > 0) {
       <app-pagination
         [currentPage]="currentPage()"
         [totalPages]="totalPages()"
         (pageChange)="goToPage($event)"
       />
-    } @else {
-      <!-- Empty state -->
-      <app-empty-state
-        [title]="'decks.empty.title' | transloco"
-        [subtitle]="'decks.empty.subtitle' | transloco"
-      >
-        <svg icon lucidePlus class="size-8 text-muted" />
-        <button
-          action
-          (click)="openCreateDialog()"
-          class="px-4 py-2 text-sm font-medium transition-colors rounded-lg bg-primary text-background hover:bg-primary/90"
-        >
-          {{ 'decks.newDeck' | transloco }}
-        </button>
-      </app-empty-state>
     }
   }
 </div>

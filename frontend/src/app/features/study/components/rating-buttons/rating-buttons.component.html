@@ -1,14 +1,8 @@
 <div class="grid grid-cols-2 gap-2 pt-2">
-  <button
-    (click)="rate.emit(1)"
-    class="py-3 text-xs font-bold transition-colors rounded-lg bg-error/10 text-error hover:bg-error/20"
-  >
+  <app-button variant="danger" [fullWidth]="true" (clicked)="rate.emit(1)">
     {{ 'study.session.rating.forgotten' | transloco }}
-  </button>
-  <button
-    (click)="rate.emit(3)"
-    class="py-3 text-xs font-bold transition-colors rounded-lg bg-accent-5/10 text-accent-5 hover:bg-accent-5/20"
-  >
+  </app-button>
+  <app-button variant="success" [fullWidth]="true" (clicked)="rate.emit(3)">
     {{ 'study.session.rating.remembered' | transloco }}
-  </button>
+  </app-button>
 </div>

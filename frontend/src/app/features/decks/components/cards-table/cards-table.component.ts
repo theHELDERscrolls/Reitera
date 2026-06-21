@@ -10,6 +10,7 @@ import {
 import { Component, input, output } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 import { NoteResponse } from '@core/models/note.model';
 import { CardTypeBadgeComponent } from '@shared/components/card-type-badge/card-type-badge.component';
 import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
@@ -17,6 +18,7 @@ import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.
 @Component({
   selector: 'app-cards-table',
   imports: [
+    AppButtonComponent,
     CardTypeBadgeComponent,
     EmptyStateComponent,
     LucideArrowDown,

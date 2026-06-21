@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
-
-// Note: Optional import kept for potential future use even though unused currently
 
 public interface StudyProgressRepository extends JpaRepository<StudyProgress, StudyProgressId> {
 

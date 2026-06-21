@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideX } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 import { Category } from '@core/models/category.model';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { DeckRequest, DeckResponse } from '@core/models/deck.model';
@@ -11,7 +13,7 @@ import { ToastService } from '@core/toast/toast.service';
 
 @Component({
   selector: 'app-deck-form',
-  imports: [ReactiveFormsModule, TranslocoPipe, LucideX, ConfirmDialogComponent],
+  imports: [AppButtonComponent, AppInputComponent, ConfirmDialogComponent, LucideX, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './deck-form.component.html',
 })
 export class DeckFormComponent {

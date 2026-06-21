@@ -1,6 +1,3 @@
-<span
-  class="inline-flex text-xs px-2 py-0.5 rounded-full font-medium"
-  [class]="badgeClass()"
->
+<app-badge [variant]="badgeVariant()">
   {{ 'deckDetail.cards.type.' + type().toLowerCase() | transloco }}
-</span>
+</app-badge>

@@ -3,10 +3,11 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { AuthService } from '@core/auth/auth.service';
 import { ProfilePanelComponent } from './profile-panel/profile-panel.component';
+import AppAvatarComponent from '@shared/components/ui/avatar/avatar.component';
 
 @Component({
   selector: 'app-sidebar-footer',
-  imports: [TranslocoPipe, ProfilePanelComponent],
+  imports: [TranslocoPipe, ProfilePanelComponent, AppAvatarComponent],
   templateUrl: './sidebar-footer.component.html',
 })
 export class SidebarFooterComponent {

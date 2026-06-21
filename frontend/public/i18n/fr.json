@@ -409,6 +409,53 @@
         "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
         "saveFailed": "Impossible d'enregistrer les modifications. Veuillez réessayer."
       }
+    },
+    "guide": {
+      "title": "Guide de création de cartes",
+      "subtitle": "Rédigez vos notes avec la syntaxe Markdown dans l'éditeur. Ajoutez optionnellement une explication après une ligne === — elle sera affichée après la réponse pendant la révision.",
+      "basic": {
+        "label": "Basique",
+        "description": "Une carte simple question-réponse, séparées par ---. Ajoutez === après la réponse pour inclure une explication optionnelle affichée après la révision.",
+        "cards": "Génère 1 carte"
+      },
+      "basicReverse": {
+        "label": "Basique (inverse)",
+        "description": "Comme Basique, mais le marqueur <-> à la fin génère aussi une carte inverse (réponse → question). Ajoutez === après <-> pour une explication optionnelle.",
+        "cards": "Génère 2 cartes"
+      },
+      "cloze": {
+        "label": "Lacunaire",
+        "description": "Masquez des mots avec {{c1::mot}}. Des numéros différents (c1, c2...) génèrent des cartes séparées. Ajoutez === à la fin pour une explication optionnelle.",
+        "cards": "1 carte par groupe de suppression"
+      },
+      "multipleChoice": {
+        "label": "Choix multiple",
+        "description": "Une question suivie d'options. Marquez la bonne réponse avec [x] et les mauvaises avec [ ]. Ajoutez === après les options pour une explication optionnelle.",
+        "cards": "Génère 1 carte"
+      }
+    },
+    "tips": {
+      "title": "Conseils et précisions",
+      "basic": {
+        "tip1": "Le séparateur --- doit être sur sa propre ligne, sans aucun autre texte sur cette ligne.",
+        "tip2": "Si le type s'affiche comme Inconnu, vérifiez l'absence accidentelle de marqueurs <-> ou {{...}}.",
+        "tip3": "Les deux faces acceptent Markdown complet : gras, listes, code en ligne, etc."
+      },
+      "basicReverse": {
+        "tip1": "<-> doit être la toute dernière ligne avant ===. Tout texte après casse la détection.",
+        "tip2": "Deux cartes sont créées : Question → Réponse et Réponse → Question.",
+        "tip3": "Les deux faces peuvent être aussi longues que nécessaire — la longueur n'affecte pas la détection."
+      },
+      "cloze": {
+        "tip1": "Plusieurs {{c1::...}} dans la même note appartiennent à une seule carte (même numéro de groupe).",
+        "tip2": "Ne mélangez pas {{...}} avec des marqueurs --- ou - [x] dans la même note.",
+        "tip3": "Utilisez des numéros consécutifs (c1, c2, c3...). Sauter des numéros peut produire des résultats inattendus."
+      },
+      "multipleChoice": {
+        "tip1": "Il doit y avoir exactement un [x] — la bonne réponse. Plusieurs [x] cassent la détection.",
+        "tip2": "Les mauvaises options utilisent - [ ] avec un espace entre les crochets, pas - [].",
+        "tip3": "Ne mélangez pas les options avec des marqueurs --- ou {{...}} dans la même note."
+      }
     }
   },
   "dashboard": {

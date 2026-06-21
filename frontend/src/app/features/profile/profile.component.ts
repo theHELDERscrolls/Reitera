@@ -1,27 +1,40 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideCalendar, LucideExternalLink, LucideMail, LucidePencil, LucideUser, LucideX } from '@lucide/angular';
+import {
+  LucideCalendar,
+  LucideExternalLink,
+  LucideGitBranch,
+  LucideMail,
+  LucidePencil,
+  LucideX,
+} from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { AuthService } from '@core/auth/auth.service';
-import { ToastService } from '@core/toast/toast.service';
+import { ProfileGuideComponent } from './components/profile-guide/profile-guide.component';
 import { ProfileService } from '@features/profile/services/profile.service';
-import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { ProfileTipsComponent } from './components/profile-tips/profile-tips.component';
+import { ToastService } from '@core/toast/toast.service';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 
 @Component({
   selector: 'app-profile',
   imports: [
+    AppButtonComponent,
+    AppInputComponent,
     DatePipe,
-    ReactiveFormsModule,
-    PageHeaderComponent,
-    TranslocoPipe,
-    LucideUser,
-    LucideMail,
     LucideCalendar,
+    LucideExternalLink,
+    LucideGitBranch,
+    LucideMail,
     LucidePencil,
     LucideX,
-    LucideExternalLink,
+    ProfileGuideComponent,
+    ProfileTipsComponent,
+    ReactiveFormsModule,
+    TranslocoPipe,
   ],
   templateUrl: './profile.component.html',
 })
@@ -56,7 +69,9 @@ export default class ProfileComponent {
 
   readonly displayName = computed(() => {
     const user = this.currentUser();
+
     if (!user) return '';
+
     return `${user.firstName} ${user.lastName}`.trim();
   });
 
@@ -74,7 +89,9 @@ export default class ProfileComponent {
 
   startEdit(): void {
     const user = this.currentUser();
+
     if (!user) return;
+
     this.form.setValue({
       firstName: user.firstName,
       lastName: user.lastName,
@@ -93,6 +110,7 @@ export default class ProfileComponent {
     if (this.form.invalid || this.isSaving()) return;
 
     const { firstName, lastName, username } = this.form.getRawValue();
+
     this.isSaving.set(true);
 
     this.profileService
@@ -111,7 +129,9 @@ export default class ProfileComponent {
         },
         error: (err) => {
           this.isSaving.set(false);
+
           const is409 = err?.status === 409;
+
           this.toastService.error(
             this.transloco.translate(
               is409 ? 'profile.form.error.usernameTaken' : 'profile.form.error.saveFailed',

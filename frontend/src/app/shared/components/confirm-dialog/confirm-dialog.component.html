@@ -7,14 +7,14 @@
 >
   <!-- Modal card -->
   <div
-    class="flex flex-col w-full max-w-sm border shadow-xl bg-surface rounded-xl border-border"
+    class="flex flex-col w-full max-w-sm border-3 shadow-[6px_6px_0_0_var(--ctp-mocha-crust)] bg-surface rounded-xs border-border"
     tabindex="0"
     (click)="$event.stopPropagation()"
     (keydown)="$event.stopPropagation()"
   >
     <!-- Body -->
     <div class="flex flex-col items-center gap-3 p-6 text-center">
-      <div class="flex items-center justify-center rounded-full size-12" [class]="config().iconBg">
+      <div class="flex items-center justify-center rounded-xs size-12" [class]="config().iconBg">
         @if (variant() === 'success') {
           <svg lucideCircleCheck class="size-6" [class]="config().iconColor" />
         } @else if (variant() === 'info') {
@@ -33,13 +33,13 @@
     <div class="flex gap-2 px-6 pb-6">
       <button
         (click)="cancelled.emit()"
-        class="flex-1 px-4 py-2 text-sm font-medium transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay"
+        class="flex-1 px-4 py-2 text-sm font-medium transition-colors rounded-xs text-muted hover:text-foreground hover:bg-overlay"
       >
         {{ 'common.cancel' | transloco }}
       </button>
       <button
         (click)="confirmed.emit()"
-        class="flex-1 px-4 py-2 text-sm font-medium transition-colors rounded-lg"
+        class="flex-1 px-4 py-2 text-sm font-medium transition-all rounded-xs"
         [class]="config().buttonClass"
       >
         {{ confirmLabel() ?? ('common.confirm' | transloco) }}
