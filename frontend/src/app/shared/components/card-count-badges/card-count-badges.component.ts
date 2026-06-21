@@ -1,8 +1,11 @@
 import { Component, computed, input } from '@angular/core';
 
+import { BadgeSize } from '@shared/components/ui/badge/badge.component';
+import AppBadgeComponent from '@shared/components/ui/badge/badge.component';
+
 @Component({
   selector: 'app-card-count-badges',
-  imports: [],
+  imports: [AppBadgeComponent],
   templateUrl: './card-count-badges.component.html',
 })
 export class CardCountBadgesComponent {
@@ -15,13 +18,8 @@ export class CardCountBadgesComponent {
   readonly dueLabel = input<string>();
   readonly relearningLabel = input<string>();
 
+  readonly badgeSize = computed<BadgeSize>(() => this.size() === 'lg' ? 'md' : 'sm');
   readonly containerClass = computed(() =>
     this.size() === 'lg' ? 'flex items-center gap-2' : 'flex items-center gap-1.5',
-  );
-
-  readonly badgeBase = computed(() =>
-    this.size() === 'lg'
-      ? 'px-2 py-0.5 text-xs sm:text-base font-semibold rounded'
-      : 'min-w-7 px-1 py-0.5 text-xs font-semibold text-center rounded',
   );
 }

@@ -57,13 +57,10 @@ backend/reitera-backend/src/main/resources/init.sql
 | `roles` | RBAC roles (STUDENT, ADMIN) |
 | `users` | User accounts |
 | `categories` | High-level groupings for decks |
-| `tags` | User-scoped labels for cards; unique per `(name, owner_id)` |
 | `decks` | Flashcard collections |
 | `cards` | Individual flashcards (JSONB answers) |
-| `card_tags` | Many-to-many: cards ↔ tags |
 | `study_progress` | FSRS state per (user, card) pair |
 | `review_logs` | Immutable history of every review action |
-| `user_deck_subscriptions` | Community deck subscriptions |
 | `refresh_tokens` | Active user sessions (SHA-256 hashed tokens, expiry, revoked flag) |
 
 > **Note:** `init.sql` enables the `pgcrypto` extension, which is required by `seed.sql` to generate BCrypt password hashes at runtime.
@@ -89,7 +86,6 @@ backend/reitera-backend/src/main/resources/seed.sql
 | Email | Password | Role |
 |---|---|---|
 | `alumno@reitera.com` | `reitera2026` | STUDENT |
-| `admin@reitera.com` | `reitera2026` | ADMIN |
 
 > Passwords are hashed at runtime using **pgcrypto's BCrypt** (`gen_salt('bf', 10)`), producing a hash compatible with Spring Security's `BCryptPasswordEncoder`.
 
@@ -98,9 +94,9 @@ backend/reitera-backend/src/main/resources/seed.sql
 | Resource | Count | Details |
 |---|---|---|
 | Categories | 3 | Historia de España · Programación Java · Inglés B2 |
-| Tags | 4 | importante · difícil · repaso · vocabulario |
 | Decks | 4 | Two under "Historia de España" (enables category-scoped study demo), one under "Programación Java", one under "Inglés B2" |
-| Cards | 48 | BASIC(27) · MULTIPLE_CHOICE(12) · TRUE_FALSE(9) — 12 per deck |
+| Notes | 20 | Source content; auto-generates child cards via `NoteParser` |
+| Cards | 20+ | Generated from notes; types: BASIC · BASIC_REVERSE · CLOZE · MULTIPLE_CHOICE (BASIC_REVERSE and CLOZE notes produce multiple cards each) |
 | StudyProgress | 10 | Deck 1: 6 records (Learning, Review, Relearning); Decks 2 & 3: 2 records each |
 | ReviewLogs | 20 | Historical review entries for all 10 progress records |
 

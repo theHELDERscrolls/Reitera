@@ -27,6 +27,7 @@ Access tokens are valid for **15 minutes**. When expired, call `POST /api/v1/aut
 | `400` | Validation error, bad request body, or business rule violation |
 | `401` | Token missing, expired, or invalid — re-authenticate |
 | `404` | Resource not found **or** resource exists but belongs to another user (IDOR prevention — both cases return the same 404) |
+| `410` | Gone — password reset link has expired (1-hour TTL); request a new one |
 | `429` | Rate limit exceeded on auth endpoints — wait the number of seconds in `Retry-After` before retrying |
 | `500` | Internal server error — details are intentionally hidden |
 
@@ -36,11 +37,11 @@ Access tokens are valid for **15 minutes**. When expired, call `POST /api/v1/aut
 
 | File | Endpoints |
 |------|-----------|
-| [auth.md](auth.md) | Register · Login · Refresh token · Logout |
+| [auth.md](auth.md) | Register · Login · Refresh token · Logout · Email verify · Resend verification · Forgot password · Reset password |
 | [decks.md](decks.md) | Deck CRUD · Deck stats |
-| [cards.md](cards.md) | Card CRUD · All four card types |
-| [users.md](users.md) | Authenticated user profile |
+| [notes.md](notes.md) | Note CRUD · Auto-generates cards from Markdown content |
+| [cards.md](cards.md) | Card listing (cross-deck) · CardResponseDTO shape |
+| [users.md](users.md) | User profile · Profile editing (personal data + avatar) |
 | [categories.md](categories.md) | Category listing (autocomplete) |
-| [tags.md](tags.md) | Tag listing · Cards by tag |
 | [study.md](study.md) | Due cards · Submit study session (FSRS-6) |
 | [dashboard.md](dashboard.md) | Stats badges · Activity heatmap · Last studied decks |

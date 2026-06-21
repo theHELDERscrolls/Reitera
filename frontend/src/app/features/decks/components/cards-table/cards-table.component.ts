@@ -10,15 +10,15 @@ import {
 import { Component, input, output } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { CardResponse } from '@core/models/card.model';
-import { CardStateBadgeComponent } from '@shared/components/card-state-badge/card-state-badge.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import { NoteResponse } from '@core/models/note.model';
 import { CardTypeBadgeComponent } from '@shared/components/card-type-badge/card-type-badge.component';
 import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-cards-table',
   imports: [
-    CardStateBadgeComponent,
+    AppButtonComponent,
     CardTypeBadgeComponent,
     EmptyStateComponent,
     LucideArrowDown,
@@ -33,17 +33,21 @@ import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.
   templateUrl: './cards-table.component.html',
 })
 export class CardsTableComponent {
-  readonly cards = input.required<CardResponse[]>();
+  readonly notes = input.required<NoteResponse[]>();
   readonly isLoading = input.required<boolean>();
   readonly sortDir = input.required<'asc' | 'desc'>();
-  readonly sortField = input.required<'question' | 'type'>();
+  readonly sortField = input.required<'type' | 'createdAt'>();
 
   readonly emptyTitle = input<string>('deckDetail.cards.empty.title');
   readonly emptySubtitle = input<string>('deckDetail.cards.empty.subtitle');
   readonly showAddAction = input<boolean>(true);
 
-  readonly addCard = output<void>();
-  readonly delete = output<CardResponse>();
-  readonly edit = output<CardResponse>();
-  readonly sort = output<'question' | 'type'>();
+  readonly addNote = output<void>();
+  readonly delete = output<NoteResponse>();
+  readonly edit = output<NoteResponse>();
+  readonly sort = output<'type' | 'createdAt'>();
+
+  firstLine(content: string): string {
+    return content.split('\n').find((l) => l.trim()) ?? '';
+  }
 }

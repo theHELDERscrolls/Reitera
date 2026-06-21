@@ -5,9 +5,242 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased]
-### Planned
-- Deck import / export (JSON format) — deferred, tracked in issue #16
+## [1.0.0] — 2026-06-21 — First production release
+
+### Added
+- **Neo-brutalism UI redesign** — global design system applied across the entire app:
+  - All borders unified to `border-3` and `rounded-xs` (no exceptions except `rounded-full` on avatars)
+  - Static box-shadow system: buttons use a press pattern (shadow shifts diagonally toward cursor on hover, disappears on active); cards use a lift pattern (shadow grows and element rises on hover)
+  - Shadow colors use `--ctp-mocha-crust` token for both dark and light themes
+  - `AppButtonComponent` — press shadow pattern per size (sm/md/lg); ghost variant gains visible `border-border` instead of transparent border
+  - `AppInputComponent` — `border-3 rounded-xs` across all states
+  - `AppCardComponent` — static `shadow-[3px_3px_0_0]` always visible; interactive lift pattern with `hover:-translate-y-1` and `hover:shadow-[6px_6px_0_0]`
+  - `AvatarComponent` — `border-3` (keeps `rounded-full`)
+  - Toast — `rounded-xs border-3 shadow-[3px_3px_0_0]`
+  - ConfirmDialog — `rounded-xs border-3` modal card and buttons with press pattern
+  - Sidebar nav — `transition-[box-shadow,transform]` replaces `transition-all` to prevent color fade on `routerLinkActive` changes
+  - Profile, deck cards, study hub, study session, dashboard all updated to the new system
+- **Light mode as default** — new users get light theme instead of dark; `ThemeService.resolveInitialTheme()` returns `'light'` unconditionally when no stored preference exists
+
+### Changed
+- **Spring Boot 4.0.6 → 4.1.0** — includes ~35 bug fixes (SSL, CORS, NullPointerException in reactor-netty, memory leak in meter registry cleanup, HikariCP datasource property support)
+- **`typescript-eslint` 8.60.1 → 8.61.1** — bugfix release (ESLint plugin false positive fixes)
+- **Backend cleanup** — removed unused imports from `StudyProgressRepository`
+- **Tailwind translate values** — all arbitrary `[Npx]` translate values replaced with Tailwind scale utilities (`[2px]`→`0.5`, `[3px]`→`0.75`, `[4px]`→`1`, `[6px]`→`1.5`, `[8px]`→`2`)
+- `frontend/package.json` version bumped to `1.0.0`
+- `backend/reitera-backend/pom.xml` version bumped to `1.0.0`
+
+---
+
+## [0.32.0] — 2026-05-28 — feat/55-edit-profile
+
+### Added
+- **Profile editing** — `ProfileComponent` now includes an inline edit form for `firstName`, `lastName`, and `username`, plus an avatar picker (8 predefined SVG avatars in `public/avatars/`). Selecting and saving an avatar persists the choice in the database (`avatar_id` column, `User` entity) and updates the sidebar footer in real time via `AuthService.refreshCurrentUser()`.
+- **`PUT /api/v1/users/me`** — new endpoint that updates personal data and avatar; enforces username uniqueness (409 Conflict if taken). Accepts `{firstName, lastName, username, avatarId}`.
+- **`ProfileService`** (`features/profile/services/profile.service.ts`) — wraps `PUT /api/v1/users/me`.
+- **`UpdateUserRequestDTO`** — new backend request record with Bean Validation constraints.
+- **`avatar_id VARCHAR(50)`** — new nullable column added to the `users` table in `init.sql`.
+- **Avatar sidebar** — `SidebarFooterComponent` now shows the user's selected avatar SVG; falls back to the initial-letter circle when no avatar is set.
+- **GitHub footer** — profile page includes a card-style link to the repository.
+
+### Changed
+- **`UserResponseDTO`** — `roleName` field removed; `avatarId` field added. Role is system-level and no longer exposed in the profile API response.
+- **`User` model** (`core/models/user.model.ts`) — `roleName` removed; `avatarId?: string | null` added.
+- **Profile i18n** — `profile.role` key removed from all four language files (`en`, `es`, `fr`, `pt`); new keys added under `profile.form.*` and `profile.form.error.*` for edit form labels and validation messages.
+
+### Fixed
+- **Vercel build budget exceeded** — removed `highlight.js` (^11.11.1) and `marked` (^18.0.14) as direct dependencies; both were imported at root level in `app.config.ts`, forcing ~1.08 MB of syntax-highlighting code into the initial bundle (exceeded the 1 MB error budget). Also removed the stale `angular.json` entry for `highlight.js/styles/github-dark-dimmed.min.css`. Initial bundle is now 434 KB.
+- **Markdown code block styling** — replaced the removed `highlight.js` renderer with pure CSS rules in `styles.css`; fenced code blocks render with monospace font, Catppuccin `--color-overlay` background, rounded corners and a subtle border, consistent with the app's dark/light theme. Inline `<code>` spans are tinted with `--color-primary`.
+
+---
+
+## [0.33.0] — 2026-06-01 — feat/56-frontend-testing
+
+### Added
+- **Frontend unit tests** — 74 tests across 9 spec files covering all critical frontend paths, using Angular 21 + Vitest 4 with `provideHttpClient` / `HttpTestingController`:
+  - `auth.service.spec.ts` — constructor session-restore, `login()` (token storage + signal update), `register()`, `logout()` (success / server error / no-refresh-token paths), `getAccessToken()`, `refreshCurrentUser()`, `isLoggedIn` computed
+  - `jwt.interceptor.spec.ts` — Bearer token injection, `/auth/` passthrough, 401 refresh-token rotation, retry with new token, `AuthService.logout()` on missing or expired refresh token, no-refresh on non-401 errors
+  - `auth.guard.spec.ts` / `no-auth.guard.spec.ts` — localStorage-based allow/redirect using real `UrlTree`
+  - `study-session.guard.spec.ts` — bypass flag, no-pending-ratings fast-path, `Observable<boolean>` deactivation flow (confirm / cancel)
+  - `session-backup.service.spec.ts` — signal initialization from localStorage (valid / wrong-version / expired / corrupt), `save()`, `clear()`, `markAutoResume` / `consumeAutoResume` one-shot flag
+  - `study-state.service.spec.ts` — initial signals, `bypassNextGuardCheck` / `consumeBypass` one-shot, `requestDeactivation` Observable, `confirmDeactivation`, `cancelDeactivation`
+  - `decks.service.spec.ts` — `getDecks()` default params + optional `categoryId`, `getCategories()`, `createDeck()`, `updateDeck()`, `deleteDeck()`
+  - `study.service.spec.ts` — `getDueCards()` with all param combinations, `processSession()`
+
+### Fixed
+- **`SessionBackupService` initialization crash** — `load()` called `this.clear()` when finding an expired or version-mismatched backup in localStorage. `clear()` accesses `this.backup.set()`, but `this.backup` does not exist yet because the signal is declared as `readonly backup = signal(this.load())` — `load()` runs as the initializer. Fixed by replacing the three `this.clear()` calls inside `load()` with `localStorage.removeItem(BACKUP_KEY)` directly; `return null` already sets the signal to `null` implicitly.
+
+---
+
+## [0.31.0] — 2026-05-28 — feat/54-note-based-card-system-md
+
+### Added
+- **Note module (backend)** — `Note` entity, `NoteController`, `NoteService`, `NoteParser`, `NoteRepository` under `modules/note/`
+  - Notes are the source content from which cards are generated automatically via Markdown parsing
+  - `NoteParser` detects the note type from content markers and produces `CardData` records; detection priority: CLOZE > MULTIPLE_CHOICE > BASIC_REVERSE > BASIC > UNKNOWN
+  - Smart merge on update: if the type is unchanged, existing cards are updated in-place by key (`clozeIndex` for CLOZE, `ordinal` for all others) so `StudyProgress` rows survive; if the type changes, cards are replaced and FSRS state resets
+  - 5 endpoints: `POST /api/v1/decks/{deckId}/notes` (201), `GET /api/v1/decks/{deckId}/notes` (paginated), `GET /api/v1/decks/{deckId}/notes/{noteId}`, `PUT /api/v1/decks/{deckId}/notes/{noteId}`, `DELETE /api/v1/decks/{deckId}/notes/{noteId}` (204)
+  - `NoteRequestDTO` — `content` (required, max 10 000 chars) + `explanation` (optional, max 2 000 chars)
+  - `NoteResponseDTO` — `id`, `deckId`, `type`, `content`, `explanation`, `cardCount`, `createdAt`
+- **Two new card types**: `BASIC_REVERSE` (generates front + reverse cards from a single note) and `CLOZE` (one card per `{{cN::}}` deletion); `MULTIPLE_CHOICE` retained; `TRUE_FALSE` removed (see below)
+- **`NoteEditorComponent`** (`features/decks/components/note-editor/`) — CodeMirror-based Markdown editor with live type detection, conflict validation, create/edit modes, and theme-aware dark mode; sends note to `NoteService`
+- **`NoteService`** (`features/decks/services/note.service.ts`) — wraps all 5 note API endpoints
+- **`CardExplanationComponent`** (`features/study/components/card-explanation/`) — collapsible explanation panel that renders Markdown via `ngx-markdown`
+- **`note.model.ts`** added to `core/models/` — exports `NoteRequest`, `NoteResponse`, `NoteType`
+- **Study session Markdown rendering** — `StudyCardComponent` and `CardExplanationComponent` now use `ngx-markdown` (`MarkdownComponent`) to render card content and explanations
+- `cards` table gains `note_id` FK column (`INTEGER NOT NULL REFERENCES notes(id) ON DELETE CASCADE`) and `ordinal` column for sibling card ordering
+- `notes` table added to `init.sql` with `deck_id` FK, `type`, `content`, `explanation`, `created_at`
+
+### Removed
+- **`TRUE_FALSE` card type** — removed from `NoteParser`, `CardType` frontend union, `CardTypeBadgeComponent`, and all type filter options; existing data using this type is no longer writable
+- **Direct card CRUD endpoints** (`POST/PUT/DELETE /api/v1/decks/{deckId}/cards`) — cards are now managed exclusively through the note system; `CardController` deleted; `CardListController` (`GET /api/v1/cards`) is retained
+
+### Changed
+- `CardResponseDTO` gains `noteId` field (ID of the parent note)
+- `CardType` TypeScript union narrowed from `BASIC | MULTIPLE_CHOICE | TRUE_FALSE` to `BASIC | BASIC_REVERSE | CLOZE | MULTIPLE_CHOICE`
+- `CardTypeBadgeComponent` updated with color slots for `BASIC_REVERSE` (`accent-2`) and `CLOZE` (`accent-4`)
+- `DeckDetailComponent` — card form replaced with `NoteEditorComponent`
+- `frontend/package.json` version bumped to `0.31.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.31.0`
+- `NoteParserTest` (21 tests) — unit tests for all `detectType`, `hasConflict` and `parse` paths across the four note types
+- `NoteServiceTest` (11 tests) — unit tests for `createNote`, `updateNote`, `deleteNote`, `getNotesByDeck` and `getNoteById`; covers UNKNOWN content, conflicting markers, ownership and not-found errors
+- `NoteControllerTest` (8 tests) — slice tests for all 5 endpoints: 201/401/400 on POST, 200 on GET list, 200/404 on GET single, 200 on PUT, 204 on DELETE
+
+---
+
+## [0.30.0] — 2026-05-27 — feat/53-study-session-persistence
+
+### Added
+- **Session backup** — after each card rating, `SessionBackupService` writes a `SessionBackup` snapshot to `localStorage` (`reitera_session_backup`). Backups expire after 24 hours and carry a `version: '1'` guard for forward-compatibility.
+- **Recovery flow** — on load, `StudySessionComponent` checks for an existing backup that matches the current scope (`deckId` / `categoryId`). If found, a `'recovery'` state is shown instead of fetching due cards; the user can submit the recovered session immediately or discard it and start fresh.
+- **Hub recovery banner** — `StudyHubComponent` shows a `SessionRecoveryNoticeComponent` banner at the top of the page when `SessionBackupService.backup()` is non-null, letting the user resume or discard the pending backup without entering a session first.
+- **Conflict modal** — `StudyComponent` detects when the user navigates to a different deck/category than an existing backup and shows a `warning` `ConfirmDialogComponent`; clearing the backup is required to proceed.
+- **Logout guard bypass** — `ProfilePanelComponent.logout()` now checks `hasPendingRatings()` before calling `authService.logout()`. If true, it triggers the deactivation dialog; only after the user confirms does it call `bypassNextGuardCheck()` and then `authService.logout()`, preventing the route guard from showing a second dialog.
+- **Deactivation guard** — `studySessionGuard` (`CanDeactivateFn`) in `core/guards/study-session.guard.ts` blocks navigation away from `/study` while ratings are pending; shows a `warning` `ConfirmDialogComponent` before allowing the user to leave.
+- **`beforeunload` beacon** — `StudySessionComponent` registers a `beforeunload` listener that fires `navigator.sendBeacon` to `POST /api/v1/study/sessions` when the tab is closed mid-session with ratings in memory, as a best-effort last-resort save.
+- `SessionRecoveryNoticeComponent` — new reusable component at `features/study/components/session-recovery-notice/`; renders a warning card with a title, description, and two equal-width buttons (Discard / Resume); replaces duplicated inline markup in both `StudyHubComponent` and `StudySessionComponent`.
+- `StudyStateService` — new singleton service tracking `hasPendingRatings` (signal) and coordinating the async confirm-or-cancel deactivation flow via an RxJS `Subject`; also exposes `bypassNextGuardCheck()` / `consumeBypass()` one-shot flag for the logout flow.
+- `SessionBackup` interface added to `core/models/study.model.ts`.
+- `study.session.deactivateDialog.*`, `study.session.recovery.*`, `study.hub.recovery.*`, and `study.conflict.*` i18n keys added to all four language files (EN, ES, FR, PT).
+
+### Changed
+- `StudyService.processSession` — cards not found or failing scope verification are now **silently skipped** instead of throwing `ResourceNotFoundException` / `IllegalArgumentException`; supports recovery submissions that may reference deleted cards. `cardsReviewed` in the response now reflects only actually processed cards (may be less than submitted ratings).
+- `StudySessionComponent` — `SessionState` type extended with `'recovery'`; inputs extended with `deckName` and `categoryName` (passed via query params from `StudyHubComponent`); recovery state now uses `SessionRecoveryNoticeComponent` instead of inline markup.
+- `StudyHubComponent` — study links now include `deckName` / `categoryName` as query params so the backup can store a human-readable name for the recovery prompt; recovery banner added using the new `SessionRecoveryNoticeComponent`.
+- `SessionBackupService` — added reactive `backup` signal initialised from `localStorage` at construction time (single source of truth for hub and session); `save()` and `clear()` keep the signal in sync; added `markAutoResume()` / `consumeAutoResume()` one-shot flag so the hub can navigate directly to the session skipping the recovery dialog.
+- `StudyServiceTest` — two new tests: `processSession_withMissingCard_skipsItAndReturnsZero` and `processSession_withCardFromWrongDeck_skipsItAndReturnsZero`.
+- `frontend/package.json` version bumped to `0.30.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.30.0`
+
+---
+
+## [0.29.0] — 2026-05-26 — feat/120-two-button-rating-system
+
+### Changed
+- Study session rating system simplified from 4 buttons (Again / Hard / Good / Easy) to 2 buttons — **Forgotten** (rating 1) and **Remembered** (rating 3); reduces cognitive friction and produces more consistent FSRS input data
+- **Option-A requeue strategy**: forgotten cards are always re-inserted at the end of the session queue with no maximum re-queue limit; the session ends naturally only when every card has been remembered
+- Progress bar now counts cards whose last rating is 3 (Remembered), reaching 100% exactly when the session ends — previously counted cards seen at least once
+- `CardRatingDTO` — `@Max` constraint reduced from 4 to 3; rating 2 also rejected at the service level with an explicit `IllegalArgumentException` in `StudyService.processSession`
+- `CardRating` TypeScript interface — `rating` type narrowed from `1 | 2 | 3 | 4` to `1 | 3`
+- `RatingButtonsComponent` / `StudyCardComponent` — output type narrowed to `1 | 3`; `againCount` signal removed; `ratings` Map retyped as `Map<number, 1 | 3>` (eliminates `as` cast in `submitSession`)
+- i18n keys `again`, `hard`, `good`, `easy` replaced by `forgotten` and `remembered` in all four language files (EN, ES, FR, PT)
+- `FsrsServiceTest` — renamed `schedule_newCard_againRating_schedulesEarlierThaEasy` → `schedule_newCard_forgottenRating_schedulesEarlierThanRemembered`; rating 4 replaced with rating 3
+- `frontend/package.json` version bumped to `0.29.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.29.0`
+
+### What does NOT change
+- `FsrsService` algorithm — receives an `int`; `W[1]`, `W[3]`, `hardPenalty` (W[15]), `easyBonus` (W[16]) become inert parameters but cause no errors; all FSRS math remains intact
+- Card state transitions (Learning → Review, Relearning → Review) — still driven by the algorithm output
+- `study_progress` and `review_logs` table schemas — historical ratings 2 / 4 in `review_logs` remain valid; no migration needed
+- Dashboard stats — count FSRS states, not ratings
+
+---
+
+## [0.28.0] — 2026-05-25 — chore/tag-roles-and-public-decks-update
+
+### Removed
+- Tag system — `Tag` entity, `tags` and `card_tags` tables, `TagService`, `TagController`, `TagRepository`, `NewTagDTO`, `TagResponseDTO` deleted; removes `GET /api/v1/tags` and `GET /api/v1/tags/{tagId}/cards` endpoints
+- `tagIds` and `newTags` fields removed from `CardRequestDTO`; `tags` field removed from `CardResponseDTO`; inline tag find-or-create and orphan cleanup logic removed from `CardService`
+- `tagId` filter param removed from `GET /api/v1/cards`; `CardSpecification.hasTag()` removed
+- Public deck visibility — `is_public` column removed from `decks` table; `isPublic` field removed from `DeckRequestDTO` and `DeckResponseDTO`; `VisibilityBadgeComponent` deleted
+- `user_deck_subscriptions` table and associated `UserDeckSubscription`, `UserDeckSubscriptionId`, `UserDeckSubscriptionRepository` deleted (planned public deck download feature abandoned)
+- Frontend `tag.model.ts`, `TagPillComponent`, tag combobox from `CardFormComponent`, tag filter from `CardListComponent`, `getTags()` from `CardsService` and `DeckDetailService`
+
+### Changed
+- `seed.sql` — `is_public` column removed from all deck inserts; demo tag and card_tag inserts removed
+- `truncate.sql` — `tags`, `card_tags`, `user_deck_subscriptions` entries removed
+- `TagServiceTest` and `TagControllerTest` deleted; `CardServiceTest`, `StudyServiceTest` updated to remove tag-related assertions — total test count reduced from ~137 to ~126
+- `frontend/package.json` version bumped to `0.28.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.28.0`
+
+---
+
+## [0.27.0] — 2026-05-25 — feat/51-forgot-reset-password-flow
+
+### Added
+- Forgot password / reset password flow (issue #113)
+- `core/email/PasswordResetService` — generates UUID token, SHA-256 hashes it before storage, saves hash + 1h expiry; `sendResetToken` uses `ifPresent` to silently ignore unknown emails (anti-enumeration); `resetPassword` nullifies token fields after use (single-use guarantee)
+- `TokenExpiredException` — new exception mapped to `410 Gone` by `GlobalExceptionHandler`; distinct from 400 so the frontend can show a targeted "link expired" message
+- `POST /api/v1/auth/forgot-password` — always returns 200 regardless of whether the email exists; rate-limited (5 req/min per IP)
+- `POST /api/v1/auth/reset-password` — validates token (400 invalid/used, 410 expired), encodes new password, nullifies token; rate-limited
+- `ForgotPasswordDTO` and `ResetPasswordDTO` records with Bean Validation constraints; `ResetPasswordDTO.newPassword` enforces the same strength regex as registration
+- `UserRepository.findByPasswordResetToken(String)` — Spring Data query for hash-based token lookup
+- `password_reset_token VARCHAR(64) UNIQUE` and `password_reset_token_expires_at TIMESTAMP` columns added to `users` table in `init.sql`
+- HTML reset email: Catppuccin Latte palette, "Reset password" CTA button, "This link expires in 1 hour" copy, fallback text link; sent via Resend SDK (`@Async`)
+- Frontend `PasswordResetService` — `forgotPassword(data)` and `resetPassword(data)` wrapping the two new endpoints
+- `ForgotPasswordComponent` at `/auth/forgot-password` — email form; after submit shows a deliberately vague static message regardless of whether the email was found
+- `ResetPasswordComponent` at `/auth/reset-password?token=X` — reads token from query params on `ngOnInit`; handles 4 states via `@switch (tokenState())`: `valid` (form), `missing` (no token param), `expired` (410), `invalid` (400)
+- "Forgot your password?" link added to `LoginComponent` between the password field and submit button
+- `ForgotPasswordRequest` and `ResetPasswordRequest` interfaces added to `auth.model.ts`
+- `auth.login.forgot_password`, `auth.forgot_password.*` and `auth.reset_password.*` i18n keys added to `en.json`, `es.json`, `fr.json`, `pt.json`
+- `PasswordResetServiceTest` — 5 unit tests covering: silent ignore on unknown email, token save + email send on known email, 400 on invalid token, 410 on expired token, happy path (encode + nullify)
+- `AuthControllerTest` — 5 new slice tests for both endpoints and all error cases
+
+### Changed
+- `RateLimitFilter` — `/forgot-password` and `/reset-password` added to `RATE_LIMITED_PATHS`
+- `frontend/package.json` version bumped to `0.27.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.27.0`
+
+---
+
+## [0.26.0] — 2026-05-22 — feat/50-mail-verification
+
+### Added
+- Email verification flow: users must verify their email before logging in
+- `core/email/EmailVerificationService` — generates UUID token, SHA-256 hashes it before storage, saves hash + 24h expiry; `verifyToken` is `@Transactional` to prevent race conditions on concurrent requests
+- `GET /api/v1/auth/verify?token=` — verifies the token and activates the account; 400 for invalid or expired token
+- `POST /api/v1/auth/resend-verification` — resends the verification email; always 200 (anti-enumeration); rate-limited per `ip:path`
+- `DataConflictException` — new exception returning 409 Conflict for duplicate email/username on registration; replaces the former generic 400
+- HTML email template for verification: Catppuccin Latte palette (`#8839ef` mauve), centered CTA button, fallback text link, sent via Resend SDK
+- `app.base-url` config property drives the verification link; `http://localhost:4200/auth` in dev, `https://reitera.vercel.app/auth` in prod
+- Frontend `EmailVerificationService` — `verifyEmail(token)` and `resendEmail(email)` wrapping the two new endpoints
+- `CheckEmailComponent` at `/auth/check-email` — post-registration screen with destination email, spam hint, resend button, and fallback state for direct navigation
+- `VerifyComponent` at `/auth/verify` — auto-triggers verification on load; spinner while in-flight; error state with email input and resend form for invalid/expired tokens
+- `auth.check_email.*` and `auth.verify.*` i18n keys added to `en.json`, `es.json`, `fr.json`, `pt.json`
+- `ResendVerificationRequest` interface added to `auth.model.ts`
+
+### Fixed
+- `AuthService.register()` was auto-logging in via `switchMap` after registration — now fails because unverified users cannot log in; simplified to return `Observable<void>`
+- Verification link pointed to `/verify` instead of `/auth/verify` — corrected by appending `/auth` to `app.base-url`
+- `RateLimitFilter` bucket key was `ip` only — now `ip:path`, preventing a `/login` attack from exhausting the `/register` rate limit
+
+### Changed
+- Registration conflict returns **409 Conflict** (was 400) — frontend detects `err.status === 409` and shows a warning toast instead of a generic error
+- `seed.sql` — admin user removed; only `alumno@reitera.com` demo account remains
+- `application-prod.yml` — `app.base-url` set to `https://reitera.vercel.app/auth`
+- `frontend/package.json` version bumped to `0.26.0`
+- `backend/reitera-backend/pom.xml` version bumped to `0.26.0`
+
+---
+
+## [0.25.1] — 2026-05-14 — fix/memory-leak
+
+### Security
+- Registration conflict responses now return a single generic message (`"The provided data is invalid or already in use"`) regardless of whether the email or the username was already taken — prevents user enumeration by observing distinct error messages; issue #100
+- `RateLimitFilter` bucket store migrated from `ConcurrentHashMap` to a Caffeine `LoadingCache` with 10-minute expiration after last access — inactive IPs are evicted automatically, eliminating unbounded memory growth under sustained unique-IP traffic; issue #100
+
+### Changed
+- `backend/reitera-backend/pom.xml` version bumped to `0.25.1`; `caffeine` added as dependency
 
 ---
 

@@ -4,14 +4,14 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Angular](https://img.shields.io/badge/Angular-21-red?logo=angular)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-green?logo=springboot)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.0-green?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
 
 ## What is Reitera?
 
 Reitera is a web application for learning with flashcards using spaced repetition. It implements the **FSRS-6** algorithm — the same science behind Anki — to schedule card reviews at the optimal moment before you forget them.
 
-Cards support three types: basic (front/back), multiple choice, and true/false. Progress is tracked per user per card, so two people studying the same deck each have independent learning curves.
+Cards support four types: basic (front/back), basic reverse (front→back and back→front), cloze deletion, and multiple choice. Progress is tracked per user per card, so two people studying the same deck each have independent learning curves.
 
 ## Live demo
 
@@ -22,7 +22,7 @@ Cards support three types: basic (front/back), multiple choice, and true/false. 
 | Layer      | Technology                                                                                   |
 | ---------- | -------------------------------------------------------------------------------------------- |
 | Frontend   | Angular 21 — standalone components, signals, Transloco i18n, Tailwind CSS                    |
-| Backend    | Spring Boot 4.0.3 — stateless JWT auth (15 min access + 7 day refresh), Spring Security, JPA |
+| Backend    | Spring Boot 4.1.0 — stateless JWT auth (15 min access + 7 day refresh), Spring Security, JPA |
 | Database   | PostgreSQL 16 — JSONB for card variants, manual schema management                            |
 | Dev DB     | Docker Compose                                                                               |
 | Deployment | Vercel (frontend) · Render (backend) · Supabase (database)                                   |
@@ -31,7 +31,7 @@ Cards support three types: basic (front/back), multiple choice, and true/false. 
 
 ### Prerequisites
 
-- Node.js 22 LTS, Angular CLI 21
+- Node.js 24 LTS, Angular CLI 21
 - Java 21, Maven 3.9+
 - Docker (for the local database)
 

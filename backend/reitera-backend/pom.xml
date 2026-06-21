@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.6</version>
+        <version>4.1.0</version>
         <relativePath/>
     </parent>
     <groupId>com.helderruiz</groupId>
     <artifactId>reitera-backend</artifactId>
-    <version>0.25.0</version>
+    <version>1.0.0</version>
     <name>Reitera</name>
-    <description>Spaced repetition flashcard application (TFG)</description>
+    <description>Spaced repetition flashcard application</description>
     <url/>
     <licenses>
         <license/>
@@ -116,6 +116,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.resend</groupId>
+            <artifactId>resend-java</artifactId>
+            <version>4.13.0</version>
         </dependency>
     </dependencies>
 

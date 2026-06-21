@@ -21,3 +21,16 @@ export interface AuthResponse {
 export interface RefreshRequest {
   refreshToken: string;
 }
+
+export interface ResendVerificationRequest {
+  email: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}

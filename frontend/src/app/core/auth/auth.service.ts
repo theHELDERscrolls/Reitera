@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { environment } from '@environments/environment';
@@ -30,10 +30,8 @@ export class AuthService {
       .pipe(tap((response) => this.handleAuthSuccess(response)));
   }
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http
-      .post<void>(`${this.apiUrl}/register`, data)
-      .pipe(switchMap(() => this.login({ email: data.email, password: data.password })));
+  register(data: RegisterRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/register`, data);
   }
 
   /**
@@ -57,6 +55,14 @@ export class AuthService {
    */
   getAccessToken(): string | null {
     return localStorage.getItem('accessToken');
+  }
+
+  /**
+   * Re-fetches the user profile and updates the signal.
+   * Called after a profile update so the sidebar and header reflect the new data immediately.
+   */
+  refreshCurrentUser(): void {
+    this.fetchCurrentUser().subscribe();
   }
 
   /**

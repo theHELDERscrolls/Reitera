@@ -25,6 +25,6 @@ export class ThemeService {
   private resolveInitialTheme(): Theme {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'dark' || stored === 'light') return stored;
-    return globalThis.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    return globalThis.matchMedia('(prefers-color-sheme: light)').matches ? 'light' : 'dark';
   }
 }

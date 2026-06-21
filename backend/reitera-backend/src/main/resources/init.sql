@@ -1,54 +1,64 @@
 -- ============================================================
 -- Reitera — Database Schema Initialization
 -- ============================================================
--- Safe to re-run in development: drops all tables first so schema
--- changes (new columns, new constraints) are always applied cleanly.
+-- Safe to re-run in development: drops ALL objects in the public
+-- schema first so stale tables from old schema versions are also
+-- removed. Wrapped in a transaction so a mid-script failure rolls
+-- back completely — you never end up with a partial schema.
 -- Prerequisites: Docker container 'reitera_postgres' running,
 -- connected to 'reitera_db' as 'reitera_admin'.
 -- ============================================================
 
+BEGIN;
+
 -- Required by seed.sql to generate BCrypt password hashes.
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Drop all tables in reverse dependency order so FK constraints don't block the drops.
--- CASCADE is not needed here because we respect the dependency order,
--- but it is kept as a safety net.
-DROP TABLE IF EXISTS refresh_tokens         CASCADE;
-DROP TABLE IF EXISTS review_logs            CASCADE;
-DROP TABLE IF EXISTS study_progress         CASCADE;
-DROP TABLE IF EXISTS card_tags              CASCADE;
-DROP TABLE IF EXISTS user_deck_subscriptions CASCADE;
-DROP TABLE IF EXISTS cards                  CASCADE;
-DROP TABLE IF EXISTS decks                  CASCADE;
-DROP TABLE IF EXISTS tags                   CASCADE;
-DROP TABLE IF EXISTS categories             CASCADE;
-DROP TABLE IF EXISTS users                  CASCADE;
-DROP TABLE IF EXISTS roles                  CASCADE;
+-- Drop ALL tables in the public schema dynamically.
+-- This handles stale tables from previous schema versions that
+-- are not listed explicitly, avoiding the "leftover tables" problem.
+DO $$
+DECLARE r RECORD;
+BEGIN
+    FOR r IN
+        SELECT tablename
+        FROM pg_tables
+        WHERE schemaname = 'public'
+    LOOP
+        EXECUTE format('DROP TABLE IF EXISTS %I CASCADE', r.tablename);
+    END LOOP;
+END $$;
 
 
 -- 1. ROLES
-CREATE TABLE IF NOT EXISTS roles (
+CREATE TABLE roles (
     id   SERIAL      PRIMARY KEY,
     name VARCHAR(20) NOT NULL UNIQUE
 );
 
 
 -- 2. USERS
-CREATE TABLE IF NOT EXISTS users (
-    id         UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-    username   VARCHAR(50)  NOT NULL UNIQUE,
-    email      VARCHAR(100) NOT NULL UNIQUE,
-    password   VARCHAR      NOT NULL,
-    first_name VARCHAR(50)  NOT NULL,
-    last_name  VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP    DEFAULT NOW(),
-    updated_at TIMESTAMP    DEFAULT NOW(),
-    role_id    INTEGER      NOT NULL REFERENCES roles(id)
+CREATE TABLE users (
+    id                            UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    username                      VARCHAR(50)  NOT NULL UNIQUE,
+    email                         VARCHAR(100) NOT NULL UNIQUE,
+    password                      VARCHAR      NOT NULL,
+    first_name                    VARCHAR(50)  NOT NULL,
+    last_name                     VARCHAR(100) NOT NULL,
+    created_at                    TIMESTAMP    DEFAULT NOW(),
+    updated_at                    TIMESTAMP    DEFAULT NOW(),
+    role_id                       INTEGER      NOT NULL REFERENCES roles(id),
+    email_verified                BOOLEAN      NOT NULL DEFAULT FALSE,
+    verification_token            VARCHAR(64)  UNIQUE,
+    verification_token_expires_at TIMESTAMP,
+    password_reset_token            VARCHAR(64)  UNIQUE,
+    password_reset_token_expires_at TIMESTAMP,
+    avatar_id                       VARCHAR(50)
 );
 
 
 -- 3. CATEGORIES
-CREATE TABLE IF NOT EXISTS categories (
+CREATE TABLE categories (
     id          SERIAL      PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT,
@@ -56,24 +66,11 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 
--- 4. TAGS
--- owner_id scopes tags to a user — two users can have the same tag name independently.
--- The unique constraint is (name, owner_id), not just name.
-CREATE TABLE IF NOT EXISTS tags (
-    id        SERIAL      PRIMARY KEY,
-    name      VARCHAR(30) NOT NULL,
-    hex_color VARCHAR(7),
-    owner_id  UUID        NOT NULL REFERENCES users(id),
-    UNIQUE (name, owner_id)
-);
-
-
--- 5. DECKS
-CREATE TABLE IF NOT EXISTS decks (
+-- 4. DECKS
+CREATE TABLE decks (
     id          SERIAL       PRIMARY KEY,
     title       VARCHAR(100) NOT NULL,
     description TEXT,
-    is_public   BOOLEAN      NOT NULL DEFAULT FALSE,
     owner_id    UUID         NOT NULL REFERENCES users(id),
     author_name VARCHAR(150),
     category_id INTEGER      REFERENCES categories(id),
@@ -82,31 +79,38 @@ CREATE TABLE IF NOT EXISTS decks (
 );
 
 
+-- 5. NOTES
+-- A note is what the user writes in Markdown. The NoteParser derives one or more cards from it.
+-- Explanation lives here (shared across all child cards of this note).
+CREATE TABLE notes (
+    id          SERIAL       PRIMARY KEY,
+    deck_id     INTEGER      NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+    type        VARCHAR(50)  NOT NULL,
+    content     TEXT         NOT NULL,
+    explanation TEXT,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+
+
 -- 6. CARDS
--- answer_json uses JSONB to support multiple card types with different answer structures.
--- See docs/api/endpoints.md for the format per type (BASIC, MULTIPLE_CHOICE, TRUE_FALSE).
-CREATE TABLE IF NOT EXISTS cards (
-    id          SERIAL      PRIMARY KEY,
-    deck_id     INTEGER     NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
-    type        VARCHAR(50) NOT NULL,
-    question    TEXT        NOT NULL,
-    answer_json JSONB       NOT NULL,
-    explanation TEXT
+-- Cards are generated by NoteParser from a Note and never edited directly.
+-- answer_json uses JSONB; format depends on type: BASIC, BASIC_REVERSE, CLOZE, MULTIPLE_CHOICE.
+-- ordinal distinguishes sibling cards within the same note (e.g. the two sides of BASIC_REVERSE).
+CREATE TABLE cards (
+    id          SERIAL       PRIMARY KEY,
+    note_id     INTEGER      NOT NULL REFERENCES notes(id) ON DELETE CASCADE,
+    deck_id     INTEGER      NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+    type        VARCHAR(50)  NOT NULL,
+    ordinal     SMALLINT     NOT NULL DEFAULT 0,
+    question    TEXT         NOT NULL,
+    answer_json JSONB        NOT NULL
 );
 
 
--- 7. CARD_TAGS (many-to-many: cards ↔ tags)
-CREATE TABLE IF NOT EXISTS card_tags (
-    card_id INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
-    tag_id  INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
-    PRIMARY KEY (card_id, tag_id)
-);
-
-
--- 8. STUDY_PROGRESS
+-- 7. STUDY_PROGRESS
 -- One row per (user, card) pair. Stores FSRS state variables.
 -- States: 0=New, 1=Learning, 2=Review, 3=Relearning.
-CREATE TABLE IF NOT EXISTS study_progress (
+CREATE TABLE study_progress (
     user_id        UUID             NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     card_id        INTEGER          NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
     stability      FLOAT8           NOT NULL DEFAULT 0.0,
@@ -122,9 +126,9 @@ CREATE TABLE IF NOT EXISTS study_progress (
 );
 
 
--- 9. REVIEW_LOGS
+-- 8. REVIEW_LOGS
 -- Immutable audit ledger. One row per review action. Never updated, only appended.
-CREATE TABLE IF NOT EXISTS review_logs (
+CREATE TABLE review_logs (
     id             SERIAL  PRIMARY KEY,
     user_id        UUID    NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     card_id        INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
@@ -135,19 +139,10 @@ CREATE TABLE IF NOT EXISTS review_logs (
 );
 
 
--- 10. USER_DECK_SUBSCRIPTIONS
-CREATE TABLE IF NOT EXISTS user_deck_subscriptions (
-    user_id       UUID    NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    deck_id       INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
-    subscribed_at TIMESTAMP DEFAULT NOW(),
-    PRIMARY KEY (user_id, deck_id)
-);
-
-
--- 11. REFRESH_TOKENS
+-- 9. REFRESH_TOKENS
 -- One row per active session. Stores a SHA-256 hash of the raw token (never the token itself).
 -- The revoked flag allows explicit logout without deleting the row, preserving the audit trail.
-CREATE TABLE IF NOT EXISTS refresh_tokens (
+CREATE TABLE refresh_tokens (
     id         SERIAL       PRIMARY KEY,
     token_hash VARCHAR(64)  NOT NULL UNIQUE,
     user_id    UUID         NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -159,19 +154,27 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 
 -- INDEXES
 -- PostgreSQL does not auto-index FK columns. These cover the most frequent query paths.
--- See docs/ARCHITECTURE.md for the rationale behind each index.
 
-CREATE INDEX IF NOT EXISTS idx_study_progress_user_next_review
+CREATE INDEX idx_study_progress_user_next_review
     ON study_progress (user_id, next_review);
 
-CREATE INDEX IF NOT EXISTS idx_cards_deck_id
+CREATE INDEX idx_notes_deck_id
+    ON notes (deck_id);
+
+CREATE INDEX idx_cards_note_id
+    ON cards (note_id);
+
+CREATE INDEX idx_cards_deck_id
     ON cards (deck_id);
 
-CREATE INDEX IF NOT EXISTS idx_decks_owner_id
+CREATE INDEX idx_decks_owner_id
     ON decks (owner_id);
 
-CREATE INDEX IF NOT EXISTS idx_review_logs_user_id
+CREATE INDEX idx_review_logs_user_id
     ON review_logs (user_id);
 
-CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id
+CREATE INDEX idx_refresh_tokens_user_id
     ON refresh_tokens (user_id);
+
+
+COMMIT;

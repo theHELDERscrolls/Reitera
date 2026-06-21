@@ -10,6 +10,22 @@ const authRoutes: Routes = [
     loadComponent: () => import('./register/register.component'),
   },
   {
+    path: 'verify',
+    loadComponent: () => import('./verify/verify.component'),
+  },
+  {
+    path: 'check-email',
+    loadComponent: () => import('./check-email/check-email.component'),
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./forgot-password/forgot-password.component'),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./reset-password/reset-password.component'),
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',

@@ -4,7 +4,7 @@
       (click)="pageChange.emit(currentPage() - 1)"
       [disabled]="currentPage() === 0"
       [attr.aria-label]="'decks.pagination.prev' | transloco"
-      class="p-2 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay disabled:opacity-50 disabled:cursor-not-allowed"
+      class="p-2 transition-colors rounded-xs text-muted hover:text-foreground hover:bg-overlay disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <svg lucideChevronLeft class="size-4" />
     </button>
@@ -17,8 +17,8 @@
           (click)="pageChange.emit(page)"
           [class]="
             page === currentPage()
-              ? 'min-w-8 h-8 rounded-lg text-sm font-medium bg-primary text-background'
-              : 'min-w-8 h-8 rounded-lg text-sm text-muted hover:text-foreground hover:bg-overlay transition-colors'
+              ? 'min-w-8 h-8 rounded-xs text-sm font-medium bg-primary text-background'
+              : 'min-w-8 h-8 rounded-xs text-sm text-muted hover:text-foreground hover:bg-overlay transition-colors'
           "
         >
           {{ page + 1 }}
@@ -30,7 +30,7 @@
       (click)="pageChange.emit(currentPage() + 1)"
       [disabled]="currentPage() === totalPages() - 1"
       [attr.aria-label]="'decks.pagination.next' | transloco"
-      class="p-2 transition-colors rounded-lg text-muted hover:text-foreground hover:bg-overlay disabled:opacity-50 disabled:cursor-not-allowed"
+      class="p-2 transition-colors rounded-xs text-muted hover:text-foreground hover:bg-overlay disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <svg lucideChevronRight class="size-4" />
     </button>

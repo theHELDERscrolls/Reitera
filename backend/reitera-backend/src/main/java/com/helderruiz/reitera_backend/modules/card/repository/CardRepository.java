@@ -55,6 +55,7 @@ public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecifi
      * These cards will be included in the due list alongside overdue cards.
      */
     @Query("SELECT c FROM Card c " +
+            "JOIN FETCH c.note " +
             "WHERE c.deck.id = :deckId " +
             "AND NOT EXISTS (" +
             "    SELECT sp FROM StudyProgress sp " +
@@ -69,6 +70,7 @@ public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecifi
      * to exclude cards the user has already started studying.
      */
     @Query("SELECT c FROM Card c " +
+            "JOIN FETCH c.note " +
             "WHERE c.deck.category.id = :categoryId " +
             "AND c.deck.owner.id = :userId " +
             "AND NOT EXISTS (" +
@@ -78,10 +80,4 @@ public interface CardRepository extends JpaRepository<Card, Integer>, JpaSpecifi
     List<Card> findNewCardsByCategoryAndUser(@Param("categoryId") Integer categoryId,
                                              @Param("userId") UUID userId);
 
-    /**
-     * Returns a paginated list of cards owned by the user that have the specified tag assigned.
-     * Navigates Card → tags (ManyToMany) and Card → deck → owner.
-     */
-    @Query("SELECT c FROM Card c JOIN c.tags t WHERE t.id = :tagId AND c.deck.owner.id = :userId")
-    Page<Card> findByTagIdAndOwner(@Param("tagId") Integer tagId, @Param("userId") UUID userId, Pageable pageable);
 }

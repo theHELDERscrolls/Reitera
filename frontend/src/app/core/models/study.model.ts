@@ -1,5 +1,4 @@
 import { CardType } from './card.model';
-import { Tag } from './tag.model';
 
 export type CardState = 0 | 1 | 2 | 3;
 
@@ -10,13 +9,12 @@ export interface DueCard {
   question: string;
   answerJson: Record<string, unknown>;
   explanation: string | null;
-  tags: Tag[];
   state: CardState;
 }
 
 export interface CardRating {
   cardId: number;
-  rating: 1 | 2 | 3 | 4;
+  rating: 1 | 3;
 }
 
 export interface StudySessionRequest {
@@ -29,4 +27,15 @@ export interface StudySessionResponse {
   deckId: number | null;
   categoryId: number | null;
   cardsReviewed: number;
+}
+
+export interface SessionBackup {
+  version: '1';
+  deckId: number | null;
+  deckName: string | null;
+  categoryId: number | null;
+  categoryName: string | null;
+  ratings: CardRating[];
+  startedAt: number;
+  updatedAt: number;
 }

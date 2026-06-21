@@ -25,7 +25,35 @@
         "email_invalid": "Enter a valid email address.",
         "password_required": "Password is required.",
         "server": "Invalid credentials. Please try again."
-      }
+      },
+      "forgot_password": "Forgot your password?"
+    },
+    "check_email": {
+      "title": "Check your email",
+      "subtitle": "We sent you a verification link",
+      "description": "Click the link we sent to:",
+      "check_spam": "Can't find it? Check your spam folder.",
+      "resend": "Resend email",
+      "resend_success": "Verification email sent. Check your inbox.",
+      "resend_error": "Could not send the email. Please try again.",
+      "no_email": "It looks like you got here by mistake.",
+      "go_register": "Register here"
+    },
+    "verify": {
+      "title": "Email verification",
+      "loading": "Verifying your email, please wait...",
+      "success": "Email verified! You can now sign in.",
+      "error": "Could not verify your email.",
+      "error_subtitle": "Something went wrong",
+      "error_description": "Your verification link may be expired or invalid. Enter your email to receive a new one.",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "email_required": "Email is required.",
+      "email_invalid": "Enter a valid email address.",
+      "resend": "Resend verification email",
+      "resend_success": "Verification email sent. Check your inbox.",
+      "resend_error": "Could not send the email. Please try again.",
+      "go_login": "Back to sign in"
     },
     "register": {
       "title": "Create your account",
@@ -60,10 +88,47 @@
         "confirm_password_required": "Please confirm your password.",
         "password_mismatch": "Passwords do not match.",
         "server": "Registration failed. Please try again.",
+        "email_taken": "This email or username is already registered.",
         "email_max": "Email must be at most 100 characters.",
         "first_name_max": "First name must be at most 50 characters.",
         "last_name_max": "Last name must be at most 100 characters.",
         "password_max": "Password must be at most 128 characters."
+      }
+    },
+    "forgot_password": {
+      "title": "Forgot password?",
+      "subtitle": "Enter your email and we'll send you a reset link",
+      "email": "Email",
+      "email_placeholder": "you@example.com",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
+      "sent_message": "If that email is registered, you'll receive a reset link shortly. Check your inbox and spam folder.",
+      "go_login": "Back to sign in",
+      "error": {
+        "email_required": "Email is required.",
+        "email_invalid": "Enter a valid email address."
+      }
+    },
+    "reset_password": {
+      "title": "Set new password",
+      "subtitle": "Choose a strong password for your account",
+      "new_password": "New password",
+      "new_password_placeholder": "Min. 8 characters",
+      "confirm_password": "Confirm password",
+      "confirm_password_placeholder": "Repeat your password",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "success": "Password reset successfully! You can now sign in.",
+      "go_forgot_password": "Request a new link",
+      "error": {
+        "missing_token": "No reset token found. Please request a new password reset link.",
+        "expired": "This reset link has expired. Please request a new one.",
+        "invalid": "This reset link is invalid or has already been used. Please request a new one.",
+        "password_required": "Password is required.",
+        "password_pattern": "Min. 8 characters with uppercase, lowercase, number and special character (@#$%^&+=!).",
+        "confirm_required": "Please confirm your password.",
+        "password_mismatch": "Passwords do not match.",
+        "server": "Something went wrong. Please try again."
       }
     }
   },
@@ -79,8 +144,6 @@
       "next": "Next page"
     },
     "card": {
-      "public": "Public",
-      "private": "Private",
       "options": "Deck options",
       "edit": "Edit deck",
       "delete": "Delete deck"
@@ -98,8 +161,6 @@
       "descriptionPlaceholder": "What is this deck about?",
       "categoryLabel": "Category",
       "categoryPlaceholder": "Search or create a category...",
-      "isPublicLabel": "Public deck",
-      "isPublicHint": "Anyone will be able to download this deck",
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving...",
@@ -126,7 +187,7 @@
   },
   "deckDetail": {
     "createdAt": "Created",
-    "addCard": "Add card",
+    "addNote": "Add note",
     "study": "Study",
     "stats": {
       "total": "Total",
@@ -137,23 +198,26 @@
       "due": "Due"
     },
     "cards": {
-      "title": "Cards",
-      "editCard": "Edit card",
-      "deleteCard": "Delete card",
+      "title": "Notes",
+      "editNote": "Edit note",
+      "deleteNote": "Delete note",
       "table": {
         "question": "Question",
+        "content": "Content",
         "type": "Type",
         "state": "State",
+        "cards": "Cards",
         "actions": "Actions"
       },
       "empty": {
-        "title": "No cards yet",
-        "subtitle": "Add your first card to start studying"
+        "title": "No notes yet",
+        "subtitle": "Add your first note to start studying"
       },
       "type": {
         "basic": "Basic",
-        "multiple_choice": "Multi",
-        "true_false": "True / False"
+        "basic_reverse": "Basic + Reverse",
+        "cloze": "Cloze",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "New",
@@ -162,65 +226,14 @@
         "relearning": "Relearning"
       }
     },
-    "deleteCard": {
-      "title": "Delete card",
-      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    "deleteNote": {
+      "title": "Delete note",
+      "message": "Are you sure? All cards generated from this note will also be deleted."
     },
     "toast": {
-      "cardCreated": "Card created successfully",
-      "cardUpdated": "Card updated successfully",
-      "cardDeleted": "Card deleted successfully"
-    }
-  },
-  "cardForm": {
-    "createTitle": "New card",
-    "editTitle": "Edit card",
-    "type": {
-      "label": "Card type",
-      "basic": "Basic",
-      "multiple_choice": "MC",
-      "true_false": "T/F"
-    },
-    "question": {
-      "label": "Question",
-      "placeholder": "Enter the question..."
-    },
-    "answer": {
-      "label": "Answer",
-      "placeholder": "Enter the answer..."
-    },
-    "options": {
-      "label": "Options (click the circle to mark the correct one)",
-      "placeholder": "Enter option...",
-      "markCorrect": "Mark as correct",
-      "remove": "Remove option",
-      "add": "Add option"
-    },
-    "correct": {
-      "label": "Correct answer"
-    },
-    "trueFalse": {
-      "true": "True",
-      "false": "False"
-    },
-    "explanation": {
-      "label": "Explanation (optional)",
-      "placeholder": "Explain why this is the correct answer..."
-    },
-    "tags": {
-      "label": "Tags",
-      "search": "Search or add a tag...",
-      "create": "Create '{{ name }}'",
-      "remove": "Remove tag"
-    },
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "delete": "Delete card",
-    "error": {
-      "questionRequired": "Question is required.",
-      "questionMax": "Question must be at most 5000 characters.",
-      "explanationMax": "Explanation must be at most 2000 characters."
+      "noteCreated": "Note created successfully",
+      "noteUpdated": "Note updated successfully",
+      "noteDeleted": "Note deleted successfully"
     }
   },
   "study": {
@@ -238,7 +251,18 @@
         "new": "new",
         "due": "due",
         "relearning": "relearning"
+      },
+      "recovery": {
+        "title": "Unsubmitted session found",
+        "description": "You have an unsubmitted session for \"{{name}}\" from a previous visit.",
+        "resume": "Resume and submit",
+        "discard": "Discard"
       }
+    },
+    "conflict": {
+      "title": "Pending session",
+      "message": "You have unsaved progress from \"{{name}}\". Starting now will discard it.",
+      "confirm": "Discard and continue"
     },
     "session": {
       "state": {
@@ -249,18 +273,15 @@
       },
       "type": {
         "BASIC": "Basic",
-        "MULTIPLE_CHOICE": "Multiple choice",
-        "TRUE_FALSE": "True / False"
+        "BASIC_REVERSE": "Basic + Reverse",
+        "CLOZE": "Cloze",
+        "MULTIPLE_CHOICE": "Multiple choice"
       },
       "showAnswer": "Show answer",
-      "true": "True",
-      "false": "False",
       "explanation": "Explanation",
       "rating": {
-        "again": "Again",
-        "hard": "Hard",
-        "good": "Good",
-        "easy": "Easy"
+        "forgotten": "Forgotten",
+        "remembered": "Remembered"
       },
       "endSession": "End session",
       "backToHub": "Back to hub",
@@ -268,6 +289,19 @@
         "title": "Leave session?",
         "message": "Your progress won't be saved if you go back now.",
         "confirm": "Leave"
+      },
+      "deactivateDialog": {
+        "title": "Leave session?",
+        "message": "You have unsaved ratings. If you leave now, your progress may be lost.",
+        "confirm": "Leave"
+      },
+      "recovery": {
+        "title": "Unsubmitted session found",
+        "description": "You have an unsubmitted session for \"{{name}}\" from earlier.",
+        "resume": "Resume and submit",
+        "discard": "Discard",
+        "success": "Recovered session submitted successfully.",
+        "noCards": "No valid cards were found in the recovered session."
       },
       "saving": "Saving results...",
       "empty": {
@@ -288,26 +322,42 @@
     "filterQuestion": "Search by question...",
     "filterType": "Type",
     "filterState": "State",
-    "filterTag": "Tag",
     "filterClear": "Clear filters",
     "allTypes": "All types",
     "allStates": "All states",
-    "allTags": "All tags",
     "stateNew": "New",
     "stateLearning": "Learning",
     "stateReview": "Review",
     "stateRelearning": "Relearning",
+    "editNote": "Edit note",
     "empty": {
       "title": "No cards found",
-      "subtitle": "Try adjusting your filters or add cards to a deck"
+      "subtitle": "Try adjusting your filters or add notes to a deck"
     },
-    "deleteCard": {
-      "title": "Delete card",
-      "message": "Are you sure you want to delete this card? This action cannot be undone."
+    "deleteNote": {
+      "title": "Delete note",
+      "message": "Are you sure? All cards generated from this note will also be deleted."
     },
     "toast": {
-      "cardUpdated": "Card updated successfully",
-      "cardDeleted": "Card deleted successfully"
+      "noteUpdated": "Note updated successfully",
+      "noteDeleted": "Note deleted successfully"
+    }
+  },
+  "noteEditor": {
+    "titleCreate": "New note",
+    "titleEdit": "Edit note",
+    "contentLabel": "Content",
+    "explanationHint": "Add === on a new line to include an explanation shown after answering.",
+    "typeHint": "Format not recognized. Use --- for Basic, {{c1::text}} for Cloze, or - [x] / - [ ] for Multiple Choice.",
+    "conflictMarkers": "Mixed type markers detected. Remove the markers that do not belong to the detected type.",
+    "save": "Save",
+    "saving": "Saving...",
+    "types": {
+      "BASIC": "Basic",
+      "BASIC_REVERSE": "Basic + Reverse",
+      "CLOZE": "Cloze",
+      "MULTIPLE_CHOICE": "Multiple Choice",
+      "UNKNOWN": "Unknown format"
     }
   },
   "shell": {
@@ -337,8 +387,76 @@
     "fullName": "Full name",
     "username": "Username",
     "email": "Email address",
-    "role": "Role",
-    "memberSince": "Member since"
+    "memberSince": "Member since",
+    "editButton": "Edit profile",
+    "saveButton": "Save changes",
+    "cancelButton": "Cancel",
+    "saveSuccess": "Profile updated successfully.",
+    "avatarSection": "Choose an avatar",
+    "githubFooter": "Open-source project — contribute on GitHub",
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "username": "Username",
+      "error": {
+        "firstNameRequired": "First name is required.",
+        "firstNameMax": "First name must be at most 50 characters.",
+        "lastNameRequired": "Last name is required.",
+        "lastNameMax": "Last name must be at most 100 characters.",
+        "usernameRequired": "Username is required.",
+        "usernameMin": "Username must be at least 3 characters.",
+        "usernameMax": "Username must be at most 50 characters.",
+        "usernameTaken": "This username is already taken.",
+        "saveFailed": "Could not save changes. Please try again."
+      }
+    },
+    "guide": {
+      "title": "Card creation guide",
+      "subtitle": "Write notes using Markdown syntax in the editor. Optionally add an explanation after a === line — it will be shown to you after answering during study.",
+      "basic": {
+        "label": "Basic",
+        "description": "A simple question and answer card, separated by ---. Add === after the answer to include an optional explanation shown post-review.",
+        "cards": "Generates 1 card"
+      },
+      "basicReverse": {
+        "label": "Basic (reverse)",
+        "description": "Like Basic, but the <-> marker at the end also generates a reverse card (answer → question). Add === after <-> for an optional explanation.",
+        "cards": "Generates 2 cards"
+      },
+      "cloze": {
+        "label": "Cloze",
+        "description": "Hide specific words using {{c1::word}}. Different numbers (c1, c2...) generate separate cards. Add === at the end for an optional explanation shown after each deletion.",
+        "cards": "1 card per deletion group"
+      },
+      "multipleChoice": {
+        "label": "Multiple choice",
+        "description": "A question followed by options. Mark the correct answer with [x] and wrong ones with [ ]. Add === after the options for an optional explanation.",
+        "cards": "Generates 1 card"
+      }
+    },
+    "tips": {
+      "title": "Tips & clarifications",
+      "basic": {
+        "tip1": "The --- separator must be on its own line with no other text on that line.",
+        "tip2": "If the type shows as Unknown, check for accidental <-> or {{...}} markers.",
+        "tip3": "Both sides support full Markdown: bold, lists, inline code, and more."
+      },
+      "basicReverse": {
+        "tip1": "<-> must be the very last line before ===. Any text after it breaks detection.",
+        "tip2": "Two cards are created: Question → Answer and Answer → Question.",
+        "tip3": "Both sides can be as long as needed — length does not affect type detection."
+      },
+      "cloze": {
+        "tip1": "Multiple {{c1::...}} in the same note all belong to one card (same group number).",
+        "tip2": "Do not mix {{...}} with --- or - [x] markers in the same note.",
+        "tip3": "Use consecutive numbers (c1, c2, c3...). Skipping numbers may produce unexpected results."
+      },
+      "multipleChoice": {
+        "tip1": "There must be exactly one [x] — the correct answer. Multiple [x] break detection.",
+        "tip2": "Wrong options use - [ ] with a space between the brackets, not - [].",
+        "tip3": "Do not mix options with --- or {{...}} markers in the same note."
+      }
+    }
   },
   "dashboard": {
     "title": "Stats",

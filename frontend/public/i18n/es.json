@@ -25,7 +25,35 @@
         "email_invalid": "Introduce una dirección de email válida.",
         "password_required": "La contraseña es obligatoria.",
         "server": "Credenciales incorrectas. Por favor, inténtalo de nuevo."
-      }
+      },
+      "forgot_password": "¿Olvidaste tu contraseña?"
+    },
+    "check_email": {
+      "title": "Revisa tu correo",
+      "subtitle": "Te hemos enviado un enlace de verificación",
+      "description": "Haz clic en el enlace que enviamos a:",
+      "check_spam": "¿No lo encuentras? Revisa tu carpeta de spam.",
+      "resend": "Reenviar correo",
+      "resend_success": "Correo de verificación enviado. Revisa tu bandeja de entrada.",
+      "resend_error": "No se pudo enviar el correo. Por favor, inténtalo de nuevo.",
+      "no_email": "Parece que llegaste aquí por error.",
+      "go_register": "Regístrate aquí"
+    },
+    "verify": {
+      "title": "Verificación de email",
+      "loading": "Verificando tu correo, por favor espera...",
+      "success": "¡Correo verificado! Ya puedes iniciar sesión.",
+      "error": "No hemos podido verificar tu correo.",
+      "error_subtitle": "Algo ha salido mal",
+      "error_description": "Tu enlace de verificación puede haber expirado o no ser válido. Introduce tu email para recibir uno nuevo.",
+      "email": "Email",
+      "email_placeholder": "tu@ejemplo.com",
+      "email_required": "El email es obligatorio.",
+      "email_invalid": "Introduce una dirección de email válida.",
+      "resend": "Reenviar correo de verificación",
+      "resend_success": "Correo de verificación enviado. Revisa tu bandeja de entrada.",
+      "resend_error": "No se pudo enviar el correo. Por favor, inténtalo de nuevo.",
+      "go_login": "Volver al inicio de sesión"
     },
     "register": {
       "title": "Crea tu cuenta",
@@ -60,10 +88,47 @@
         "confirm_password_required": "Por favor, confirma tu contraseña.",
         "password_mismatch": "Las contraseñas no coinciden.",
         "server": "El registro ha fallado. Por favor, inténtalo de nuevo.",
+        "email_taken": "Este email o nombre de usuario ya está registrado.",
         "email_max": "El email no puede superar los 100 caracteres.",
         "first_name_max": "El nombre no puede superar los 50 caracteres.",
         "last_name_max": "Los apellidos no pueden superar los 100 caracteres.",
         "password_max": "La contraseña no puede superar los 128 caracteres."
+      }
+    },
+    "forgot_password": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Introduce tu email y te enviaremos un enlace para restablecerla",
+      "email": "Email",
+      "email_placeholder": "tu@ejemplo.com",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando...",
+      "sent_message": "Si ese email está registrado, recibirás un enlace en breve. Revisa tu bandeja de entrada y carpeta de spam.",
+      "go_login": "Volver al inicio de sesión",
+      "error": {
+        "email_required": "El email es obligatorio.",
+        "email_invalid": "Introduce una dirección de email válida."
+      }
+    },
+    "reset_password": {
+      "title": "Nueva contraseña",
+      "subtitle": "Elige una contraseña segura para tu cuenta",
+      "new_password": "Nueva contraseña",
+      "new_password_placeholder": "Mín. 8 caracteres",
+      "confirm_password": "Confirmar contraseña",
+      "confirm_password_placeholder": "Repite tu contraseña",
+      "submit": "Restablecer contraseña",
+      "submitting": "Restableciendo...",
+      "success": "¡Contraseña restablecida! Ya puedes iniciar sesión.",
+      "go_forgot_password": "Solicitar un nuevo enlace",
+      "error": {
+        "missing_token": "No se encontró ningún token de restablecimiento. Solicita un nuevo enlace.",
+        "expired": "Este enlace ha expirado. Por favor, solicita uno nuevo.",
+        "invalid": "Este enlace no es válido o ya ha sido utilizado. Solicita uno nuevo.",
+        "password_required": "La contraseña es obligatoria.",
+        "password_pattern": "Mín. 8 caracteres con mayúscula, minúscula, número y carácter especial (@#$%^&+=!).",
+        "confirm_required": "Por favor, confirma tu contraseña.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "server": "Algo ha ido mal. Por favor, inténtalo de nuevo."
       }
     }
   },
@@ -79,8 +144,6 @@
       "next": "Página siguiente"
     },
     "card": {
-      "public": "Público",
-      "private": "Privado",
       "options": "Opciones del mazo",
       "edit": "Editar mazo",
       "delete": "Eliminar mazo"
@@ -98,8 +161,6 @@
       "descriptionPlaceholder": "¿De qué trata este mazo?",
       "categoryLabel": "Categoría",
       "categoryPlaceholder": "Busca o crea una categoría...",
-      "isPublicLabel": "Mazo público",
-      "isPublicHint": "Cualquier usuario podrá descargar este mazo",
       "cancel": "Cancelar",
       "save": "Guardar",
       "saving": "Guardando...",
@@ -126,7 +187,7 @@
   },
   "deckDetail": {
     "createdAt": "Creado",
-    "addCard": "Añadir tarjeta",
+    "addNote": "Añadir nota",
     "study": "Estudiar",
     "stats": {
       "total": "Total",
@@ -137,23 +198,26 @@
       "due": "Pendientes"
     },
     "cards": {
-      "title": "Tarjetas",
-      "editCard": "Editar tarjeta",
-      "deleteCard": "Eliminar tarjeta",
+      "title": "Notas",
+      "editNote": "Editar nota",
+      "deleteNote": "Eliminar nota",
       "table": {
         "question": "Pregunta",
+        "content": "Contenido",
         "type": "Tipo",
         "state": "Estado",
+        "cards": "Tarjetas",
         "actions": "Acciones"
       },
       "empty": {
-        "title": "Aún no hay tarjetas",
-        "subtitle": "Añade tu primera tarjeta para empezar a estudiar"
+        "title": "Aún no hay notas",
+        "subtitle": "Añade tu primera nota para empezar a estudiar"
       },
       "type": {
         "basic": "Básica",
-        "multiple_choice": "Multi",
-        "true_false": "Verdadero / Falso"
+        "basic_reverse": "Básica + Reversa",
+        "cloze": "Rellenar",
+        "multiple_choice": "Multi"
       },
       "state": {
         "new": "Nueva",
@@ -162,65 +226,14 @@
         "relearning": "Reaprendiendo"
       }
     },
-    "deleteCard": {
-      "title": "Eliminar tarjeta",
-      "message": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer."
+    "deleteNote": {
+      "title": "Eliminar nota",
+      "message": "¿Estás seguro? También se eliminarán todas las tarjetas generadas por esta nota."
     },
     "toast": {
-      "cardCreated": "Tarjeta creada correctamente",
-      "cardUpdated": "Tarjeta actualizada correctamente",
-      "cardDeleted": "Tarjeta eliminada correctamente"
-    }
-  },
-  "cardForm": {
-    "createTitle": "Nueva tarjeta",
-    "editTitle": "Editar tarjeta",
-    "type": {
-      "label": "Tipo de tarjeta",
-      "basic": "Básica",
-      "multiple_choice": "OM",
-      "true_false": "V/F"
-    },
-    "question": {
-      "label": "Pregunta",
-      "placeholder": "Escribe la pregunta..."
-    },
-    "answer": {
-      "label": "Respuesta",
-      "placeholder": "Escribe la respuesta..."
-    },
-    "options": {
-      "label": "Opciones (haz clic en el círculo para marcar la correcta)",
-      "placeholder": "Escribe una opción...",
-      "markCorrect": "Marcar como correcta",
-      "remove": "Eliminar opción",
-      "add": "Añadir opción"
-    },
-    "correct": {
-      "label": "Respuesta correcta"
-    },
-    "trueFalse": {
-      "true": "Verdadero",
-      "false": "Falso"
-    },
-    "explanation": {
-      "label": "Explicación (opcional)",
-      "placeholder": "Explica por qué esta es la respuesta correcta..."
-    },
-    "tags": {
-      "label": "Etiquetas",
-      "search": "Buscar o añadir una etiqueta...",
-      "create": "Crear '{{ name }}'",
-      "remove": "Eliminar etiqueta"
-    },
-    "cancel": "Cancelar",
-    "save": "Guardar",
-    "saving": "Guardando...",
-    "delete": "Eliminar tarjeta",
-    "error": {
-      "questionRequired": "La pregunta es obligatoria.",
-      "questionMax": "La pregunta no puede superar los 5000 caracteres.",
-      "explanationMax": "La explicación no puede superar los 2000 caracteres."
+      "noteCreated": "Nota creada correctamente",
+      "noteUpdated": "Nota actualizada correctamente",
+      "noteDeleted": "Nota eliminada correctamente"
     }
   },
   "study": {
@@ -238,7 +251,18 @@
         "new": "nuevas",
         "due": "pendientes",
         "relearning": "reaprendiendo"
+      },
+      "recovery": {
+        "title": "Sesión sin enviar encontrada",
+        "description": "Tienes una sesión sin enviar de \"{{name}}\" de una visita anterior.",
+        "resume": "Retomar y enviar",
+        "discard": "Descartar"
       }
+    },
+    "conflict": {
+      "title": "Sesión pendiente",
+      "message": "Tienes progreso sin guardar de \"{{name}}\". Si continúas, se perderá.",
+      "confirm": "Descartar y continuar"
     },
     "session": {
       "state": {
@@ -249,18 +273,15 @@
       },
       "type": {
         "BASIC": "Básica",
-        "MULTIPLE_CHOICE": "Múltiple opción",
-        "TRUE_FALSE": "Verdadero / Falso"
+        "BASIC_REVERSE": "Básica + Reversa",
+        "CLOZE": "Rellenar",
+        "MULTIPLE_CHOICE": "Múltiple opción"
       },
       "showAnswer": "Mostrar respuesta",
-      "true": "Verdadero",
-      "false": "Falso",
       "explanation": "Explicación",
       "rating": {
-        "again": "Otra vez",
-        "hard": "Difícil",
-        "good": "Bien",
-        "easy": "Fácil"
+        "forgotten": "Olvidada",
+        "remembered": "Recordada"
       },
       "endSession": "Terminar sesión",
       "backToHub": "Volver al inicio",
@@ -268,6 +289,19 @@
         "title": "¿Salir de la sesión?",
         "message": "Tu progreso no se guardará si vuelves atrás ahora.",
         "confirm": "Salir"
+      },
+      "deactivateDialog": {
+        "title": "¿Salir de la sesión?",
+        "message": "Tienes valoraciones sin guardar. Si sales ahora, tu progreso podría perderse.",
+        "confirm": "Salir"
+      },
+      "recovery": {
+        "title": "Sesión sin enviar encontrada",
+        "description": "Tienes una sesión sin enviar de \"{{name}}\" de antes.",
+        "resume": "Retomar y enviar",
+        "discard": "Descartar",
+        "success": "La sesión recuperada se envió correctamente.",
+        "noCards": "No se encontraron tarjetas válidas en la sesión recuperada."
       },
       "saving": "Guardando resultados...",
       "empty": {
@@ -288,26 +322,42 @@
     "filterQuestion": "Buscar por pregunta...",
     "filterType": "Tipo",
     "filterState": "Estado",
-    "filterTag": "Etiqueta",
     "filterClear": "Limpiar filtros",
     "allTypes": "Todos los tipos",
     "allStates": "Todos los estados",
-    "allTags": "Todas las etiquetas",
     "stateNew": "Nueva",
     "stateLearning": "Aprendiendo",
     "stateReview": "Repaso",
     "stateRelearning": "Reaprendiendo",
+    "editNote": "Editar nota",
     "empty": {
       "title": "No se encontraron tarjetas",
-      "subtitle": "Prueba a ajustar los filtros o añade tarjetas a un mazo"
+      "subtitle": "Prueba a ajustar los filtros o añade notas a un mazo"
     },
-    "deleteCard": {
-      "title": "Eliminar tarjeta",
-      "message": "¿Estás seguro de que quieres eliminar esta tarjeta? Esta acción no se puede deshacer."
+    "deleteNote": {
+      "title": "Eliminar nota",
+      "message": "¿Estás seguro? También se eliminarán todas las tarjetas generadas por esta nota."
     },
     "toast": {
-      "cardUpdated": "Tarjeta actualizada correctamente",
-      "cardDeleted": "Tarjeta eliminada correctamente"
+      "noteUpdated": "Nota actualizada correctamente",
+      "noteDeleted": "Nota eliminada correctamente"
+    }
+  },
+  "noteEditor": {
+    "titleCreate": "Nueva nota",
+    "titleEdit": "Editar nota",
+    "contentLabel": "Contenido",
+    "explanationHint": "Añade === en una nueva línea para incluir una explicación que se muestra al responder.",
+    "typeHint": "Formato no reconocido. Usa --- para Básica, {{c1::texto}} para Cloze, o - [x] / - [ ] para Múltiple.",
+    "conflictMarkers": "Se detectaron marcadores de tipos mezclados. Elimina los marcadores que no correspondan al tipo detectado.",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "types": {
+      "BASIC": "Básica",
+      "BASIC_REVERSE": "Básica + Reversa",
+      "CLOZE": "Rellenar",
+      "MULTIPLE_CHOICE": "Múltiple opción",
+      "UNKNOWN": "Formato desconocido"
     }
   },
   "shell": {
@@ -337,8 +387,76 @@
     "fullName": "Nombre completo",
     "username": "Nombre de usuario",
     "email": "Correo electrónico",
-    "role": "Rol",
-    "memberSince": "Miembro desde"
+    "memberSince": "Miembro desde",
+    "editButton": "Editar perfil",
+    "saveButton": "Guardar cambios",
+    "cancelButton": "Cancelar",
+    "saveSuccess": "Perfil actualizado correctamente.",
+    "avatarSection": "Elige un avatar",
+    "githubFooter": "Proyecto de código abierto — contribuye en GitHub",
+    "form": {
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "username": "Nombre de usuario",
+      "error": {
+        "firstNameRequired": "El nombre es obligatorio.",
+        "firstNameMax": "El nombre no puede superar los 50 caracteres.",
+        "lastNameRequired": "Los apellidos son obligatorios.",
+        "lastNameMax": "Los apellidos no pueden superar los 100 caracteres.",
+        "usernameRequired": "El nombre de usuario es obligatorio.",
+        "usernameMin": "El nombre de usuario debe tener al menos 3 caracteres.",
+        "usernameMax": "El nombre de usuario no puede superar los 50 caracteres.",
+        "usernameTaken": "Este nombre de usuario ya está en uso.",
+        "saveFailed": "No se pudieron guardar los cambios. Inténtalo de nuevo."
+      }
+    },
+    "guide": {
+      "title": "Guía de creación de cards",
+      "subtitle": "Escribe tus notas con sintaxis Markdown en el editor. Opcionalmente añade una explicación tras una línea === — se mostrará después de responder durante el estudio.",
+      "basic": {
+        "label": "Básica",
+        "description": "Una card simple de pregunta y respuesta, separadas por ---. Añade === tras la respuesta para incluir una explicación opcional que se muestra tras revisar.",
+        "cards": "Genera 1 card"
+      },
+      "basicReverse": {
+        "label": "Básica (inversa)",
+        "description": "Igual que Básica, pero el marcador <-> al final también genera una card inversa (respuesta → pregunta). Añade === tras <-> para una explicación opcional.",
+        "cards": "Genera 2 cards"
+      },
+      "cloze": {
+        "label": "Cloze",
+        "description": "Oculta palabras usando {{c1::palabra}}. Números distintos (c1, c2...) generan cards separadas. Añade === al final para una explicación opcional mostrada tras cada hueco.",
+        "cards": "1 card por grupo de eliminación"
+      },
+      "multipleChoice": {
+        "label": "Opción múltiple",
+        "description": "Una pregunta seguida de opciones. Marca la correcta con [x] y las incorrectas con [ ]. Añade === tras las opciones para una explicación opcional.",
+        "cards": "Genera 1 card"
+      }
+    },
+    "tips": {
+      "title": "Tips y aclaraciones",
+      "basic": {
+        "tip1": "El separador --- debe estar en su propia línea, sin ningún otro texto en esa línea.",
+        "tip2": "Si el tipo aparece como Desconocido, comprueba que no haya marcadores <-> o {{...}} accidentales.",
+        "tip3": "Ambas caras admiten Markdown completo: negrita, listas, código en línea, etc."
+      },
+      "basicReverse": {
+        "tip1": "<-> debe ser la última línea antes de ===. Cualquier texto después rompe la detección.",
+        "tip2": "Se generan dos cards: Pregunta → Respuesta y Respuesta → Pregunta.",
+        "tip3": "Ambas caras pueden ser tan largas como necesites — la longitud no afecta a la detección del tipo."
+      },
+      "cloze": {
+        "tip1": "Varios {{c1::...}} en la misma nota pertenecen a una sola card (mismo número de grupo).",
+        "tip2": "No combines {{...}} con marcadores --- o - [x] en la misma nota.",
+        "tip3": "Usa números consecutivos (c1, c2, c3...). Saltarse números puede dar resultados inesperados."
+      },
+      "multipleChoice": {
+        "tip1": "Debe haber exactamente un [x] — la respuesta correcta. Varios [x] rompen la detección.",
+        "tip2": "Las opciones incorrectas usan - [ ] con un espacio entre corchetes, no - [].",
+        "tip3": "No combines opciones con marcadores --- o {{...}} en la misma nota."
+      }
+    }
   },
   "dashboard": {
     "title": "Estadísticas",

@@ -1,5 +1,7 @@
 package com.helderruiz.reitera_backend.modules.auth.filter;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
@@ -14,9 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Per-IP token-bucket rate limiter for authentication endpoints to mitigate brute-force attacks.
@@ -28,12 +29,18 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private static final Set<String> RATE_LIMITED_PATHS = Set.of(
             "/api/v1/auth/login",
-            "/api/v1/auth/register"
+            "/api/v1/auth/register",
+            "/api/v1/auth/resend-verification",
+            "/api/v1/auth/forgot-password",
+            "/api/v1/auth/reset-password"
     );
 
     private static final int REQUESTS_PER_MINUTE = 5;
+    private static final int CACHE_EXPIRATION_TIME = 10;
 
-    private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
+    private final LoadingCache<String, Bucket> buckets = Caffeine.newBuilder()
+            .expireAfterAccess(CACHE_EXPIRATION_TIME, TimeUnit.MINUTES)
+            .build(this::newBucket);
 
     @Override
     protected void doFilterInternal(
@@ -47,7 +54,8 @@ public class RateLimitFilter extends OncePerRequestFilter {
             return;
         }
 
-        Bucket bucket = buckets.computeIfAbsent(resolveClientIp(request), this::newBucket);
+        String clientIp = resolveClientIp(request);
+        Bucket bucket = buckets.get(clientIp + ":" + request.getRequestURI());
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
         if (probe.isConsumed()) {

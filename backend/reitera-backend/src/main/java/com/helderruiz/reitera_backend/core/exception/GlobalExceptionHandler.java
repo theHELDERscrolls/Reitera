@@ -61,8 +61,29 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handles business rule violations explicitly thrown by services (duplicate email,
-     * invalid card-deck relation, etc.) and returns HTTP 400 with the original message.
+     * Handles data conflict errors (duplicate email, duplicate username, etc.) and returns HTTP 409.
+     * Allows the client to distinguish conflicts from other validation errors.
+     */
+    @ExceptionHandler(DataConflictException.class)
+    public ResponseEntity<Map<String, String>> handleDataConflict(DataConflictException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    /**
+     * Handles expired password reset tokens and returns HTTP 410 Gone.
+     * Distinct from 400 so the frontend can show a targeted "link expired" message.
+     */
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Map<String, String>> handleTokenExpired(TokenExpiredException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.GONE).body(error);
+    }
+
+    /**
+     * Handles business rule violations explicitly thrown by services and returns HTTP 400.
      * Messages thrown via IllegalArgumentException are considered safe to expose to clients.
      */
     @ExceptionHandler(IllegalArgumentException.class)

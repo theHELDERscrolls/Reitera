@@ -2,17 +2,26 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { LucideLock, LucideMail } from '@lucide/angular';
 
 import { AuthService } from '@core/auth/auth.service';
-import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
 import { LoginRequest } from '@core/models/auth.model';
 import { ToastService } from '@core/toast/toast.service';
+import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, TranslocoPipe, LanguageSwitcherComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoPipe,
+    LanguageSwitcherComponent,
+    AppButtonComponent,
+    AppInputComponent,
+  ],
   templateUrl: './login.component.html',
-  styles: ``,
 })
 export default class LoginComponent {
   private readonly fb = inject(FormBuilder);
@@ -22,19 +31,13 @@ export default class LoginComponent {
   private readonly toast = inject(ToastService);
 
   readonly loading = signal(false);
+  readonly mailIcon = LucideMail;
+  readonly lockIcon = LucideLock;
 
   readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
-
-  get email() {
-    return this.form.get('email');
-  }
-
-  get password() {
-    return this.form.get('password');
-  }
 
   submit(): void {
     if (this.form.invalid) {

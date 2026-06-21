@@ -9,11 +9,14 @@ import {
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { LucideLock, LucideMail, LucideUser } from '@lucide/angular';
 
 import { AuthService } from '@core/auth/auth.service';
-import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
 import { RegisterRequest } from '@core/models/auth.model';
 import { ToastService } from '@core/toast/toast.service';
+import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 
 const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
 
@@ -26,9 +29,15 @@ const matchPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors |
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink, TranslocoPipe, LanguageSwitcherComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoPipe,
+    LanguageSwitcherComponent,
+    AppButtonComponent,
+    AppInputComponent,
+  ],
   templateUrl: './register.component.html',
-  styles: ``,
 })
 export default class RegisterComponent {
   private readonly fb = inject(FormBuilder);
@@ -38,6 +47,9 @@ export default class RegisterComponent {
   private readonly toast = inject(ToastService);
 
   readonly loading = signal(false);
+  readonly mailIcon = LucideMail;
+  readonly lockIcon = LucideLock;
+  readonly userIcon = LucideUser;
 
   readonly form = this.fb.group(
     {
@@ -64,13 +76,16 @@ export default class RegisterComponent {
 
     this.authService.register(this.form.value as RegisterRequest).subscribe({
       next: () => {
-        this.toast.success(this.transloco.translate('auth.register.success'));
-        void this.router.navigate(['/dashboard']);
+        void this.router.navigate(['/auth/check-email'], {
+          state: { email: this.form.value.email },
+        });
       },
       error: (err) => {
-        this.toast.error(
-          err.error?.message ?? this.transloco.translate('auth.register.error.server'),
-        );
+        if (err.status === 409) {
+          this.toast.warning(this.transloco.translate('auth.register.error.email_taken'));
+        } else {
+          this.toast.error(this.transloco.translate('auth.register.error.server'));
+        }
         this.loading.set(false);
       },
     });

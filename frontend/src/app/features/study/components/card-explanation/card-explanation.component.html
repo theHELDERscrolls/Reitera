@@ -1,6 +1,9 @@
-<div class="px-4 py-3 border rounded-lg bg-overlay border-border">
+<div class="px-4 py-3 border rounded-xs bg-overlay border-border">
   <p class="mb-1 text-xs font-semibold tracking-wide uppercase text-muted">
     {{ 'study.session.explanation' | transloco }}
   </p>
-  <p class="text-xs leading-relaxed sm:text-sm text-foreground">{{ text() }}</p>
+  <markdown
+    class="text-xs leading-relaxed sm:text-sm text-foreground prose prose-sm max-w-none"
+    [data]="text()"
+  />
 </div>

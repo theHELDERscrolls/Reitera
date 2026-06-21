@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { LucideBookOpen, LucideChevronDown, LucidePlay } from '@lucide/angular';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { CardCountBadgesComponent } from '@shared/components/card-count-badges/card-count-badges.component';
@@ -8,6 +8,8 @@ import { DeckResponse } from '@core/models/deck.model';
 import { DecksService } from '@features/decks/services/decks.service';
 import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { SessionBackupService } from '@features/study/services/session-backup.service';
+import { SessionRecoveryNoticeComponent } from '@features/study/components/session-recovery-notice/session-recovery-notice.component';
 import { ToastService } from '@core/toast/toast.service';
 
 const COLLAPSED_STORAGE_KEY = 'study-hub-collapsed';
@@ -52,18 +54,27 @@ interface DeckGroup {
     LucidePlay,
     PageHeaderComponent,
     RouterLink,
+    SessionRecoveryNoticeComponent,
     TranslocoPipe,
   ],
   templateUrl: './study-hub.component.html',
 })
 export class StudyHubComponent implements OnInit {
   private readonly decksService = inject(DecksService);
+  private readonly router = inject(Router);
+  private readonly sessionBackupService = inject(SessionBackupService);
   private readonly toastService = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
 
   readonly isLoading = signal(true);
   readonly allDecks = signal<DeckResponse[]>([]);
   readonly collapsedGroups = signal<Set<number | null>>(readCollapsedState());
+  readonly pendingBackup = this.sessionBackupService.backup;
+
+  readonly pendingBackupName = computed(() => {
+    const backup = this.sessionBackupService.backup();
+    return backup?.deckName ?? backup?.categoryName ?? '';
+  });
 
   readonly totalNew = computed(() => this.allDecks().reduce((s, d) => s + d.newCount, 0));
   readonly totalDue = computed(() => this.allDecks().reduce((s, d) => s + d.dueCount, 0));
@@ -115,6 +126,27 @@ export class StudyHubComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDecks();
+  }
+
+  resumeBackup(): void {
+    const backup = this.sessionBackupService.backup();
+    if (!backup) return;
+
+    this.sessionBackupService.markAutoResume();
+
+    if (backup.deckId !== null) {
+      this.router.navigate(['/study'], {
+        queryParams: { deckId: backup.deckId, deckName: backup.deckName },
+      });
+    } else if (backup.categoryId !== null) {
+      this.router.navigate(['/study'], {
+        queryParams: { categoryId: backup.categoryId, categoryName: backup.categoryName },
+      });
+    }
+  }
+
+  discardBackup(): void {
+    this.sessionBackupService.clear();
   }
 
   toggleGroup(categoryId: number | null): void {

@@ -1,40 +1,31 @@
-<!-- Card edit form dialog -->
-@if (isCardFormOpen() && cardToEdit()) {
-  <app-card-form
-    [deckId]="cardToEdit()!.deckId"
-    [cardToEdit]="cardToEdit()"
-    [tags]="tags()"
-    (saved)="onCardSaved($event)"
-    (closed)="closeCardForm()"
-    (deleted)="requestDeleteCard(cardToEdit()!); closeCardForm()"
+@if (isNoteEditorOpen() && noteToEdit()) {
+  <app-note-editor
+    [deckId]="noteToEdit()!.deckId"
+    [noteToEdit]="noteToEdit()"
+    (saved)="onNoteSaved()"
+    (closed)="closeNoteEditor()"
   />
 }
 
-<!-- Delete confirmation dialog -->
 @if (cardToDelete()) {
   <app-confirm-dialog
-    [title]="'cardList.deleteCard.title' | transloco"
-    [message]="'cardList.deleteCard.message' | transloco"
+    [title]="'cardList.deleteNote.title' | transloco"
+    [message]="'cardList.deleteNote.message' | transloco"
     (confirmed)="confirmDeleteCard()"
     (cancelled)="cardToDelete.set(null)"
   />
 }
 
-<!-- Page content -->
 <div class="flex flex-col gap-6">
-  <!-- Page header -->
   <div class="flex items-center justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-bold text-foreground">{{ 'cardList.title' | transloco }}</h1>
-    </div>
+    <h1 class="text-2xl font-bold text-foreground">{{ 'cardList.title' | transloco }}</h1>
   </div>
 
-  <!-- Filter bar -->
-  <div class="flex flex-wrap items-center gap-2 px-3 py-1.5 border rounded-xl bg-surface border-border">
-    <!-- Filter icon -->
+  <div
+    class="flex flex-wrap items-center gap-2 px-3 py-1.5 border-3 rounded-xs bg-surface border-border"
+  >
     <svg lucideListFilter class="mr-1 size-4 text-muted shrink-0" />
 
-    <!-- Question search input -->
     <div class="flex-1 min-w-48">
       <input
         type="text"
@@ -42,60 +33,145 @@
         [ngModel]="filterQuestion()"
         (ngModelChange)="filterQuestion.set($event)"
         (keydown.enter)="applyFilters()"
-        class="w-full px-3 py-1.5 text-sm border rounded-lg bg-background border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-colors"
+        class="w-full px-3 py-1.5 text-sm border-3 rounded-xs bg-background border-border text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-colors"
       />
     </div>
 
-    <!-- Type dropdown -->
     <app-filter-dropdown
       [options]="typeOptions"
       [selected]="filterType()"
       (selectOption)="selectType($event)"
     />
 
-    <!-- State dropdown -->
     <app-filter-dropdown
       [options]="stateOptions"
       [selected]="filterState()"
       (selectOption)="selectState($event)"
     />
 
-    <!-- Tag dropdown -->
-    @if (tags().length > 0) {
-      <app-filter-dropdown
-        [options]="tagOptions()"
-        [selected]="filterTagId()"
-        (selectOption)="selectTag($event)"
-      />
-    }
-
-    <!-- Clear filters -->
-    <button
-      type="button"
-      (click)="clearFilters()"
+    <app-button
+      variant="danger"
+      size="sm"
       [disabled]="!hasActiveFilters()"
-      class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors text-muted bg-surface-alt enabled:text-error/90 enabled:bg-error/5 enabled:hover:text-error enabled:hover:bg-error/15 disabled:opacity-40 disabled:cursor-not-allowed"
+      (clicked)="clearFilters()"
     >
       <svg lucideX class="size-3.5" />
       {{ 'cardList.filterClear' | transloco }}
-    </button>
+    </app-button>
   </div>
 
-  <!-- Cards table -->
-  <app-cards-table
-    [cards]="cards()"
-    [isLoading]="isLoading()"
-    [sortDir]="sortDir()"
-    [sortField]="sortField()"
-    [emptyTitle]="'cardList.empty.title'"
-    [emptySubtitle]="'cardList.empty.subtitle'"
-    [showAddAction]="false"
-    (edit)="openEditCardForm($event)"
-    (delete)="requestDeleteCard($event)"
-    (sort)="toggleSort($event)"
-  />
+  @if (isLoading()) {
+    <div class="flex flex-col gap-2">
+      @for (_ of [1, 2, 3, 4, 5]; track $index) {
+        <div class="rounded-xs h-14 bg-overlay animate-pulse"></div>
+      }
+    </div>
+  } @else if (cards().length === 0) {
+    <app-empty-state
+      [title]="'cardList.empty.title' | transloco"
+      [subtitle]="'cardList.empty.subtitle' | transloco"
+    >
+      <svg icon lucideBookOpen class="size-8 text-muted" />
+    </app-empty-state>
+  } @else {
+    <div class="overflow-x-auto border-3 rounded-xs border-border">
+      <table class="w-full text-sm table-auto">
+        <thead>
+          <tr class="border-b border-border bg-overlay/50">
+            <th class="w-full min-w-52 px-4 py-2.5 text-left text-xs font-medium text-muted">
+              <button
+                type="button"
+                (click)="toggleSort('question')"
+                class="flex items-center gap-1 transition-colors hover:text-foreground"
+              >
+                {{ 'deckDetail.cards.table.question' | transloco }}
+                @if (sortField() === 'question') {
+                  @if (sortDir() === 'asc') {
+                    <svg lucideArrowUp class="size-3" />
+                  } @else {
+                    <svg lucideArrowDown class="size-3" />
+                  }
+                } @else {
+                  <svg lucideArrowUpDown class="size-3 opacity-40" />
+                }
+              </button>
+            </th>
+            <th class="px-3 py-2.5 text-left text-xs font-medium text-muted whitespace-nowrap">
+              <button
+                type="button"
+                (click)="toggleSort('type')"
+                class="flex items-center gap-1 transition-colors hover:text-foreground"
+              >
+                {{ 'deckDetail.cards.table.type' | transloco }}
+                @if (sortField() === 'type') {
+                  @if (sortDir() === 'asc') {
+                    <svg lucideArrowUp class="size-3" />
+                  } @else {
+                    <svg lucideArrowDown class="size-3" />
+                  }
+                } @else {
+                  <svg lucideArrowUpDown class="size-3 opacity-40" />
+                }
+              </button>
+            </th>
+            <th class="px-3 py-2.5 text-left text-xs font-medium text-muted whitespace-nowrap">
+              {{ 'deckDetail.cards.table.state' | transloco }}
+            </th>
+            <th class="hidden sm:table-cell px-3 py-2.5 text-right text-xs font-medium text-muted">
+              {{ 'deckDetail.cards.table.actions' | transloco }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (card of cards(); track card.id) {
+            <tr
+              class="transition-colors border-b cursor-pointer border-border/50 last:border-0 hover:bg-overlay/40"
+              (click)="openEditNoteEditor(card)"
+              (keydown.enter)="openEditNoteEditor(card)"
+            >
+              <td class="px-4 py-3 max-w-0 min-w-52">
+                <span class="line-clamp-2 sm:line-clamp-1 text-foreground">{{
+                  card.question
+                }}</span>
+              </td>
 
-  <!-- Pagination -->
+              <td class="px-3 py-3 whitespace-nowrap">
+                <app-card-type-badge [type]="card.type" />
+              </td>
+
+              <td class="px-3 py-3 whitespace-nowrap">
+                <app-card-state-badge [state]="card.state" />
+              </td>
+
+              <td
+                class="hidden px-3 py-3 sm:table-cell"
+                (click)="$event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+              >
+                <div class="flex items-center justify-end gap-1">
+                  <button
+                    (click)="openEditNoteEditor(card)"
+                    class="p-1.5 rounded-xs text-muted hover:text-primary hover:bg-primary/10 transition-colors"
+                    [attr.aria-label]="'cardList.editNote' | transloco"
+                  >
+                    <svg lucideSquarePen class="size-4" />
+                  </button>
+                  <button
+                    (click)="requestDeleteCard(card)"
+                    class="p-1.5 rounded-xs text-muted hover:text-error hover:bg-error/10 transition-colors"
+                    [attr.aria-label]="'cardList.deleteNote.title' | transloco"
+                  >
+                    <svg lucideTrash2 class="size-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
   @if (totalPages() > 1) {
     <app-pagination
       [currentPage]="currentPage()"

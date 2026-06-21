@@ -37,28 +37,29 @@ The backend is organized by **feature module**, not by technical layer:
 ```
 modules/
 ├── auth/
-│   ├── controller/ → AuthController: /register, /login, /refresh, /logout
+│   ├── controller/ → AuthController: /register, /login, /refresh, /logout, /verify, /resend-verification, /forgot-password, /reset-password
 │   ├── filter/     → JwtAuthenticationFilter (intercepts every request)
 │   ├── model/      → RefreshToken entity
 │   ├── repository/ → RefreshTokenRepository
 │   └── service/    → JwtService, RefreshTokenService
 ├── user/           → User & Role entities, registration, authentication logic, profile endpoint (UserController)
-├── deck/           → Deck, Category, Tag, UserDeckSubscription entities + CRUD, categories, tags and deck stats APIs
-├── card/           → Card entity + CRUD API (nested under decks) + tag-filtered search + inline tag find-or-create
+├── deck/           → Deck, Category entities + CRUD, categories and deck stats APIs
+├── note/           → Note entity + CRUD API (nested under decks) + NoteParser (Markdown → cards auto-generation)
+├── card/           → Card entity + cross-deck search (CardListController) with dynamic JPA Specifications
 ├── study/          → StudyProgress, ReviewLog entities + FSRS-6 algorithm + study session API
 └── dashboard/      → DashboardController, DashboardService — stats, heatmap and last-studied endpoints
 
 core/
-└── exception/      → GlobalExceptionHandler, ResourceNotFoundException
+├── email/          → EmailService (Resend SDK wrapper), EmailVerificationService (token generation, SHA-256 hashing, expiry, verification), PasswordResetService (forgot-password token generation + reset)
+└── exception/      → GlobalExceptionHandler, ResourceNotFoundException, DataConflictException, InvalidRefreshTokenException, TokenExpiredException (→ 410 Gone)
 ```
-
-**Tag lifecycle:** Tags are user-scoped — the uniqueness constraint is `UNIQUE(name, owner_id)`, not global. Tags are created inline during card save via `TagService.findOrCreateTag()` (same find-or-create pattern as categories). Tags with no remaining cards are automatically deleted by `CardService.cleanupOrphanTags()` after every update or delete, inside the same `@Transactional` block.
 
 ## Database Design
 
 - **Schema management:** Manual SQL scripts (`ddl-auto: none`). No Flyway/Liquibase yet.
 - **Primary keys:** UUID for `users`, auto-increment Integer for all other entities.
-- **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different card types (BASIC, MULTIPLE_CHOICE, TRUE_FALSE) to use different answer structures without schema changes.
+- **Note-based card generation:** Cards are never created directly. Each `Note` has a `content` (Markdown) field that `NoteParser` converts to one or more `Card` rows. Supported note types: `BASIC` (1 card), `BASIC_REVERSE` (2 cards), `CLOZE` (one card per `{{cN::}}` deletion), `MULTIPLE_CHOICE` (1 card). Cards inherit the note's type string.
+- **Flexible card answers:** `answer_json` is stored as native PostgreSQL `JSONB`, mapped via Hibernate 6's `@JdbcTypeCode(SqlTypes.JSON)` to a `Map<String, Object>`. This allows different note/card types to use different answer structures without schema changes.
 - **Composite keys:** `StudyProgress` uses a composite PK of `(user_id, card_id)` — one progress record per user per card.
 - **Refresh tokens:** the raw UUID token is never stored. Only its SHA-256 hex digest (`token_hash VARCHAR(64)`) is persisted. `ON DELETE CASCADE` on `user_id` ensures cleanup on user deletion. The `revoked` flag preserves the audit trail without physically deleting rows.
 
@@ -75,4 +76,66 @@ Study sessions follow a **batch architecture** — the backend is only hit twice
 
 **Scope modes:** both endpoints accept either `deckId` (single deck) or `categoryId` (all decks in a category), enabling users to study individual topics or full subjects at once.
 
-**Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Again on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
+**Interval precision:** intervals are stored and applied at minute precision. Low-stability cards (e.g. Forgotten on a new card) receive sub-day intervals (~5 hours) rather than being forced to the next day.
+
+## Testing Strategy
+
+Tests live in `src/test/java/` mirroring the production package structure. Two test types are used — no integration tests exist yet.
+
+### Unit tests (service layer)
+
+```
+@ExtendWith(MockitoExtension.class)
+class XServiceTest {
+    // instance fields (test data)
+    @Mock     XRepository xRepository;
+    @InjectMocks XService xService;
+
+    @BeforeEach void setUp() { ... }
+    @Test void methodName_condition_expectedOutcome() { ... }
+}
+```
+
+- Framework: JUnit 5 + Mockito + AssertJ
+- `@Mock` injects fakes for every repository/service dependency
+- `@InjectMocks` instantiates the class under test with those fakes injected
+- `@Value`-injected fields set via `ReflectionTestUtils.setField()` in `@BeforeEach`
+- Assertions use AssertJ (`assertThat`, `assertThatThrownBy`)
+- Side-effect verification uses `verify(repo).method(...)` / `verify(repo, never()).method(...)`
+
+### Controller slice tests (web layer)
+
+```
+@WebMvcTest(XController.class)
+class XControllerTest {
+    @Autowired MockMvc mockMvc;
+    @MockitoBean XService xService;
+    @MockitoBean JwtService jwtService;   // always required — JwtAuthenticationFilter depends on it
+
+    @Test void endpoint_returns200_whenAuthenticated() throws Exception {
+        mockMvc.perform(get("/api/v1/...").with(user(mockUser)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.field").value(...));
+    }
+}
+```
+
+- Framework: `@WebMvcTest` (Spring MVC slice) + `SecurityMockMvcRequestPostProcessors`
+- `@MockitoBean JwtService` is required in every controller test because `JwtAuthenticationFilter` is a `@Component` filter loaded by the slice and depends on `JwtService`
+- `.with(user(mockUser))` injects authentication directly into the `SecurityContext`, bypassing the JWT filter entirely — used for all protected endpoints
+- POST/PUT/DELETE requests include `.with(csrf())` for CSRF compatibility
+- `AuthControllerTest` is the only exception: it adds `@Import(SecurityConfig.class)` + `@MockitoBean AuthenticationProvider` + `@MockitoBean UserDetailsService` to activate the `permitAll()` rules for public auth endpoints
+
+### Coverage
+
+| Module | Unit tests | Slice tests |
+|--------|-----------|-------------|
+| auth | `JwtServiceTest` (4), `RefreshTokenServiceTest` (7), `PasswordResetServiceTest` (5) | `AuthControllerTest` (17) |
+| user | `UserServiceTest` (11) | `UserControllerTest` (5) |
+| deck | `DeckServiceTest` (20), `CategoryServiceTest` (1) | `DeckControllerTest` (16), `CategoryControllerTest` (2) |
+| note | `NoteParserTest` (21), `NoteServiceTest` (11) | `NoteControllerTest` (8) |
+| card | — | `CardListControllerTest` (3) |
+| study | `FsrsServiceTest` (3), `StudyServiceTest` (4) | `StudyControllerTest` (5) |
+| dashboard | `DashboardServiceTest` (4) | `DashboardControllerTest` (4) |
+
+**Total: 152 tests** across 20 test classes. Run with `mvn test` from `backend/reitera-backend/`.

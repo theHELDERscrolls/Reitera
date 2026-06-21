@@ -1,5 +1,6 @@
 import {
   Component,
+  OnDestroy,
   OnInit,
   computed,
   effect,
@@ -8,7 +9,9 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
+import { environment } from '@environments/environment';
 import {
   LucideArrowLeft,
   LucideBookCheck,
@@ -16,18 +19,24 @@ import {
   LucideCircleCheck,
 } from '@lucide/angular';
 import { Router, RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import { CardRating, DueCard, StudySessionRequest } from '@core/models/study.model';
+import { CardRating, DueCard, SessionBackup, StudySessionRequest } from '@core/models/study.model';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { SessionBackupService } from '@features/study/services/session-backup.service';
+import { SessionRecoveryNoticeComponent } from '@features/study/components/session-recovery-notice/session-recovery-notice.component';
 import { StudyCardComponent } from '../study-card/study-card.component';
 import { StudyService } from '@features/study/services/study.service';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { StudyStateService } from '@features/study/services/study-state.service';
+import { ToastService } from '@core/toast/toast.service';
 
-type SessionState = 'loading' | 'empty' | 'active' | 'complete';
+type SessionState = 'loading' | 'recovery' | 'empty' | 'active' | 'complete';
 
 @Component({
   selector: 'app-study-session',
+  host: { class: 'flex flex-col h-full' },
   imports: [
+    AppButtonComponent,
     ConfirmDialogComponent,
     EmptyStateComponent,
     LucideArrowLeft,
@@ -35,33 +44,44 @@ type SessionState = 'loading' | 'empty' | 'active' | 'complete';
     LucideBookOpen,
     LucideCircleCheck,
     RouterLink,
+    SessionRecoveryNoticeComponent,
     StudyCardComponent,
     TranslocoPipe,
   ],
   templateUrl: './study-session.component.html',
 })
-export class StudySessionComponent implements OnInit {
-  readonly deckId = input<number | null>(null);
+export class StudySessionComponent implements OnInit, OnDestroy {
   readonly categoryId = input<number | null>(null);
+  readonly categoryName = input<string | null>(null);
+  readonly deckId = input<number | null>(null);
+  readonly deckName = input<string | null>(null);
 
-  private readonly studyService = inject(StudyService);
   private readonly router = inject(Router);
+  private readonly sessionBackupService = inject(SessionBackupService);
+  private readonly studyService = inject(StudyService);
+  private readonly studyState = inject(StudyStateService);
+  private readonly toastService = inject(ToastService);
+  private readonly transloco = inject(TranslocoService);
 
+  readonly isComplete = signal(false);
   readonly isLoading = signal(true);
   readonly isSubmitting = signal(false);
-  readonly isComplete = signal(false);
+  readonly recoveryBackup = signal<SessionBackup | null>(null);
   readonly showBackDialog = signal(false);
 
-  readonly queue = signal<DueCard[]>([]);
   readonly originalTotal = signal(0);
-  readonly ratings = signal<Map<number, number>>(new Map());
-  readonly againCount = signal<Map<number, number>>(new Map());
+  readonly queue = signal<DueCard[]>([]);
+  readonly ratings = signal<Map<number, 1 | 3>>(new Map());
   readonly revealed = signal(false);
+
+  private startedAt = 0;
 
   readonly currentCard = computed(() => this.queue()[0] ?? null);
 
   readonly sessionState = computed<SessionState>(() => {
     if (this.isLoading()) return 'loading';
+
+    if (this.recoveryBackup() !== null) return 'recovery';
 
     if (this.originalTotal() === 0) return 'empty';
 
@@ -72,14 +92,46 @@ export class StudySessionComponent implements OnInit {
 
   readonly progress = computed(() => {
     const total = this.originalTotal();
-    const reviewed = this.ratings().size;
+    const remembered = [...this.ratings().values()].filter((rating) => rating === 3).length;
 
     return {
-      reviewed,
+      reviewed: remembered,
       total,
-      percent: total > 0 ? Math.round((reviewed / total) * 100) : 0,
+      percent: total > 0 ? Math.round((remembered / total) * 100) : 0,
     };
   });
+
+  readonly deactivationRequested = this.studyState.deactivationRequested;
+
+  readonly recoveryName = computed(() => {
+    const backup = this.recoveryBackup();
+
+    if (!backup) return '';
+
+    return backup.deckName ?? backup.categoryName ?? '';
+  });
+
+  private readonly handleBeforeUnload = (event: BeforeUnloadEvent): void => {
+    if (this.ratings().size === 0) return;
+
+    event.preventDefault();
+
+    const ratings: CardRating[] = Array.from(this.ratings().entries()).map(([cardId, rating]) => ({
+      cardId,
+      rating,
+    }));
+
+    const request: StudySessionRequest = {
+      deckId: this.deckId() ?? null,
+      categoryId: this.categoryId() ?? null,
+      ratings,
+    };
+
+    navigator.sendBeacon(
+      `${environment.apiUrl}/study/sessions`,
+      new Blob([JSON.stringify(request)], { type: 'application/json' }),
+    );
+  };
 
   constructor() {
     effect(() => {
@@ -94,53 +146,73 @@ export class StudySessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const deckId = this.deckId() ?? undefined;
-    const categoryId = this.categoryId() ?? undefined;
+    this.startedAt = Date.now();
 
-    this.studyService.getDueCards(deckId, categoryId).subscribe({
-      next: (cards) => {
-        this.queue.set([...cards]);
-        this.originalTotal.set(cards.length);
+    const backup = this.sessionBackupService.load();
+
+    const backupMatchesSession =
+      backup !== null &&
+      backup.deckId === (this.deckId() ?? null) &&
+      backup.categoryId === (this.categoryId() ?? null);
+
+    if (backupMatchesSession) {
+      if (this.sessionBackupService.consumeAutoResume()) {
         this.isLoading.set(false);
-      },
-      error: () => {
+        this.resumeBackup();
+      } else {
+        this.recoveryBackup.set(backup);
         this.isLoading.set(false);
-      },
-    });
+      }
+    } else {
+      this.loadDueCards();
+    }
+
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    this.studyState.hasPendingRatings.set(false);
   }
 
   revealAnswer(): void {
     this.revealed.set(true);
   }
 
-  rate(rating: 1 | 2 | 3 | 4): void {
+  rate(rating: 1 | 3): void {
     const card = this.currentCard();
 
     if (!card) return;
 
-    this.ratings.update((m) => new Map(m).set(card.id, rating));
+    this.ratings.update((currentRatings) => new Map(currentRatings).set(card.id, rating));
 
     if (rating === 1) {
-      const count = (this.againCount().get(card.id) ?? 0) + 1;
-
-      this.againCount.update((m) => new Map(m).set(card.id, count));
-
-      this.queue.update((q) => {
-        const [, ...rest] = q;
-
-        if (count < 3) {
-          const pos = Math.min(10, rest.length);
-
-          rest.splice(pos, 0, card);
-        }
-
-        return rest;
+      this.queue.update((currentQueue) => {
+        const [, ...remainingCards] = currentQueue;
+        remainingCards.push(card);
+        return remainingCards;
       });
     } else {
-      this.queue.update(([, ...rest]) => rest);
+      this.queue.update(([, ...remainingCards]) => remainingCards);
     }
 
     this.revealed.set(false);
+    this.studyState.hasPendingRatings.set(true);
+
+    const ratingsArray: CardRating[] = Array.from(this.ratings().entries()).map(
+      ([cardId, cardRating]) => ({ cardId, rating: cardRating }),
+    );
+
+    this.sessionBackupService.save({
+      version: '1',
+      deckId: this.deckId() ?? null,
+      deckName: this.deckName() ?? null,
+      categoryId: this.categoryId() ?? null,
+      categoryName: this.categoryName() ?? null,
+      ratings: ratingsArray,
+      startedAt: this.startedAt,
+      updatedAt: Date.now(),
+    });
   }
 
   goBack(): void {
@@ -158,6 +230,72 @@ export class StudySessionComponent implements OnInit {
     this.submitSession(true);
   }
 
+  resumeBackup(): void {
+    const backup = this.recoveryBackup();
+
+    if (!backup) return;
+
+    this.isSubmitting.set(true);
+
+    const request: StudySessionRequest = {
+      deckId: backup.deckId,
+      categoryId: backup.categoryId,
+      ratings: backup.ratings,
+    };
+
+    this.studyService.processSession(request).subscribe({
+      next: (response) => {
+        this.sessionBackupService.clear();
+        this.recoveryBackup.set(null);
+        this.isSubmitting.set(false);
+
+        if (response.cardsReviewed === 0) {
+          this.toastService.info(this.transloco.translate('study.session.recovery.noCards'));
+        } else {
+          this.toastService.success(this.transloco.translate('study.session.recovery.success'));
+        }
+
+        this.loadDueCards();
+      },
+      error: () => {
+        this.isSubmitting.set(false);
+        this.toastService.error(this.transloco.translate('common.error'));
+      },
+    });
+  }
+
+  discardBackup(): void {
+    this.sessionBackupService.clear();
+    this.recoveryBackup.set(null);
+    this.loadDueCards();
+  }
+
+  confirmDeactivation(): void {
+    this.studyState.confirmDeactivation();
+  }
+
+  cancelDeactivation(): void {
+    this.studyState.cancelDeactivation();
+  }
+
+  private loadDueCards(): void {
+    this.isLoading.set(true);
+
+    const deckId = this.deckId() ?? undefined;
+    const categoryId = this.categoryId() ?? undefined;
+
+    this.studyService.getDueCards(deckId, categoryId).subscribe({
+      next: (cards) => {
+        this.queue.set([...cards]);
+        this.originalTotal.set(cards.length);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      },
+    });
+  }
+
   private submitSession(navigateToHub: boolean): void {
     const ratingsMap = this.ratings();
 
@@ -171,7 +309,7 @@ export class StudySessionComponent implements OnInit {
 
     const ratings: CardRating[] = Array.from(ratingsMap.entries()).map(([cardId, rating]) => ({
       cardId,
-      rating: rating as 1 | 2 | 3 | 4,
+      rating,
     }));
 
     const request: StudySessionRequest = {
@@ -181,7 +319,9 @@ export class StudySessionComponent implements OnInit {
     };
 
     this.studyService.processSession(request).subscribe({
-      next: () => {
+      complete: () => {
+        this.sessionBackupService.clear();
+        this.studyState.hasPendingRatings.set(false);
         this.isSubmitting.set(false);
 
         if (navigateToHub) {

@@ -1,13 +1,21 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
+import { MarkdownComponent } from 'ngx-markdown';
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { DueCard } from '@core/models/study.model';
 import { CardExplanationComponent } from '../card-explanation/card-explanation.component';
+import { DueCard } from '@core/models/study.model';
 import { RatingButtonsComponent } from '../rating-buttons/rating-buttons.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
 
 @Component({
   selector: 'app-study-card',
-  imports: [TranslocoPipe, CardExplanationComponent, RatingButtonsComponent],
+  imports: [
+    AppButtonComponent,
+    TranslocoPipe,
+    CardExplanationComponent,
+    RatingButtonsComponent,
+    MarkdownComponent,
+  ],
   templateUrl: './study-card.component.html',
 })
 export class StudyCardComponent {
@@ -15,16 +23,14 @@ export class StudyCardComponent {
   readonly revealed = input.required<boolean>();
 
   readonly reveal = output<void>();
-  readonly rate = output<1 | 2 | 3 | 4>();
+  readonly rate = output<1 | 3>();
 
   readonly selectedMcIndex = signal<number | null>(null);
-  readonly selectedTf = signal<boolean | null>(null);
 
   constructor() {
     effect(() => {
       this.card();
       this.selectedMcIndex.set(null);
-      this.selectedTf.set(null);
     });
   }
 
@@ -45,12 +51,6 @@ export class StudyCardComponent {
     return mapped;
   });
 
-  readonly tfCorrect = computed(() => {
-    const json = this.card().answerJson as { correct: boolean };
-
-    return json.correct;
-  });
-
   readonly basicAnswer = computed(() => {
     const json = this.card().answerJson as { answer: string };
 
@@ -61,13 +61,6 @@ export class StudyCardComponent {
     if (this.revealed()) return;
 
     this.selectedMcIndex.set(index);
-    this.reveal.emit();
-  }
-
-  selectTf(value: boolean): void {
-    if (this.revealed()) return;
-
-    this.selectedTf.set(value);
     this.reveal.emit();
   }
 }

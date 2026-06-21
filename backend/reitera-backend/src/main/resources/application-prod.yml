@@ -21,6 +21,7 @@ api:
 app:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS}
+  base-url: https://reitera.vercel.app/auth
 
 springdoc:
   swagger-ui:

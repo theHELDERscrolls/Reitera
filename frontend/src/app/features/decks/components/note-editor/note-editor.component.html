@@ -1,0 +1,69 @@
+<div
+  class="fixed inset-0 z-40 flex items-start justify-center p-4 pt-16 overflow-y-auto bg-black/50 backdrop-blur-sm"
+  tabindex="0"
+  (click)="closed.emit()"
+  (keydown.escape)="closed.emit()"
+>
+  <div
+    class="flex flex-col w-full max-w-2xl mb-4 border-3 border-border rounded-xs bg-surface shadow-[6px_6px_0_0_var(--ctp-mocha-crust)]"
+    tabindex="0"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between px-5 py-4 border-b-2 border-border">
+      <h2 class="text-base font-semibold text-foreground">
+        {{ (isEditMode() ? 'noteEditor.titleEdit' : 'noteEditor.titleCreate') | transloco }}
+      </h2>
+
+      <!-- Type badge -->
+      @if (detectedType() !== 'UNKNOWN') {
+        <app-badge variant="accent-1">{{
+          'noteEditor.types.' + detectedType() | transloco
+        }}</app-badge>
+      } @else {
+        <app-badge variant="default">{{ 'noteEditor.types.UNKNOWN' | transloco }}</app-badge>
+      }
+    </div>
+
+    <div class="flex flex-col gap-5 p-4 sm:p-5">
+      <!-- CodeMirror editor -->
+      <div class="flex flex-col gap-1.5">
+        <span class="text-sm font-medium text-foreground">
+          {{ 'noteEditor.contentLabel' | transloco }}
+          <span class="text-error">*</span>
+        </span>
+        <div
+          #editorContainer
+          class="min-h-40 rounded-xs border-3 border-border bg-overlay text-sm focus-within:border-primary transition-colors [&_.cm-editor]:outline-none [&_.cm-focused]:outline-none [&_.cm-editor]:min-h-40 [&_.cm-scroller]:p-2 [&_.cm-content]:font-mono"
+        ></div>
+        @if (hasConflict()) {
+          <p class="text-xs text-error animate-fade-in">
+            {{ 'noteEditor.conflictMarkers' | transloco }}
+          </p>
+        } @else if (detectedType() === 'UNKNOWN' && rawContent().trim()) {
+          <p class="text-xs text-warning">{{ 'noteEditor.typeHint' | transloco }}</p>
+        } @else if (!rawContent().trim()) {
+          <p class="text-xs text-muted-foreground">
+            {{ 'noteEditor.explanationHint' | transloco }}
+          </p>
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-2 pt-3 border-t-2 border-border">
+        <app-button variant="ghost" type="button" (clicked)="closed.emit()">
+          {{ 'common.cancel' | transloco }}
+        </app-button>
+        <app-button
+          type="button"
+          [loading]="isSaving()"
+          [disabled]="detectedType() === 'UNKNOWN' || hasConflict() || !rawContent().trim()"
+          (clicked)="submit()"
+        >
+          {{ 'noteEditor.save' | transloco }}
+        </app-button>
+      </div>
+    </div>
+  </div>
+</div>

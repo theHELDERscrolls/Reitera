@@ -16,12 +16,12 @@ Each card tracks three variables per user:
 
 The user rates each card after reviewing it:
 
-| Rating | Name  | Meaning                    |
-| ------ | ----- | -------------------------- |
-| 1      | Again | Did not remember           |
-| 2      | Hard  | Remembered with difficulty |
-| 3      | Good  | Remembered correctly       |
-| 4      | Easy  | Remembered instantly       |
+| Rating | Name       | Meaning              |
+| ------ | ---------- | -------------------- |
+| 1      | Forgotten  | Did not remember     |
+| 3      | Remembered | Remembered correctly |
+
+> The FSRS-6 algorithm internally supports ratings 1–4. Reitera uses only 1 and 3 to reduce cognitive friction. Parameters `W[1]`, `W[3]` (initial stability for Hard/Easy), `hardPenalty` (W[15]), and `easyBonus` (W[16]) are inert in the current implementation.
 
 ## Card States
 
@@ -29,19 +29,19 @@ The user rates each card after reviewing it:
 0 = New        — never studied
 1 = Learning   — being learned for the first time
 2 = Review     — in long-term spaced repetition rotation
-3 = Relearning — was forgotten (Again in Review state), back to learning
+3 = Relearning — was forgotten (Forgotten in Review state), back to learning
 ```
 
-State transitions:
+State transitions (using Reitera's 2-button inputs):
 
 ```
-New       → [any rating]    → Learning
-Learning  → [Good / Easy]   → Review
-Learning  → [Again / Hard]  → Learning (stays)
-Review    → [Again]         → Relearning
-Review    → [Hard/Good/Easy]→ Review (stays)
-Relearning→ [Good / Easy]   → Review
-Relearning→ [Again / Hard]  → Relearning (stays)
+New        → [Forgotten / Remembered] → Learning
+Learning   → [Remembered]             → Review
+Learning   → [Forgotten]              → Learning (stays)
+Review     → [Forgotten]              → Relearning
+Review     → [Remembered]             → Review (stays)
+Relearning → [Remembered]             → Review
+Relearning → [Forgotten]              → Relearning (stays)
 ```
 
 ## FSRS-6 Default Parameters (W)
@@ -50,11 +50,11 @@ Relearning→ [Again / Hard]  → Relearning (stays)
 
 ```java
 double[] W = {
-    0.212,  1.2931, 2.3065, 8.2956,   // w[0-3]:  S₀ per rating (1=Again → 4=Easy)
+    0.212,  1.2931, 2.3065, 8.2956,   // w[0-3]:  S₀ per rating 1–4 (w[1] and w[3] inert in Reitera)
     6.4133, 0.8334, 3.0194, 0.001,    // w[4-7]:  D₀ and D update
     1.8722, 0.1666, 0.796,  1.4835,   // w[8-11]: S'_recall factors
-    0.0614, 0.2629, 1.6483, 0.6014,   // w[12-15]: S'_forget + Hard penalty
-    1.8729, 0.5425, 0.0912,           // w[16-18]: Easy bonus + same-day scaling
+    0.0614, 0.2629, 1.6483, 0.6014,   // w[12-15]: S'_forget + Hard penalty (w[15] inert in Reitera)
+    1.8729, 0.5425, 0.0912,           // w[16-18]: Easy bonus + same-day scaling (w[16] inert in Reitera)
     0.0658, 0.1542                    // w[19-20]: same-day power + decay
 };
 ```
@@ -69,7 +69,7 @@ Applied on the very first review of a card (state = New).
 S₀(rating) = W[rating - 1]
 ```
 
-Examples: Again → 0.212 days · Good → 2.307 days · Easy → 8.296 days
+Examples: Forgotten (1) → 0.212 days · Remembered (3) → 2.307 days · Easy/4 → 8.296 days (inert in Reitera)
 
 ### Initial difficulty — `D₀`
 
@@ -97,7 +97,7 @@ interval_days = S / factor × (0.9^(1/decay) - 1)   ≈ S days
 interval_minutes = interval_days × 1440
 ```
 
-Intervals are stored and applied at **minute precision**. This allows sub-day intervals for low-stability cards (e.g. Again on a new card → ~305 min).
+Intervals are stored and applied at **minute precision**. This allows sub-day intervals for low-stability cards (e.g. Forgotten on a new card → ~305 min).
 
 ### Difficulty update — `D'`
 
@@ -111,20 +111,20 @@ Mean-reversion: difficulty drifts towards the global average (D₀ at rating=4 �
 
 ### Stability after recall — `S'_recall`
 
-Applied when rating ≥ 2 (Hard / Good / Easy):
+Applied when rating = 3 (Remembered):
 
 ```
 S'_recall = S × exp(W[8]) × (11 - D) × S^(-W[9])
           × (exp(W[10] × (1 - R)) - 1)
-          × hardPenalty   [× W[15] = 0.6014 if rating = 2]
-          × easyBonus     [× W[16] = 1.8729 if rating = 4]
+          × hardPenalty   [× W[15] = 0.6014 if rating = 2 — inert in Reitera]
+          × easyBonus     [× W[16] = 1.8729 if rating = 4 — inert in Reitera]
 ```
 
 Stability always increases after a successful recall. A floor of `S + 0.01` is applied.
 
 ### Stability after forgetting — `S'_forget`
 
-Applied when rating = 1 (Again):
+Applied when rating = 1 (Forgotten):
 
 ```
 S'_forget = W[11] × D^(-W[12]) × ((S + 1)^W[13] - 1) × exp(W[14] × (1 - R))

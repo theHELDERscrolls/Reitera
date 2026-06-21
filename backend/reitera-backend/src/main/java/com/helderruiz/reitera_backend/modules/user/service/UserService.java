@@ -1,8 +1,11 @@
 package com.helderruiz.reitera_backend.modules.user.service;
 
+import com.helderruiz.reitera_backend.core.email.EmailVerificationService;
+import com.helderruiz.reitera_backend.core.exception.DataConflictException;
 import com.helderruiz.reitera_backend.modules.auth.service.JwtService;
 import com.helderruiz.reitera_backend.modules.auth.service.RefreshTokenService;
 import com.helderruiz.reitera_backend.modules.user.dto.AuthResponseDTO;
+import com.helderruiz.reitera_backend.modules.user.dto.UpdateUserRequestDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserLoginDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserRegisterDTO;
 import com.helderruiz.reitera_backend.modules.user.dto.UserResponseDTO;
@@ -26,6 +29,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final EmailVerificationService emailVerificationService;
 
     /**
      * Registers a new user in the system.
@@ -37,11 +41,11 @@ public class UserService {
         }
 
         if (userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new IllegalArgumentException("The email is already registered");
+            throw new DataConflictException("The provided data is invalid or already in use");
         }
 
         if (userRepository.findByUsername(dto.username()).isPresent()) {
-            throw new IllegalArgumentException("The username is already in use");
+            throw new DataConflictException("The provided data is invalid or already in use");
         }
 
         Role studentRole = roleRepository.findByName("STUDENT")
@@ -54,7 +58,10 @@ public class UserService {
                 .firstName(dto.firstName())
                 .lastName(dto.lastName())
                 .role(studentRole)
+                .emailVerified(false)
                 .build());
+
+        emailVerificationService.sendToken(savedUser);
 
         return new UserResponseDTO(
                 savedUser.getId(),
@@ -62,7 +69,7 @@ public class UserService {
                 savedUser.getEmail(),
                 savedUser.getFirstName(),
                 savedUser.getLastName(),
-                savedUser.getRole().getName(),
+                savedUser.getAvatarId(),
                 savedUser.getCreatedAt()
         );
     }
@@ -77,8 +84,37 @@ public class UserService {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRole().getName(),
+                user.getAvatarId(),
                 user.getCreatedAt()
+        );
+    }
+
+    /**
+     * Updates the personal data and avatar of the authenticated user.
+     * Enforces username uniqueness: rejects with 409 if the new username belongs to a different account.
+     */
+    public UserResponseDTO updateMe(UpdateUserRequestDTO dto, User user) {
+        if (!dto.username().equals(user.getNickname())) {
+            userRepository.findByUsername(dto.username()).ifPresent(existing -> {
+                throw new DataConflictException("The provided data is invalid or already in use");
+            });
+        }
+
+        user.setUsername(dto.username());
+        user.setFirstName(dto.firstName());
+        user.setLastName(dto.lastName());
+        user.setAvatarId(dto.avatarId());
+
+        User updated = userRepository.save(user);
+
+        return new UserResponseDTO(
+                updated.getId(),
+                updated.getNickname(),
+                updated.getEmail(),
+                updated.getFirstName(),
+                updated.getLastName(),
+                updated.getAvatarId(),
+                updated.getCreatedAt()
         );
     }
 
@@ -91,6 +127,10 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
         if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid credentials");
+        }
+
+        if (!user.isEnabled()) {
             throw new IllegalArgumentException("Invalid credentials");
         }
 

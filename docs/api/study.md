@@ -37,7 +37,6 @@ GET /api/v1/study/due?categoryId=2
   "question": "¿En qué año comenzó la Guerra Civil Española?",
   "answerJson": { "answer": "1936" },
   "explanation": "El conflicto se inició el 17 de julio de 1936.",
-  "tags": [{ "id": 1, "name": "historia", "hexColor": "#FF5733" }],
   "state": 0
 }
 ```
@@ -46,7 +45,9 @@ GET /api/v1/study/due?categoryId=2
 
 ### POST `/api/v1/study/sessions`
 
-Processes a completed study session. Runs the FSRS-6 algorithm for each rated card, updates `StudyProgress`, and writes an immutable `ReviewLog` entry. The entire batch runs in a single transaction — if any card fails, the whole session is rolled back.
+Processes a completed study session. Runs the FSRS-6 algorithm for each rated card, updates `StudyProgress`, and writes an immutable `ReviewLog` entry. The entire batch runs in a single `@Transactional` block.
+
+Cards that no longer exist or fail scope verification are **silently skipped** rather than aborting the session. This supports the `localStorage` recovery path where a backed-up session may reference cards deleted after the backup was created. Rating `2` is still rejected eagerly as it signals a malformed request.
 
 Provide **exactly one** of `deckId` or `categoryId` to match the scope used to fetch the due cards.
 
@@ -59,12 +60,12 @@ Provide **exactly one** of `deckId` or `categoryId` to match the scope used to f
   "ratings": [
     { "cardId": 1, "rating": 3 },
     { "cardId": 2, "rating": 1 },
-    { "cardId": 3, "rating": 4 }
+    { "cardId": 3, "rating": 3 }
   ]
 }
 ```
 
-Rating scale: `1` = Again · `2` = Hard · `3` = Good · `4` = Easy
+Rating scale: `1` = Forgotten · `3` = Remembered
 
 For category sessions, replace `deckId` with `categoryId`:
 
@@ -86,4 +87,8 @@ For category sessions, replace `deckId` with `categoryId`:
 }
 ```
 
-**Errors:** `404` if deck/category/card not found · `400` if both or neither scope provided · `400` if a card does not belong to the declared scope.
+`cardsReviewed` reflects only the cards **actually processed** — skipped cards (not found or wrong scope) are not counted. This value may be lower than the number of ratings submitted.
+
+**Errors:** `404` if deck or category not found · `400` if both or neither scope provided · `400` if any rating is not 1 or 3.
+
+> **Validation note:** `CardRatingDTO` uses `@Max(3)`, so rating `2` passes bean validation and reaches the service layer, where it is explicitly rejected with `IllegalArgumentException` (→ `400`). Rating `4` is caught earlier by `@Max(3)`. The net behavior is identical — only `1` and `3` are accepted — but the rejection point differs depending on the value.

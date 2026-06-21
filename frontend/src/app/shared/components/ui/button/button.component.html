@@ -1,0 +1,23 @@
+<button
+  [type]="type()"
+  [disabled]="isDisabled()"
+  [class]="classes()"
+  (click)="!isDisabled() && clicked.emit($event)"
+>
+  @if (loading()) {
+    <svg
+      lucideLoaderCircle
+      class="animate-spin shrink-0"
+      [class]="iconSizeClass()"
+      aria-hidden="true"
+    />
+  } @else if (iconLeft()) {
+    <svg [lucideIcon]="iconLeft()!" [class]="iconSizeClass()" aria-hidden="true"></svg>
+  }
+
+  <ng-content />
+
+  @if (!loading() && iconRight()) {
+    <svg [lucideIcon]="iconRight()!" [class]="iconSizeClass()" aria-hidden="true"></svg>
+  }
+</button>

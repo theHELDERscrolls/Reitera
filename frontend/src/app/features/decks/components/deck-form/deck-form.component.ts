@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideX } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 import { Category } from '@core/models/category.model';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { DeckRequest, DeckResponse } from '@core/models/deck.model';
@@ -11,7 +13,7 @@ import { ToastService } from '@core/toast/toast.service';
 
 @Component({
   selector: 'app-deck-form',
-  imports: [ReactiveFormsModule, TranslocoPipe, LucideX, ConfirmDialogComponent],
+  imports: [AppButtonComponent, AppInputComponent, ConfirmDialogComponent, LucideX, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './deck-form.component.html',
 })
 export class DeckFormComponent {
@@ -32,7 +34,6 @@ export class DeckFormComponent {
   readonly form = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', Validators.maxLength(2000)],
-    isPublic: [false],
     categoryName: ['', Validators.maxLength(50)],
   });
 
@@ -43,11 +44,10 @@ export class DeckFormComponent {
         this.form.patchValue({
           title: deck.title,
           description: deck.description ?? '',
-          isPublic: deck.isPublic,
           categoryName: deck.categoryName ?? '',
         });
       } else {
-        this.form.reset({ title: '', description: '', isPublic: false, categoryName: '' });
+        this.form.reset({ title: '', description: '', categoryName: '' });
       }
     });
   }
@@ -75,7 +75,7 @@ export class DeckFormComponent {
   }
 
   private doSave(): void {
-    const { title, description, isPublic, categoryName } = this.form.getRawValue();
+    const { title, description, categoryName } = this.form.getRawValue();
     const trimmedName = categoryName?.trim() ?? '';
     const matchedCat = this.categories().find(
       (c) => c.name.toLowerCase() === trimmedName.toLowerCase(),
@@ -84,7 +84,6 @@ export class DeckFormComponent {
     const request: DeckRequest = {
       title: title!,
       description: description ?? '',
-      isPublic: isPublic!,
       categoryId: matchedCat?.id ?? null,
       categoryName: !matchedCat && trimmedName ? trimmedName : null,
     };

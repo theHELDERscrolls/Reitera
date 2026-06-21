@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
-
-// Note: Optional import kept for potential future use even though unused currently
 
 public interface StudyProgressRepository extends JpaRepository<StudyProgress, StudyProgressId> {
 
@@ -25,8 +22,10 @@ public interface StudyProgressRepository extends JpaRepository<StudyProgress, St
      * StudyProgress → Card → Deck → id without needing a JOIN manually.
      */
     @Query("SELECT sp FROM StudyProgress sp " +
+            "JOIN FETCH sp.card c " +
+            "JOIN FETCH c.note " +
             "WHERE sp.user.id = :userId " +
-            "AND sp.card.deck.id = :deckId " +
+            "AND c.deck.id = :deckId " +
             "AND sp.nextReview <= :now")
     List<StudyProgress> findDueByUserAndDeck(@Param("userId") UUID userId,
                                              @Param("deckId") Integer deckId,
@@ -38,9 +37,11 @@ public interface StudyProgressRepository extends JpaRepository<StudyProgress, St
      * Used when the user studies a full category (e.g. "Historia de España" → Tema 1 + Tema 2).
      */
     @Query("SELECT sp FROM StudyProgress sp " +
+            "JOIN FETCH sp.card c " +
+            "JOIN FETCH c.note " +
             "WHERE sp.user.id = :userId " +
-            "AND sp.card.deck.category.id = :categoryId " +
-            "AND sp.card.deck.owner.id = :userId " +
+            "AND c.deck.category.id = :categoryId " +
+            "AND c.deck.owner.id = :userId " +
             "AND sp.nextReview <= :now")
     List<StudyProgress> findDueByUserAndCategory(@Param("userId") UUID userId,
                                                  @Param("categoryId") Integer categoryId,
