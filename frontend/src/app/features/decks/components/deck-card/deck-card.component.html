@@ -1,9 +1,9 @@
 <div
   [routerLink]="['/decks', deck().id]"
-  class="relative flex flex-col gap-3 p-3 min-h-44 overflow-hidden rounded-md border-2 border-border bg-surface cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] hover:border-border-strong active:translate-y-px active:shadow-none"
+  class="relative flex flex-col gap-3 p-3 min-h-44 overflow-hidden rounded-xs border-3 border-border bg-surface cursor-pointer transition-all duration-200 shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--ctp-mocha-crust)] hover:border-border-strong active:translate-y-px active:shadow-[2px_2px_0_0_var(--ctp-mocha-crust)]"
 >
   <div
-    class="absolute top-0 left-0 w-1.5 h-full rounded-l-md"
+    class="absolute top-0 left-0 w-1.5 h-full rounded-l-xs"
     [style.background-color]="accentColor()"
   ></div>
 
@@ -17,7 +17,7 @@
         <button
           (click)="toggleMenu(); $event.stopPropagation()"
           (keydown)="$event.stopPropagation()"
-          class="p-1 transition-colors rounded-md text-muted-foreground hover:text-foreground hover:bg-overlay"
+          class="p-1 transition-colors rounded-xs text-muted-foreground hover:text-foreground hover:bg-overlay"
           [attr.aria-label]="'decks.card.options' | transloco"
         >
           <svg lucideEllipsisVertical class="size-4" />
@@ -25,7 +25,7 @@
 
         @if (isMenuOpen()) {
           <div
-            class="absolute right-3 z-10 top-9 min-w-36 overflow-hidden border-2 border-border rounded-md bg-surface shadow-[3px_3px_0_var(--ctp-mocha-crust)]"
+            class="absolute right-3 z-10 top-9 min-w-36 overflow-hidden border-3 border-border rounded-xs bg-surface shadow-[3px_3px_0_0_var(--ctp-mocha-crust)]"
           >
             <button
               (click)="edit.emit(deck()); isMenuOpen.set(false); $event.stopPropagation()"

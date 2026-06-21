@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full border-2 rounded-md bg-surface border-border">
+<div class="flex flex-col h-full border-3 rounded-xs bg-surface border-border">
   <!-- Scrollable content area -->
   <div class="flex flex-col flex-1 gap-3 p-3 overflow-y-auto sm:gap-6 sm:p-6">
     <!-- Question -->
@@ -31,7 +31,7 @@
           <button
             (click)="selectMcOption(option.index)"
             [disabled]="revealed()"
-            class="flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors border-2 rounded-md disabled:cursor-default"
+            class="flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors border-3 rounded-xs disabled:cursor-default"
             [class]="
               !revealed()
                 ? 'border-border bg-overlay text-foreground hover:bg-border hover:border-primary'

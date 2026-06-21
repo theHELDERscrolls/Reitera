@@ -1,8 +1,11 @@
 <div
-  class="relative overflow-hidden rounded-md border-2 border-primary-foreground/50 p-4 shadow-[3px_3px_0_var(--ctp-mocha-crust)]"
+  class="relative overflow-hidden rounded-xs border-3 border-primary-foreground/50 p-4 shadow-[3px_3px_0_0_var(--ctp-mocha-crust)]"
   [class]="bgClass()"
 >
-  <div class="absolute pointer-events-none opacity-20 -right-3 -top-2 text-primary-foreground" aria-hidden="true">
+  <div
+    class="absolute pointer-events-none opacity-20 -right-3 -top-2 text-primary-foreground"
+    aria-hidden="true"
+  >
     <ng-content select="[icon]" />
   </div>
   <div class="relative flex flex-col gap-1">

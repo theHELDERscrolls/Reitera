@@ -2,18 +2,18 @@
   <!-- Loading -->
   @case ('loading') {
     <div class="flex flex-col gap-6">
-      <div class="h-8 rounded-md bg-overlay animate-pulse"></div>
-      <div class="flex flex-col gap-6 p-6 border-2 rounded-md bg-surface border-border">
+      <div class="h-8 rounded-xs bg-overlay animate-pulse"></div>
+      <div class="flex flex-col gap-6 p-6 border-3 rounded-xs bg-surface border-border">
         <div class="flex justify-between">
-          <div class="w-16 h-5 rounded-md bg-overlay animate-pulse"></div>
-          <div class="w-20 h-5 rounded-md bg-overlay animate-pulse"></div>
+          <div class="w-16 h-5 rounded-xs bg-overlay animate-pulse"></div>
+          <div class="w-20 h-5 rounded-xs bg-overlay animate-pulse"></div>
         </div>
         <div class="space-y-2">
-          <div class="w-full h-4 rounded-md bg-overlay animate-pulse"></div>
-          <div class="w-3/4 h-4 rounded-md bg-overlay animate-pulse"></div>
+          <div class="w-full h-4 rounded-xs bg-overlay animate-pulse"></div>
+          <div class="w-3/4 h-4 rounded-xs bg-overlay animate-pulse"></div>
         </div>
         <hr class="border-t-2 border-border" />
-        <div class="w-full h-10 rounded-md bg-overlay animate-pulse"></div>
+        <div class="w-full h-10 rounded-xs bg-overlay animate-pulse"></div>
       </div>
     </div>
   }
@@ -48,7 +48,7 @@
       <a
         action
         [routerLink]="['/study']"
-        class="inline-flex items-center justify-center border-2 border-primary rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] active:translate-y-px active:shadow-none"
+        class="inline-flex items-center justify-center border-3 border-primary rounded-xs bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold transition-all shadow-[6px_6px_0_0_var(--ctp-mocha-crust)] hover:translate-x-0.75 hover:translate-y-0.75 hover:shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] active:translate-x-1.5 active:translate-y-1.5 active:shadow-none"
       >
         {{ 'study.session.empty.back' | transloco }}
       </a>
@@ -127,7 +127,7 @@
   <!-- Complete -->
   @case ('complete') {
     <div class="flex flex-col items-center justify-center max-w-sm gap-6 py-20 mx-auto text-center">
-      <div class="flex items-center justify-center rounded-md size-20 bg-success/10">
+      <div class="flex items-center justify-center rounded-xs size-20 bg-success/10">
         <svg lucideCircleCheck class="size-10 text-success" />
       </div>
       <div class="flex flex-col gap-2">
@@ -140,7 +140,7 @@
       </div>
       <a
         [routerLink]="['/study']"
-        class="inline-flex w-full items-center justify-center border-2 border-primary rounded-md bg-primary text-primary-foreground py-2.5 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] active:translate-y-px active:shadow-none"
+        class="inline-flex w-full items-center justify-center border-3 border-primary rounded-xs bg-primary text-primary-foreground py-2.5 text-sm font-semibold transition-all shadow-[6px_6px_0_0_var(--ctp-mocha-crust)] hover:translate-x-0.75 hover:translate-y-0.75 hover:shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] active:translate-x-1.5 active:translate-y-1.5 active:shadow-none"
       >
         {{ 'study.session.complete.back' | transloco }}
       </a>

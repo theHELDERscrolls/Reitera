@@ -33,7 +33,7 @@ export default class AppAvatarComponent {
 
   readonly containerClasses = computed(() => {
     return [
-      'rounded-full border-2 border-border shrink-0 overflow-hidden',
+      'rounded-full border-3 border-border shrink-0 overflow-hidden',
       this.SIZE_CLASSES[this.size()],
     ].join(' ');
   });

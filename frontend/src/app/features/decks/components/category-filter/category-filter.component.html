@@ -2,7 +2,7 @@
   <div class="relative inline-block" data-category-filter>
     <button
       (click)="toggleFilter()"
-      class="flex min-w-3xs justify-between items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all border-2 rounded-md bg-surface border-border hover:border-border-strong hover:-translate-y-0.5 hover:shadow-[2px_2px_0_var(--ctp-mocha-crust)] active:translate-y-px active:shadow-none"
+      class="flex min-w-3xs justify-between items-center gap-2 px-3 py-1.5 text-sm font-medium transition-all border-3 rounded-xs bg-surface border-border hover:border-border-strong shadow-[4px_4px_0_0_var(--ctp-mocha-crust)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_var(--ctp-mocha-crust)] active:translate-x-1 active:translate-y-1 active:shadow-none"
       [class]="activeCategory() ? 'text-foreground' : 'text-muted-foreground'"
     >
       <span>{{ activeCategory() ?? ('decks.filter.all' | transloco) }}</span>
@@ -15,7 +15,7 @@
 
     @if (isFilterOpen()) {
       <div
-        class="absolute left-0 z-20 mt-1 overflow-hidden border-2 border-border rounded-md bg-surface shadow-[3px_3px_0_var(--ctp-mocha-crust)] min-w-3xs animate-fade-in"
+        class="absolute left-0 z-20 mt-1 overflow-hidden border-3 border-border rounded-xs bg-surface shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] min-w-3xs animate-fade-in"
       >
         <div class="flex flex-wrap gap-1.5 p-2.5">
           <button

@@ -2,7 +2,7 @@
   <button
     type="button"
     (click)="isOpen.update(v => !v)"
-    class="flex items-center min-w-30 sm:min-w-40 justify-between gap-2 px-3 py-1.5 text-sm border-2 rounded-md transition-all bg-surface border-border hover:-translate-y-0.5 hover:shadow-[2px_2px_0_var(--ctp-mocha-crust)] active:translate-y-px active:shadow-none"
+    class="flex items-center min-w-30 sm:min-w-40 justify-between gap-2 px-3 py-1.5 text-sm border-3 rounded-xs transition-all bg-surface border-border shadow-[4px_4px_0_0_var(--ctp-mocha-crust)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_var(--ctp-mocha-crust)] active:translate-x-1 active:translate-y-1 active:shadow-none"
     [class]="isActive() ? 'text-foreground border-primary' : 'text-muted-foreground'"
   >
     <span>
@@ -21,14 +21,14 @@
 
   @if (isOpen()) {
     <div
-      class="absolute left-0 z-20 mt-1 overflow-hidden overflow-y-auto border-2 rounded-md bg-surface border-border shadow-[3px_3px_0_var(--ctp-mocha-crust)] min-w-40 max-h-52"
+      class="absolute left-0 z-20 mt-1 overflow-hidden overflow-y-auto border-3 rounded-xs bg-surface border-border shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] min-w-40 max-h-52"
     >
       <div class="flex flex-col gap-1 p-1">
         @for (opt of options(); track opt.value) {
           <button
             type="button"
             (click)="select(opt.value)"
-            class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors text-left"
+            class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-xs transition-colors text-left"
             [class]="
               selected() === opt.value
                 ? 'bg-primary text-primary-foreground font-medium'

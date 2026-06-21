@@ -38,7 +38,7 @@
   @if (isLoading()) {
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       @for (_ of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track $index) {
-        <div class="rounded-md h-44 bg-overlay animate-pulse"></div>
+        <div class="rounded-xs h-44 bg-overlay animate-pulse"></div>
       }
     </div>
   }
@@ -57,7 +57,7 @@
       <!-- Add new deck card -->
       <button
         (click)="openCreateDialog()"
-        class="flex flex-col items-center justify-center gap-2 transition-all border-2 border-dashed rounded-md cursor-pointer min-h-44 border-border text-muted-foreground hover:border-primary hover:text-primary"
+        class="flex flex-col items-center justify-center gap-2 transition-all border-3 border-dashed rounded-xs cursor-pointer min-h-44 border-border text-muted-foreground hover:border-primary hover:text-primary"
       >
         <svg lucidePlus class="size-6" />
         <span class="text-sm font-medium">{{ 'decks.newDeck' | transloco }}</span>

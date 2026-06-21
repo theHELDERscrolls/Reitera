@@ -22,11 +22,12 @@ export default class AppCardComponent {
   };
 
   readonly classes = computed(() => {
-    const base = 'rounded-md border-2 border-border bg-surface transition-all duration-200';
+    const base = 'rounded-xs border-3 border-border bg-surface transition-all duration-200';
     const padding = this.PADDING_CLASSES[this.padding()];
-    const shadow = this.shadow() === 'offset' ? 'shadow-[3px_3px_0_var(--ctp-mocha-crust)]' : '';
+    const shadow =
+      this.shadow() === 'offset' ? 'shadow-[3px_3px_0_0_var(--ctp-mocha-crust)]' : '';
     const interactive = this.interactive()
-      ? 'cursor-pointer hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ctp-mocha-crust)] hover:border-border-strong active:translate-y-px active:shadow-none'
+      ? 'cursor-pointer shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--ctp-mocha-crust)] hover:border-border-strong active:translate-y-px active:shadow-[2px_2px_0_0_var(--ctp-mocha-crust)]'
       : '';
 
     return [base, padding, shadow, interactive].filter(Boolean).join(' ');
