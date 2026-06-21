@@ -2,7 +2,6 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { LucidePlus } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import PaginationComponent from '@shared/components/pagination/pagination.component';
 import { Category } from '@core/models/category.model';
 import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -10,20 +9,21 @@ import { DeckCardComponent } from './components/deck-card/deck-card.component';
 import { DeckFormComponent } from './components/deck-form/deck-form.component';
 import { DeckResponse } from '@core/models/deck.model';
 import { DecksService } from './services/decks.service';
-import { ToastService } from '@core/toast/toast.service';
-import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { ToastService } from '@core/toast/toast.service';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import PaginationComponent from '@shared/components/pagination/pagination.component';
 
 const PAGE_SIZE = 12;
 
 @Component({
   selector: 'app-decks',
   imports: [
+    AppButtonComponent,
     CategoryFilterComponent,
     ConfirmDialogComponent,
     DeckCardComponent,
     DeckFormComponent,
-    EmptyStateComponent,
     LucidePlus,
     PageHeaderComponent,
     PaginationComponent,
@@ -92,9 +92,9 @@ export default class DecksComponent implements OnInit {
 
   confirmDeleteDeck(): void {
     const deck = this.deckToDelete();
-    
+
     if (!deck) return;
-    
+
     this.deckToDelete.set(null);
     this.decksService.deleteDeck(deck.id).subscribe({
       complete: () => {

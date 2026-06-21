@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { LucideLibraryBig, LucideX } from '@lucide/angular';
+import { LucideX } from '@lucide/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { SidebarFooterComponent } from './sidebar-footer/sidebar-footer.component';
@@ -11,7 +11,6 @@ const SIDEBAR_KEY = 'sidebar_collapsed';
 @Component({
   selector: 'app-sidebar',
   imports: [
-    LucideLibraryBig,
     LucideX,
     SidebarFooterComponent,
     SidebarHeaderComponent,

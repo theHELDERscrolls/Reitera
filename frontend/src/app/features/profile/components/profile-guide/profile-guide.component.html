@@ -1,0 +1,51 @@
+<div class="flex flex-col gap-4">
+  <div>
+    <div class="flex items-center gap-2">
+      <svg lucideBookOpen class="size-5 text-muted" />
+      <h2 class="text-lg font-semibold text-foreground">
+        {{ 'profile.guide.title' | transloco }}
+      </h2>
+    </div>
+    <p class="mt-1.5 text-sm text-muted-foreground">
+      {{ 'profile.guide.subtitle' | transloco }}
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    @for (item of guideItems; track item.id) {
+      <div
+        class="overflow-hidden border-3 rounded-xs border-border transition-all shadow-[3px_3px_0_0_var(--ctp-mocha-crust)] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--ctp-mocha-crust)]"
+      >
+        <button
+          type="button"
+          (click)="toggleGuideItem(item.id)"
+          class="flex items-center justify-between w-full px-5 py-3.5"
+        >
+          <div class="flex items-center gap-3">
+            <app-badge [variant]="item.variant">
+              {{ item.labelKey | transloco }}
+            </app-badge>
+            <span class="text-sm text-muted-foreground">
+              {{ item.cardsKey | transloco }}
+            </span>
+          </div>
+          <svg
+            lucideChevronDown
+            class="transition-transform duration-200 size-4 text-muted-foreground shrink-0"
+            [class]="openGuideItems().has(item.id) ? 'rotate-180' : ''"
+          />
+        </button>
+
+        @if (openGuideItems().has(item.id)) {
+          <div class="flex flex-col gap-3 px-5 pt-4 pb-5 animate-fade-in">
+            <p class="text-sm text-muted-foreground">{{ item.descriptionKey | transloco }}</p>
+            <pre
+              class="p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap border-3 rounded-xs border-border bg-overlay text-foreground"
+              >{{ item.example }}</pre
+            >
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

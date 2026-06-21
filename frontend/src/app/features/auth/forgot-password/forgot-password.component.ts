@@ -2,13 +2,23 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { LucideMail } from '@lucide/angular';
 
 import { PasswordResetService } from '../services/password-reset.service';
 import { LanguageSwitcherComponent } from '@shared/components/language-switcher/language-switcher.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import AppInputComponent from '@shared/components/ui/input/input.component';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [ReactiveFormsModule, RouterLink, TranslocoPipe, LanguageSwitcherComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoPipe,
+    LanguageSwitcherComponent,
+    AppButtonComponent,
+    AppInputComponent,
+  ],
   templateUrl: './forgot-password.component.html',
 })
 export default class ForgotPasswordComponent {
@@ -17,6 +27,7 @@ export default class ForgotPasswordComponent {
 
   readonly loading = signal(false);
   readonly submitted = signal(false);
+  readonly mailIcon = LucideMail;
 
   readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

@@ -1,36 +1,25 @@
-<div class="relative border-t min-h-16.5 border-border shrink-0" data-profile-menu>
+<div class="relative shrink-0 p-2" data-profile-menu>
   @if (isProfileOpen()) {
     <app-profile-panel (navigated)="isProfileOpen.set(false); navigated.emit()" />
   }
 
   <button
     (click)="toggleProfile()"
-    class="flex items-center justify-start w-full min-h-16.5 p-3 transition-colors hover:bg-overlay"
-    [class]="isCollapsed() ? 'justify-center' : 'gap-3'"
+    class="flex items-center w-full rounded-xs p-2.5 transition-colors hover:bg-overlay"
+    [class]="isCollapsed() ? 'justify-center' : 'justify-start gap-3'"
     [attr.aria-label]="'shell.profile.open' | transloco"
   >
-    @if (currentUser()?.avatarId) {
-      <img
-        [src]="'avatars/' + currentUser()!.avatarId + '.svg'"
-        alt="Avatar"
-        class="border rounded-full size-8 shrink-0 border-border"
-      />
-    } @else {
-      <div
-        class="flex items-center justify-center text-xs font-semibold uppercase border rounded-full size-8 bg-overlay border-border shrink-0 text-foreground"
-      >
-        {{ (currentUser()?.username ?? '?').charAt(0) }}
-      </div>
-    }
-    @if (!isCollapsed()) {
-      <div class="flex flex-col items-start justify-center gap-0.5 min-w-0">
-        <span class="font-semibold text-md text-foreground">{{
-          currentUser()?.username ?? '—'
-        }}</span>
-        <span class="text-xs text-muted">{{
-          currentUser()?.email ?? ''
-        }}</span>
-      </div>
-    }
+    <app-avatar
+      [src]="currentUser()?.avatarId ? 'avatars/' + currentUser()!.avatarId + '.svg' : null"
+      [name]="currentUser()?.username ?? ''"
+      size="sm"
+    />
+    <div
+      class="flex flex-col items-start justify-center gap-0.5 min-w-0 transition-all duration-200 overflow-hidden"
+      [class]="isCollapsed() ? 'opacity-0 max-w-0' : 'opacity-100 max-w-full'"
+    >
+      <span class="text-sm font-semibold text-foreground truncate">{{ currentUser()?.username ?? '—' }}</span>
+      <span class="text-xs text-muted-foreground truncate">{{ currentUser()?.email ?? '' }}</span>
+    </div>
   </button>
 </div>

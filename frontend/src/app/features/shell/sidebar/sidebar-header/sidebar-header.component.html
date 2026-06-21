@@ -1,10 +1,10 @@
-<div class="flex items-center justify-center h-16 px-3 border-b border-border shrink-0">
+<div class="flex items-center justify-center h-16 px-3 shrink-0">
   <button
     (click)="toggled.emit()"
-    class="flex items-center min-w-0 gap-2 transition-opacity rounded-md cursor-pointer hover:opacity-80"
+    class="flex items-center min-w-0 gap-2 transition-opacity rounded-xs cursor-pointer hover:opacity-80"
     [attr.aria-label]="'shell.sidebar.collapse' | transloco"
   >
-    <img class="size-8 rounded-md" src="./reitera_logo.png" alt="reitera_logo" />
+    <img class="size-8 rounded-xs" src="./reitera_logo.png" alt="reitera_logo" />
     @if (!isCollapsed()) {
       <span class="font-semibold truncate text-foreground">Reitera</span>
     }

@@ -4,28 +4,32 @@ import { DatePipe } from '@angular/common';
 import { LucideBookOpen, LucideChevronRight, LucidePlus } from '@lucide/angular';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
-import PaginationComponent from '@shared/components/pagination/pagination.component';
-import { NoteEditorComponent } from '../note-editor/note-editor.component';
-import { NoteResponse } from '@core/models/note.model';
-import { NoteService } from '../../services/note.service';
 import { CardsTableComponent } from '../cards-table/cards-table.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { DeckDetailService } from '../../services/deck-detail.service';
 import { DeckResponse, DeckStats } from '@core/models/deck.model';
+import { NoteEditorComponent } from '../note-editor/note-editor.component';
+import { NoteResponse } from '@core/models/note.model';
+import { NoteService } from '../../services/note.service';
 import { ToastService } from '@core/toast/toast.service';
+import AppBadgeComponent from '@shared/components/ui/badge/badge.component';
+import AppButtonComponent from '@shared/components/ui/button/button.component';
+import PaginationComponent from '@shared/components/pagination/pagination.component';
 
 const PAGE_SIZE = 20;
 
 @Component({
   selector: 'app-deck-detail',
   imports: [
-    NoteEditorComponent,
+    AppBadgeComponent,
+    AppButtonComponent,
     CardsTableComponent,
     ConfirmDialogComponent,
     DatePipe,
     LucideBookOpen,
     LucideChevronRight,
     LucidePlus,
+    NoteEditorComponent,
     PaginationComponent,
     RouterLink,
     TranslocoPipe,

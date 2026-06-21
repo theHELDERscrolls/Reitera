@@ -19,10 +19,10 @@ export class ToastComponent {
 
   typeClasses(type: ToastType): string {
     const map: Record<ToastType, string> = {
-      success: 'bg-success border-success',
-      error: 'bg-error border-error',
-      warning: 'bg-warning border-warning',
-      info: 'bg-info border-info',
+      success: 'bg-success border-primary-foreground/50',
+      error: 'bg-error border-primary-foreground/50',
+      warning: 'bg-warning border-primary-foreground/50',
+      info: 'bg-info border-primary-foreground/50',
     };
 
     return map[type];
