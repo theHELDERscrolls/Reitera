@@ -17,6 +17,8 @@ api:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
+    resend:
+      api-key: ${RESEND_API_KEY}
 
 app:
   cors:
