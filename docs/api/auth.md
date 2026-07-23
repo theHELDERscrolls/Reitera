@@ -28,8 +28,7 @@ Password rules: min 8 characters, at least 1 digit, 1 lowercase, 1 uppercase, 1 
   "username": "test01",
   "email": "test01@test.com",
   "firstName": "Test",
-  "lastName": "Testez",
-  "roleName": "STUDENT"
+  "lastName": "Testez"
 }
 ```
 

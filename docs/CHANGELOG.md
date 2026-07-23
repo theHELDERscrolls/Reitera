@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.0.1] — 2026-07-23 — Dependency security patches
+
+### Security
+- **Angular `21.2.14` → `21.2.18`/`21.2.19`** (via `ng update`) — clears the `@angular/common`, `@angular/core` and `@angular/compiler` advisories (DoS via OOM in `formatDate`/`digitsInfo`, `HttpTransferCache` cross-request data leakage, template/hydration XSS bypasses).
+- **Transitive build dependencies refreshed** (`vite`, `esbuild`, `undici`, `piscina`, `brace-expansion`, `@babel/core`, `tar`, …) to their patched versions via `npm audit fix`. Open Dependabot alerts dropped from 35 to 3 (the remaining 3 are the dev-only, Windows-only `@hono/node-server` chain).
+
+### Changed
+- **`docker-compose.yml`** — dropped `restart: always` on the Postgres service so it no longer auto-starts on every boot.
+- `frontend/package.json` version bumped to `1.0.1`.
+
+### Removed
+- **Dependabot auto-merge workflow** (`.github/workflows/dependabot-auto-merge.yml`) — dependency PRs are now reviewed and merged manually.
+
+---
+
 ## [1.0.0] — 2026-06-21 — First production release
 
 ### Added
