@@ -38,11 +38,10 @@ Thumbs.db
 docs/.obsidian/
 
 # ===== Claude Code =====
-CLAUDE.md
+# Personal / machine-specific — never commit:
 .claude/settings.json
+.claude/settings.local.json
 .claude/scripts/
-.claude/checklists/
-.claude/commands/orient.md
-.claude/commands/check.md
-.claude/commands/doc-audit.md
-.claude/commands/brief.md
+
+# Everything else under .claude/ (skills, commands, checklists) and the root
+# CLAUDE.md is shared tooling and is tracked on purpose.
