@@ -68,7 +68,10 @@ the doc in isolation.
 - `docs/api/README.md` — does it list every current endpoint?
 - `docs/setup/README.md` and `docs/core-logic/README.md` — do their tables
   include every file actually present in those folders?
-- `docs/CHANGELOG.md` — if a feature was merged, is there an accurate entry?
+- `docs/CHANGELOG.md` — is the latest version entry present and accurate? Compare
+  its top version header against `frontend/package.json` and
+  `backend/reitera-backend/pom.xml`: a version bump with no matching entry is a
+  gap, even for a patch or security-only release.
 
 ---
 
@@ -85,7 +88,7 @@ helps nobody.
 5. **i18n drift** — a new language or key set not reflected where it's described
 6. **Missing security mechanism** — a guard/filter/rule in code not covered in `docs/architecture/security.md`
 7. **Stale index or table** — a `README.md` table missing a file that now exists
-8. **CHANGELOG gap** — a shipped feature with no changelog entry
+8. **CHANGELOG gap** — a shipped feature *or a version bump* (`frontend/package.json` / `pom.xml`) with no matching CHANGELOG entry
 9. **Direct contradiction** — the doc describes behavior the code no longer does
 10. **Phantom docs** — the doc describes something that no longer exists in code
 

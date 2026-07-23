@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Reitera spaced repetition flashcard app. Monorepo with two independent projects:
 - `frontend/` — Angular 21 SPA
-- `backend/reitera-backend/` — Spring Boot 4.0.6 REST API
+- `backend/reitera-backend/` — Spring Boot 4.1.0 REST API
 
 ## Commands
 
